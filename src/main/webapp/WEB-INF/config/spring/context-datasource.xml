@@ -1,0 +1,12 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+<property name="locations" value="classpath:/application.properties"/>
+<property name="fileEncoding" value="UTF-8"/>
+</bean>
+<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+<property name="driverClassName" value="${db.driverClassName}"/>
+<property name="url" value="${db.url}"/>
+<property name="username" value="${db.username}"/>
+<property name="password" value="${db.password}"/>
+</bean>
+</beans>

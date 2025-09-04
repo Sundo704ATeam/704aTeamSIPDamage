@@ -1,0 +1,37 @@
+/.metadata/
+.metadata/
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+
+# Maven build output
+/target/
+/*.war
+/*.ear
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+
+# Properties (환경설정, DB 연결 등)
+src/main/resources/*.properties
+
+# Eclipse build output
+/bin/
+
+# Tomcat related
+Servers/
+.tomcatplugin
+logs/
+temp/
+work/
+*.pid
