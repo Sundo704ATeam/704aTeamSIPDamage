@@ -7,8 +7,7 @@
 
 </head>
 <body>
-  <h1>${message}</h1>
-
+  <jsp:include page="/WEB-INF/views/header.jsp"/>
   <!-- 지도 fragment include -->
   <jsp:include page="/WEB-INF/views/initmap.jsp"/>
 </body>
