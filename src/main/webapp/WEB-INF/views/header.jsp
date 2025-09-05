@@ -1,12 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <title>사회기반시설 스마트 유지관리 시스템</title>
+    <link rel="stylesheet" href="<c:url value='/resources/css/style.css'/>">
 </head>
-<body>
-
-</body>
-</html>
+<body style="margin:0;"> 
+<header style="background:#000; padding:8px 15px; border-bottom:1px solid #333;">
+    <h2 style="margin:0; color:#fff; font-size:18px;">
+        사회기반시설 스마트 유지관리 시스템
+    </h2>
+</header>
