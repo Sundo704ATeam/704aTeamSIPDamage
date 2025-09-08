@@ -1,12 +1,40 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-</body>
-</html>
+<style>
+  .rail{
+    position:fixed; z-index:900;
+    top:var(--header-h); left:0; bottom:0; width:var(--rail-w);
+    background: var(--gray-700); color:#fff;
+    display:flex; flex-direction:column; gap:8px; padding:16px 10px;
+    overflow: hidden; /* 좌우 스크롤 안 뜨게 */
+  }
+
+  .menu-item{
+    display:block;
+    padding:10px 12px;
+    border-radius:10px;
+    text-decoration:none;
+    color:#fff;
+    background: transparent;
+    /* 글씨 안 짤리게: 좌측 정렬 + 줄바꿈 허용 */
+    text-align:left;
+    white-space: normal;      /* 줄바꿈 허용 */
+    word-break: keep-all;     /* 한국어 단어 중간 분절 방지 */
+    line-height: 1.3;
+    font-size: 14px;
+  }
+  .menu-item:hover{ background: rgba(0,0,0,.15); }
+  .menu-item.active{
+    background: var(--gray-800);
+    font-weight:700;
+    border:1px solid rgba(255,255,255,.08);
+  }
+</style>
+
+
+<nav id="leftRail" class="rail">
+  <a class="menu-item active" href="#!">HOME</a>
+  <a class="menu-item" href="#!">노후화 패턴분석</a>
+  <a class="menu-item" href="${pageContext.request.contextPath}/dust">손상진단 시뮬</a>
+</nav>
+

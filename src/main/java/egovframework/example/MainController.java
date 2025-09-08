@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,6 @@ public class MainController {
 		
 		model.addAttribute("message", message);
 		
-		return "test";
+		return "main";
 	}
 }
