@@ -10,11 +10,11 @@
 <script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
 <style>
 :root {
-	--footer-h: 40px;
-	--rail-w: 120px; /* 사이드바 */
-	--tool-w: 200px; /* 데이터레일 */
+  --header-h: 60px;   /* 명시적으로 정의해 두세요 */
+  --footer-h: 40px;
+  --rail-w: 120px;
+  --tool-w: 200px;
 }
-
 #dataRail {
 	position: fixed;
 	z-index: 900;
@@ -29,6 +29,7 @@
 	flex-direction: column;
 	gap: 10px;
 }
+
 footer {
 	position: fixed;
 	left: 0;
@@ -43,13 +44,16 @@ footer {
 	border-top: 1px solid #444;
 	z-index: 1000;
 }
+
+
 #map {
   position: fixed;
-  top: var(--header-h, 60px);
-  left: calc(var(--rail-w) + var(--tool-w)); /* ✓ 120 + 200 = 320px */
+  top: var(--header-h);
+  left: calc(var(--rail-w) + var(--tool-w)); /* ← 연산 기호 앞뒤 공백 필수 */
   right: 0;
   bottom: var(--footer-h);
-  z-index: 1;
+  z-index: 10;
+  min-height: 300px; /* 안전빵 */
 }
 
 #dataRail button {
@@ -67,8 +71,6 @@ footer {
 #dataRail a:hover {
 	background: #e5e7eb;
 }
-
-
 </style>
 </head>
 <body>
@@ -87,6 +89,7 @@ footer {
 					<button id="btnBridge" class="btn btn-light btn-sm">교량</button>
 					<button id="btnFootbridge" class="btn btn-light btn-sm">육교</button>
 					<button id="btnTunnel" class="btn btn-light btn-sm">터널</button>
+					<button id="btnStruc" class="btn btn-light btn-sm">건축물</button>
 					<button id="btnAll" class="btn btn-light btn-sm">전체 보기</button>
 					<button id="btnAlldown" class="btn btn-light btn-sm">전체 해제</button>
 				</div>
@@ -106,9 +109,9 @@ footer {
     // 2-1. 육교(yookgyo) 레이어
     const yookgyoLayer = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://localhost:1221/geoserver/wms',
+        url: 'http://172.30.1.33:8081/geoserver/wms',
         params: {
-          'LAYERS': 'gisdb:yookgyo', 	
+          'LAYERS': 'dbdbdb:yookgyo', 	
           'TILED': true
         },
         serverType: 'geoserver',
@@ -120,9 +123,9 @@ footer {
     // 2-2. 교량(gyoryang) 레이어
     const gyoryangLayer = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://localhost:1221/geoserver/wms',
+        url: 'http://172.30.1.33:8081/geoserver/wms',
         params: {
-          'LAYERS': 'gisdb:gyoryang',
+          'LAYERS': 'dbdbdb:gyoryang',
           'TILED': true
         },
         serverType: 'geoserver',
@@ -134,9 +137,23 @@ footer {
     // 2-2. 터널(tunnel) 레이어
     const tunnelLayer = new ol.layer.Tile({
       source: new ol.source.TileWMS({
-        url: 'http://localhost:1221/geoserver/wms',
+    	  url: 'http://172.30.1.33:8081/geoserver/wms',
         params: {
-          'LAYERS': 'gisdb:tunnel',
+          'LAYERS': 'dbdbdb:tunnel',
+          'TILED': true
+        },
+        serverType: 'geoserver',
+        transition: 0
+      }),
+      visible: false  
+    });
+    
+    // 2-3. 마포건축물 레이어
+    const mapoLayer = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+   	  	url: 'http://172.30.1.33:8081/geoserver/wms',
+        params: {
+          'LAYERS': 'dbdbdb:mapo',
           'TILED': true
         },
         serverType: 'geoserver',
@@ -148,7 +165,7 @@ footer {
     // 3. 지도 생성
     const map = new ol.Map({
       target: 'map',
-      layers: [osmLayer, yookgyoLayer, gyoryangLayer, tunnelLayer],
+      layers: [osmLayer, yookgyoLayer, gyoryangLayer, tunnelLayer, mapoLayer],
       view: new ol.View({
         center: ol.proj.fromLonLat([127.024612, 37.5326]), // 서울 좌표
         zoom: 12,
@@ -162,6 +179,7 @@ footer {
    	  gyoryangLayer.setVisible(true);
       yookgyoLayer.setVisible(false);     
       tunnelLayer.setVisible(false);
+      mapoLayer.setVisible(false);
     });
     
 	//육교 선택
@@ -169,13 +187,23 @@ footer {
       gyoryangLayer.setVisible(false);
       yookgyoLayer.setVisible(true);
       tunnelLayer.setVisible(false);
+      mapoLayer.setVisible(false);
     });
 	
   	//터널 선택
     document.getElementById("btnTunnel")?.addEventListener("click", function() {
       gyoryangLayer.setVisible(false);
       yookgyoLayer.setVisible(false);
+      mapoLayer.setVisible(false);
       tunnelLayer.setVisible(true);
+    });
+  	
+  	// 마포구역 건물 선택
+    document.getElementById("btnStruc")?.addEventListener("click", function() {
+      gyoryangLayer.setVisible(false);
+      yookgyoLayer.setVisible(false);
+      tunnelLayer.setVisible(false);
+      mapoLayer.setVisible(true);
     });
 	
 	//전체 보기
@@ -183,6 +211,7 @@ footer {
       yookgyoLayer.setVisible(true);
       gyoryangLayer.setVisible(true);
       tunnelLayer.setVisible(true);
+      mapoLayer.setVisible(true);
     });
 	
     //전체 해제
@@ -190,6 +219,7 @@ footer {
         gyoryangLayer.setVisible(false);
         yookgyoLayer.setVisible(false);
         tunnelLayer.setVisible(false);
+        mapoLayer.setVisible(false);
       });
     
   </script>
