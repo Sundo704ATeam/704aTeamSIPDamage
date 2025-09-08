@@ -34,7 +34,7 @@
 
 <nav id="leftRail" class="rail">
   <a class="menu-item active" href="#!">HOME</a>
-  <a class="menu-item" href="#!">노후화 패턴분석</a>
+  <a class="menu-item" href="${pageContext.request.contextPath}/damageMap">노후화 패턴분석</a>
   <a class="menu-item" href="${pageContext.request.contextPath}/dust">손상진단 시뮬</a>
 </nav>
 
