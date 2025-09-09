@@ -2,7 +2,7 @@
 
 <style>
   .rail{
-    position:fixed; z-index:900;
+    position:fixed; z-index:950;
     top:var(--header-h); left:0; bottom:0; width:var(--rail-w);
     background: var(--gray-700); color:#fff;
     display:flex; flex-direction:column; gap:8px; padding:16px 10px;

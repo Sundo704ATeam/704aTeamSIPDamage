@@ -16,18 +16,23 @@
   --tool-w: 200px;
 }
 #dataRail {
-	position: fixed;
-	z-index: 900;
-	top: var(--header-h, 60px);
-	left: var(--rail-w); /* 사이드바 오른쪽부터 시작 */
-	bottom: var(--footer-h);
-	width: var(--tool-w); /* 데이터레일 폭 */
-	background: #f3f3f3;
-	border-right: 1px solid #ddd;
-	padding: 12px 10px;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+  position: fixed;
+  z-index: 900;               /* sidebar보다 낮고, map보다 높게만 유지 */
+  top: var(--header-h, 60px);
+  left: var(--rail-w);        /* ← 사이드바 오른쪽부터 시작 (사이드바는 고정) */
+  bottom: var(--footer-h);
+  width: var(--tool-w);       /* DataRail 폭 */
+  background: #f3f3f3;
+  border-right: 1px solid #ddd;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+
+  /* 접기/펼치기 애니메이션 */
+  transition: transform .25s ease;
+  will-change: transform;
 }
 
 footer {
@@ -68,9 +73,55 @@ footer {
 	color: #111;
 }
 
-#dataRail a:hover {
-	background: #e5e7eb;
+#dataRail button:hover {
+  background: #e5e7eb;
 }
+
+/* DataRail 접힘(숨김) - 사이드바는 그대로 */
+body.rail-collapsed #dataRail {
+  transform: translateX(-100%);   /* 자기 너비만큼 왼쪽으로 */
+}
+
+/* 접히면 지도는 사이드바 너비까지만 띄움 */
+body.rail-collapsed #map {
+  left: var(--rail-w);
+}
+.rail-toggle {
+  position: fixed;
+  z-index: 1200;
+  top: 50%;
+  transform: translateY(-50%);
+  left: calc(var(--rail-w) + var(--tool-w) - 1px); /* DataRail 펼침 상태 */
+  width: 18px;        /* 얇게 */
+  height: 80px;
+  border: 1px solid #c9ccd1;
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+
+  /* 중앙 정렬 */
+  display: flex;
+  align-items: center;   /* 세로 중앙 */
+  justify-content: center; /* 가로 중앙 */
+
+  font-size: 14px;   /* 화살표 크기 */
+  line-height: 1;
+  transition: left .25s ease, background .15s ease, box-shadow .15s ease, transform .1s ease;
+}
+.rail-toggle:hover {
+  background: #f6f7f9;
+  box-shadow: 0 4px 8px rgba(0,0,0,.18);
+}
+.rail-toggle:active {
+  transform: translateY(-50%) scale(.97);
+}
+
+/* 접힘 상태: 사이드바 옆으로 이동 */
+body.rail-collapsed .rail-toggle {
+  left: calc(var(--rail-w) - 1px);
+}
+
+#dataRail .btn.active { background:#e5e7eb; }
 </style>
 </head>
 <body>
@@ -97,7 +148,7 @@ footer {
 			</div>
 		</aside>
 	</div>
-
+<button id="toggleRailBtn" class="rail-toggle" aria-expanded="true" title="데이터레일 접기">◀</button>
 	<div id="map"></div>
 
 	<footer>© 사회기반시설 스마트 유지관리 시스템</footer>
@@ -168,7 +219,7 @@ footer {
       source: new ol.source.TileWMS({
    	  	url: 'http://172.30.1.33:8081/geoserver/wms',
         params: {
-          'LAYERS': 'dbdbdb:cheoldo',
+          'LAYERS': 'dbdbdb:cheoldo_shifted',
           'TILED': true
         },
         serverType: 'geoserver',
@@ -188,61 +239,53 @@ footer {
       }),
     });
 
-    //사이드바 버튼과 연동
-    //교량 선택
-    document.getElementById("btnBridge")?.addEventListener("click", function() {
-   	  gyoryangLayer.setVisible(true);
-      yookgyoLayer.setVisible(false);     
-      tunnelLayer.setVisible(false);
-      mapoLayer.setVisible(false);
-      cheoldoLayer.setVisible(false);
+ // === 레이어 토글 유틸 ===
+    function bindToggle(btnId, layer) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        const next = !layer.getVisible();
+        layer.setVisible(next);
+        // 버튼 상태 표시(부트스트랩과 어울리게 active 토글)
+        btn.classList.toggle('active', next);
+      });
+    }
+
+    // 개별 토글: 상태 유지 + 다시 누르면 끄기
+    bindToggle("btnBridge",     gyoryangLayer);
+    bindToggle("btnFootbridge", yookgyoLayer);
+    bindToggle("btnTunnel",     tunnelLayer);
+    bindToggle("btnStruc",      mapoLayer);
+    bindToggle("btnCheoldo",    cheoldoLayer);
+
+    // 전체 보기
+    document.getElementById("btnAll")?.addEventListener("click", () => {
+      const pairs = [
+        ["btnBridge",     gyoryangLayer],
+        ["btnFootbridge", yookgyoLayer],
+        ["btnTunnel",     tunnelLayer],
+        ["btnStruc",      mapoLayer],
+        ["btnCheoldo",    cheoldoLayer],
+      ];
+      pairs.forEach(([id, layer]) => {
+        layer.setVisible(true);
+        document.getElementById(id)?.classList.add("active");
+      });
     });
-    
-	//육교 선택
-    document.getElementById("btnFootbridge")?.addEventListener("click", function() {
-      gyoryangLayer.setVisible(false);
-      yookgyoLayer.setVisible(true);
-      tunnelLayer.setVisible(false);
-      mapoLayer.setVisible(false);
-      cheoldoLayer.setVisible(false);
-    });
-	
-  	//터널 선택
-    document.getElementById("btnTunnel")?.addEventListener("click", function() {
-      gyoryangLayer.setVisible(false);
-      yookgyoLayer.setVisible(false);
-      mapoLayer.setVisible(false);
-      tunnelLayer.setVisible(true);
-      cheoldoLayer.setVisible(false);
-    });
-  	
-  	// 마포구역 건물 선택
-    document.getElementById("btnStruc")?.addEventListener("click", function() {
-      gyoryangLayer.setVisible(false);
-      yookgyoLayer.setVisible(false);
-      tunnelLayer.setVisible(false);
-      mapoLayer.setVisible(true);
-      cheoldoLayer.setVisible(false);
-    });
-  	
-  	//철도 선택
-    document.getElementById("btnCheoldo")?.addEventListener("click", function() {
-      gyoryangLayer.setVisible(false);
-      yookgyoLayer.setVisible(false);
-      mapoLayer.setVisible(false);
-      tunnelLayer.setVisible(false);
-      cheoldoLayer.setVisible(true);
-      
-      
-    });
-	 
-	//전체 보기
-    document.getElementById("btnAll")?.addEventListener("click", function() {
-      yookgyoLayer.setVisible(true);
-      gyoryangLayer.setVisible(true);
-      tunnelLayer.setVisible(true);
-      cheoldoLayer.setVisible(true);
-      mapoLayer.setVisible(true);
+
+    // 전체 해제
+    document.getElementById("btnAlldown")?.addEventListener("click", () => {
+      const pairs = [
+        ["btnBridge",     gyoryangLayer],
+        ["btnFootbridge", yookgyoLayer],
+        ["btnTunnel",     tunnelLayer],
+        ["btnStruc",      mapoLayer],
+        ["btnCheoldo",    cheoldoLayer],
+      ];
+      pairs.forEach(([id, layer]) => {
+        layer.setVisible(false);
+        document.getElementById(id)?.classList.remove("active");
+      });
     });
 	
     //전체 해제
@@ -255,7 +298,25 @@ footer {
         
         
       });
-   
+ // 데이터레일 접기/펼치기
+    const toggleBtn = document.getElementById('toggleRailBtn');
+    toggleBtn?.addEventListener('click', () => {
+      document.body.classList.toggle('rail-collapsed');
+      const collapsed = document.body.classList.contains('rail-collapsed');
+      // 접근성/툴팁/아이콘 업데이트
+      toggleBtn.setAttribute('aria-expanded', String(!collapsed));
+      toggleBtn.title = collapsed ? '데이터레일 펼치기' : '데이터레일 접기';
+      toggleBtn.textContent = collapsed ? '▶' : '◀';
+
+      // 지도 크기 재계산 (애니메이션 끝난 뒤)
+      setTimeout(() => map.updateSize(), 260);
+    });
+
+    // 창 크기 변경 시에도 안전하게 지도 사이즈 업데이트
+    window.addEventListener('resize', () => {
+      clearTimeout(window.__mapResizeTimer);
+      window.__mapResizeTimer = setTimeout(() => map.updateSize(), 150);
+    });
   </script>
 </body>
 </html>
