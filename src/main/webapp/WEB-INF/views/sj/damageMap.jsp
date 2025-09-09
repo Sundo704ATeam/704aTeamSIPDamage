@@ -90,6 +90,7 @@ footer {
 					<button id="btnFootbridge" class="btn btn-light btn-sm">육교</button>
 					<button id="btnTunnel" class="btn btn-light btn-sm">터널</button>
 					<button id="btnStruc" class="btn btn-light btn-sm">건축물</button>
+					<button id="btnCheoldo" class="btn btn-light btn-sm">철도</button>
 					<button id="btnAll" class="btn btn-light btn-sm">전체 보기</button>
 					<button id="btnAlldown" class="btn btn-light btn-sm">전체 해제</button>
 				</div>
@@ -162,10 +163,24 @@ footer {
       visible: false  
     });
     
+    // 2-3. 철도 레이어
+     const cheoldoLayer = new ol.layer.Tile({
+      source: new ol.source.TileWMS({
+   	  	url: 'http://172.30.1.33:8081/geoserver/wms',
+        params: {
+          'LAYERS': 'dbdbdb:cheoldo',
+          'TILED': true
+        },
+        serverType: 'geoserver',
+        transition: 0
+      }),
+      visible: false  
+    });
+     
     // 3. 지도 생성
     const map = new ol.Map({
       target: 'map',
-      layers: [osmLayer, yookgyoLayer, gyoryangLayer, tunnelLayer, mapoLayer],
+      layers: [osmLayer, yookgyoLayer, gyoryangLayer, tunnelLayer, mapoLayer,cheoldoLayer],
       view: new ol.View({
         center: ol.proj.fromLonLat([127.024612, 37.5326]), // 서울 좌표
         zoom: 12,
@@ -180,6 +195,7 @@ footer {
       yookgyoLayer.setVisible(false);     
       tunnelLayer.setVisible(false);
       mapoLayer.setVisible(false);
+      cheoldoLayer.setVisible(false);
     });
     
 	//육교 선택
@@ -188,6 +204,7 @@ footer {
       yookgyoLayer.setVisible(true);
       tunnelLayer.setVisible(false);
       mapoLayer.setVisible(false);
+      cheoldoLayer.setVisible(false);
     });
 	
   	//터널 선택
@@ -196,6 +213,7 @@ footer {
       yookgyoLayer.setVisible(false);
       mapoLayer.setVisible(false);
       tunnelLayer.setVisible(true);
+      cheoldoLayer.setVisible(false);
     });
   	
   	// 마포구역 건물 선택
@@ -204,13 +222,26 @@ footer {
       yookgyoLayer.setVisible(false);
       tunnelLayer.setVisible(false);
       mapoLayer.setVisible(true);
+      cheoldoLayer.setVisible(false);
     });
-	
+  	
+  	//철도 선택
+    document.getElementById("btnCheoldo")?.addEventListener("click", function() {
+      gyoryangLayer.setVisible(false);
+      yookgyoLayer.setVisible(false);
+      mapoLayer.setVisible(false);
+      tunnelLayer.setVisible(false);
+      cheoldoLayer.setVisible(true);
+      
+      
+    });
+	 
 	//전체 보기
     document.getElementById("btnAll")?.addEventListener("click", function() {
       yookgyoLayer.setVisible(true);
       gyoryangLayer.setVisible(true);
       tunnelLayer.setVisible(true);
+      cheoldoLayer.setVisible(true);
       mapoLayer.setVisible(true);
     });
 	
@@ -219,9 +250,12 @@ footer {
         gyoryangLayer.setVisible(false);
         yookgyoLayer.setVisible(false);
         tunnelLayer.setVisible(false);
+        cheoldoLayer.setVisible(false);
         mapoLayer.setVisible(false);
+        
+        
       });
-    
+   
   </script>
 </body>
 </html>
