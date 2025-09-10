@@ -259,6 +259,74 @@ body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
         });
     }
   });
+
+  // === 클릭 이벤트: yookgyo에서 name 가져오기 ===
+  map.on('singleclick', function(evt) {
+    if (!yookgyoLayer.getVisible()) return;
+
+    const viewRes = map.getView().getResolution();
+    const url = yookgyoLayer.getSource().getFeatureInfoUrl(
+      evt.coordinate,
+      viewRes,
+      "EPSG:3857",
+      { INFO_FORMAT: "application/json" }
+    );
+
+    console.log("📌 URL:", url);
+
+    if (url) {
+      fetch(url)
+        .then(r => r.json())
+        .then(json => {
+          if (json.features && json.features.length > 0) {
+            const props = json.features[0].properties;
+            const nameVal = props.name || "(이름 없음)";
+            popupEl.innerHTML = "<b>육교명:</b> " + nameVal;
+            overlay.setPosition(evt.coordinate);
+          } else {
+            overlay.setPosition(undefined);
+          }
+        })
+        .catch(err => {
+          console.error("GetFeatureInfo 에러:", err);
+          overlay.setPosition(undefined);
+        });
+    }
+  });
+
+  // === 클릭 이벤트: tunnel에서 name 가져오기 ===
+  map.on('singleclick', function(evt) {
+    if (!tunnelLayer.getVisible()) return;
+
+    const viewRes = map.getView().getResolution();
+    const url = tunnelLayer.getSource().getFeatureInfoUrl(
+      evt.coordinate,
+      viewRes,
+      "EPSG:3857",
+      { INFO_FORMAT: "application/json" }
+    );
+
+    console.log("📌 URL:", url);
+
+    if (url) {
+      fetch(url)
+        .then(r => r.json())
+        .then(json => {
+          if (json.features && json.features.length > 0) {
+            const props = json.features[0].properties;
+            const nameVal = props.name || "(이름 없음)";
+            popupEl.innerHTML = "<b>터널명:</b> " + nameVal;
+            overlay.setPosition(evt.coordinate);
+          } else {
+            overlay.setPosition(undefined);
+          }
+        })
+        .catch(err => {
+          console.error("GetFeatureInfo 에러:", err);
+          overlay.setPosition(undefined);
+        });
+    }
+  });
 </script>
 </body>
 </html>
