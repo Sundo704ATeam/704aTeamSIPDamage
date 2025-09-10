@@ -1,4 +1,4 @@
-package egovframework.example.service;
+package egovframework.sipdamage704a.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,9 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import egovframework.example.dao.RainfallDao;
-import egovframework.example.dto.rain.RainfallApiRespDto;
-import egovframework.example.dto.rain.RainfallDto;
+import egovframework.sipdamage704a.dao.RainfallDao;
+import egovframework.sipdamage704a.dto.rain.RainfallApiRespDto;
+import egovframework.sipdamage704a.dto.rain.RainfallDto;
 
 @Service
 @Transactional

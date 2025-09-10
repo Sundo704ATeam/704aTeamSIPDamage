@@ -1,4 +1,4 @@
-package egovframework.SIPDamage.controller;
+package egovframework.sipdamage704a.controller;
 
 import java.sql.Connection;
 import java.sql.SQLException;

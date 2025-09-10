@@ -1,10 +1,10 @@
-package egovframework.SIPDamage.controller;
+package egovframework.sipdamage704a.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import egovframework.example.service.RainfallService;
+import egovframework.sipdamage704a.service.RainfallService;
 import lombok.RequiredArgsConstructor;
 
 @Controller

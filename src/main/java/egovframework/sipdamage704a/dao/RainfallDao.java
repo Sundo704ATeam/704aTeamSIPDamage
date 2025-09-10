@@ -1,8 +1,8 @@
-package egovframework.example.dao;
+package egovframework.sipdamage704a.dao;
 
 import java.util.List;
 
-import egovframework.example.dto.rain.RainfallDto;
+import egovframework.sipdamage704a.dto.rain.RainfallDto;
 
 public interface RainfallDao {
 
