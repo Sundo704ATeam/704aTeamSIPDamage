@@ -70,20 +70,13 @@ body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
   position: absolute; background: white;
   box-shadow: 0 1px 4px rgba(0,0,0,0.2);
   padding: 10px; border-radius: 8px; border: 1px solid #cccccc;
-  min-width: 160px;
+  min-width: 160px; 
 }
 .ol-popup:after, .ol-popup:before {
   top: 100%; border: solid transparent; content: " ";
   height: 0; width: 0; position: absolute; pointer-events: none;
 }
-.ol-popup:after {
-  border-top-color: white; border-width: 10px;
-  left: 48px; margin-left: -10px;
-}
-.ol-popup:before {
-  border-top-color: #cccccc; border-width: 11px;
-  left: 48px; margin-left: -11px;
-}
+
 </style>
 </head>
 <body>
@@ -247,8 +240,10 @@ body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
             const props = json.features[0].properties;
             console.log("속성:", props);
             const nameVal = props.name || "(이름 없음)";
-            popupEl.innerHTML = "<b>교량명:</b> " + nameVal;
-            overlay.setPosition(evt.coordinate);
+            popupEl.innerHTML =
+            	  '<div><b>교량명:</b> ' + nameVal + '</div>' +
+            	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
+            	overlay.setPosition(evt.coordinate);
           } else {
             overlay.setPosition(undefined);
           }
@@ -281,8 +276,10 @@ body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
           if (json.features && json.features.length > 0) {
             const props = json.features[0].properties;
             const nameVal = props.name || "(이름 없음)";
-            popupEl.innerHTML = "<b>육교명:</b> " + nameVal;
-            overlay.setPosition(evt.coordinate);
+            popupEl.innerHTML =
+            	  '<div><b>육교명:</b> ' + nameVal + '</div>' +
+            	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
+        	overlay.setPosition(evt.coordinate);
           } else {
             overlay.setPosition(undefined);
           }
@@ -315,8 +312,46 @@ body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
           if (json.features && json.features.length > 0) {
             const props = json.features[0].properties;
             const nameVal = props.name || "(이름 없음)";
-            popupEl.innerHTML = "<b>터널명:</b> " + nameVal;
-            overlay.setPosition(evt.coordinate);
+            popupEl.innerHTML =
+            	  '<div><b>터널명:</b> ' + nameVal + '</div>' +
+            	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
+        	overlay.setPosition(evt.coordinate);
+          } else {
+            overlay.setPosition(undefined);
+          }
+        })
+        .catch(err => {
+          console.error("GetFeatureInfo 에러:", err);
+          overlay.setPosition(undefined);
+        });
+    }
+  });
+  
+  // === 클릭 이벤트: 마포에서 a13 가져오기 ===
+  map.on('singleclick', function(evt) {
+    if (!mapoLayer.getVisible()) return;
+
+    const viewRes = map.getView().getResolution();
+    const url = mapoLayer.getSource().getFeatureInfoUrl(
+      evt.coordinate,
+      viewRes,
+      "EPSG:3857",
+      { INFO_FORMAT: "application/json" }
+    );
+
+    console.log("📌 URL:", url);
+
+    if (url) {
+      fetch(url)
+        .then(r => r.json())
+        .then(json => {
+          if (json.features && json.features.length > 0) {
+            const props = json.features[0].properties;
+            const nameVal = props.a13 || "(이름 없음)";
+            popupEl.innerHTML =
+            	  '<div><b>건물명:</b> ' + nameVal + '</div>' +
+            	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
+        	overlay.setPosition(evt.coordinate);
           } else {
             overlay.setPosition(undefined);
           }
