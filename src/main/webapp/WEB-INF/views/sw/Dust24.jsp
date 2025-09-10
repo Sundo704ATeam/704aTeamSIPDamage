@@ -148,6 +148,7 @@
       <a class="sub-link" href="${pageContext.request.contextPath}/dust">실시간 PM10 측정정보</a>
       <a class="sub-link" href="${pageContext.request.contextPath}/dust24">PM10 예측정보</a>
       <a class="sub-link" href="${pageContext.request.contextPath}/dustTest">측정소 3개월 타임라인</a>
+      <a class="sub-link" href="${pageContext.request.contextPath}/dustTest2">측정소 1개월 타임라인+실시간</a>
     </div>
   </aside>
 
@@ -220,7 +221,8 @@
     var BASE_FCST   = 'https://apis.data.go.kr/B552584/ArpltnInforInqireSvc';
     var PATH_FCST   = '/getMinuDustFrcstDspth';
     var LOCAL_PROXY = '${pageContext.request.contextPath}/proxy.jsp';
-
+	
+    function viaProxy(u){ return LOCAL_PROXY + '?url=' + encodeURIComponent(u); }
     function fetchTextViaLocalProxy(url){
       return fetch(LOCAL_PROXY + '?url=' + encodeURIComponent(url))
         .then(function(res){ if(!res.ok) throw new Error('HTTP '+res.status); return res.text(); });
@@ -320,22 +322,28 @@
     }
 
     function renderImages(item){
-      var images = collectImagesFromItem(item);
-      thumbsEl.innerHTML = '';
-      if (images.length){
-        noImageTip.style.display='none';
-        var hero = images.find(function(u){ return /gif|ani/i.test(u); }) || images[0];
-        heroEl.src = hero;
-        images.forEach(function(u){
-          var im = document.createElement('img');
-          im.src = u;
-          im.addEventListener('click', function(){ heroEl.src = u; });
-          thumbsEl.appendChild(im);
-        });
-      } else {
-        heroEl.removeAttribute('src');
-        noImageTip.style.display='block';
-      }
+    	  var images = collectImagesFromItem(item);
+    	  thumbsEl.innerHTML = '';
+    	  if (images.length){
+    	    noImageTip.style.display='none';
+    	    // 혼합콘텐츠 회피(http->https) + 프록시 경유
+    	    var normalized = images.map(function(u){
+    	      if (/^http:\/\//i.test(u)) u = u.replace(/^http:\/\//i, 'https://');
+    	      return viaProxy(u);
+    	    });
+    	    var hero = normalized.find(function(u){ return /gif|ani/i.test(u); }) || normalized[0];
+    	    heroEl.src = hero;
+
+    	    normalized.forEach(function(u){
+    	      var im = document.createElement('img');
+    	      im.src = u;
+    	      im.addEventListener('click', function(){ heroEl.src = u; });
+    	      thumbsEl.appendChild(im);
+    	    });
+    	  } else {
+    	    heroEl.removeAttribute('src');
+    	    noImageTip.style.display='block';
+    	  }
     }
 
     function renderMeta(item){
@@ -405,6 +413,15 @@
           alert('예보 데이터가 없습니다. 날짜를 바꾸거나 나중에 다시 시도하세요.');
           return;
         }
+        
+        //이미지 디버깅
+        console.log('raw item =', item);
+        console.log('imageUrl1..9 =',
+          item.imageUrl1, item.imageUrl2, item.imageUrl3,
+          item.imageUrl4, item.imageUrl5, item.imageUrl6,
+          item.imageUrl7, item.imageUrl8, item.imageUrl9);
+        
+        
         renderGrades(item.informGrade);
         renderImages(item);
         renderMeta(item);
@@ -413,7 +430,7 @@
         alert('조회 실패: ' + (e.message || e));
       });
     });
-
+	
     (function init(){
       setToday();
       document.getElementById('btnFetch').click();

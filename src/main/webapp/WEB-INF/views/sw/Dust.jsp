@@ -120,6 +120,7 @@
       <a class="sub-link" href="${pageContext.request.contextPath}/dust">실시간 PM10 측정정보</a>
       <a class="sub-link" href="${pageContext.request.contextPath}/dust24">PM10 예측정보</a>
       <a class="sub-link" href="${pageContext.request.contextPath}/dustTest">측정소 3개월 타임라인</a>
+      <a class="sub-link" href="${pageContext.request.contextPath}/dustTest2">측정소 1개월 타임라인+실시간</a>
     </div>
   </aside>
 
@@ -146,7 +147,7 @@
     var PATH_REAL   = '/getCtprvnRltmMesureDnsty';
     var BASE_INFO   = 'https://apis.data.go.kr/B552584/MsrstnInfoInqireSvc';
     var PATH_INFO   = '/getMsrstnList';
-    var SIDO_LIST   = ['서울','부산','대구','인천','광주','대전','울산','세종','경기','강원','충북','충남','전북','전남','경북','경남','제주'];
+    var SIDO_LIST   = ['서울'];
 
     var LOCAL_PROXY = '${pageContext.request.contextPath}/proxy.jsp';
 

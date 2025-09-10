@@ -78,7 +78,8 @@
     <div id="dustSub" class="submenu" role="region" aria-label="황사 하위 메뉴">
       <a class="sub-link" href="${pageContext.request.contextPath}/dust">실시간 PM10 측정정보</a>
       <a class="sub-link" href="${pageContext.request.contextPath}/dust24">PM10 예측정보</a>
-      <a class="sub-link" href="${pageContext.request.contextPath}/dustTest">측정소 3개월 지도 애니메이션</a>
+      <a class="sub-link" href="${pageContext.request.contextPath}/dustTest">측정소 3개월 타임라인</a>
+      <a class="sub-link" href="${pageContext.request.contextPath}/dustTest2">측정소 1개월 타임라인+실시간</a>
     </div>
   </aside>
 
@@ -96,7 +97,7 @@
       <select id="field">
         <option value="pm10Value24" selected>PM10 (24시간 이동)</option>
         <option value="pm10Value">PM10 (1시간)</option>
-        <option value="pm25Value">PM2.5 (1시간)</option>
+        <option value="pm25Value">PM2.5(1시간)</option>
       </select>
       <button id="btnLoad" class="btn">불러오기</button>
     </div>
