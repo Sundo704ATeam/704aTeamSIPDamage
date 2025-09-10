@@ -1,25 +1,33 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<div id="map"></div>
-<script>
-  (function () {
-    if (!window.ol) { console.error('OpenLayers not loaded'); return; }
-
-    // 이미 만들어진 전역 지도가 있으면, 같은 target만 재지정
-    if (window.olMap instanceof ol.Map) {
-      window.olMap.setTarget('map');
-      return;
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Vworld 2.0 지도</title>
+  <!-- Vworld API 2.0 -->
+<script type="text/javascript" src="https://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=60DA3367-BC75-32D9-B593-D0386112A70C"></script>
+  <style>
+    body, html { margin:0; padding:0; width:100%; height:100%; }
+    #map { width:100%; height:100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    // API 로드 확인 후 실행
+    window.onload = function() {
+/*   if (typeof vworld === "undefined") {
+        alert("Vworld API 로드 실패 (Key 확인 필요)");
+        return;
+      }
+ */      vworld.init("map", "base", {
+        basemapType: "GRAPHIC",   // "GRAPHIC", "PHOTO", "HYBRID"
+        controlDensity: "FULL",
+        interaction: "ALL",
+        controlsAutoArrange: true,
+        initPosition: { x: 127.024612, y: 37.5326, z: 11 }
+      });
     }
-
-    // 전역으로 노출 (window.olMap)
-    window.olMap = new ol.Map({
-      target: 'map',
-      layers: [
-        new ol.layer.Tile({ source: new ol.source.OSM() })
-      ],
-      view: new ol.View({
-        center: ol.proj.fromLonLat([127.024612, 37.5326]),
-        zoom: 11
-      })
-    });
-  })();
-</script>
+  </script>
+</body>
+</html>

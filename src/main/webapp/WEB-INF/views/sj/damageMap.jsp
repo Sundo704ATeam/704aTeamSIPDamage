@@ -116,9 +116,14 @@ body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
 
 <footer>© 사회기반시설 스마트 유지관리 시스템</footer>
 <script>
-  // 1. 베이스맵
-  const osmLayer = new ol.layer.Tile({ source: new ol.source.OSM() });
-
+	// 1. Vworld WMTS 배경지도
+ const vworldLayer = new ol.layer.Tile({
+  source: new ol.source.XYZ({
+    url: "http://api.vworld.kr/req/wmts/1.0.0/"
+         + "60DA3367-BC75-32D9-B593-D0386112A70C"  // 🔑 API 키
+         + "/Base/{z}/{y}/{x}.png"
+  })
+});
   // 2. 시설물 WMS 레이어들
   const yookgyoLayer = new ol.layer.Tile({
     source: new ol.source.TileWMS({
@@ -159,7 +164,7 @@ body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
   // 3. 지도 생성
   const map = new ol.Map({
     target: 'map',
-    layers: [osmLayer, yookgyoLayer, gyoryangLayer, tunnelLayer, mapoLayer, cheoldoLayer],
+    layers: [vworldLayer, yookgyoLayer, gyoryangLayer, tunnelLayer, mapoLayer, cheoldoLayer],
     view: new ol.View({
       center: ol.proj.fromLonLat([127.024612, 37.5326]),
       zoom: 12, projection: 'EPSG:3857'
