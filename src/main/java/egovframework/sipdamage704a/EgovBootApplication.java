@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@ComponentScan(basePackages = "egovframework.example")
+@ComponentScan(basePackages = "egovframework.sipdamage704a")
 public class EgovBootApplication extends SpringBootServletInitializer {
 	
 	@Override
