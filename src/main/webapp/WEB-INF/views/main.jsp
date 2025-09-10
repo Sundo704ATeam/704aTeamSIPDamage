@@ -26,7 +26,7 @@
 <body>
   <jsp:include page="/WEB-INF/views/header.jsp"/>
   <jsp:include page="/WEB-INF/views/sidebar.jsp"/>
-  <jsp:include page="/WEB-INF/views/initmap.jsp"/>
+  <%-- <jsp:include page="/WEB-INF/views/initmap.jsp"/> --%>
   <footer>© 사회기반시설 스마트 유지관리 시스템</footer>
 </body>
 </html>

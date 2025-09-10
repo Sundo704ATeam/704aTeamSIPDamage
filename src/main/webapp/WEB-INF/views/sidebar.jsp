@@ -2,7 +2,7 @@
 
 <style>
   .rail{
-    position:fixed; z-index:900;
+    position:fixed; z-index:950;
     top:var(--header-h); left:0; bottom:0; width:var(--rail-w);
     background: var(--gray-700); color:#fff;
     display:flex; flex-direction:column; gap:8px; padding:16px 10px;
@@ -33,8 +33,8 @@
 
 
 <nav id="leftRail" class="rail">
-  <a class="menu-item active" href="#!">HOME</a>
-  <a class="menu-item" href="#!">노후화 패턴분석</a>
+  <a class="menu-item" href="${pageContext.request.contextPath}/">HOME</a>
+  <a class="menu-item" href="${pageContext.request.contextPath}/damageMap">노후화 패턴분석</a>
   <a class="menu-item" href="${pageContext.request.contextPath}/dust">손상진단 시뮬</a>
 </nav>
 

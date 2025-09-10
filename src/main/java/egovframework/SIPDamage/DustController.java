@@ -1,4 +1,4 @@
-package egovframework.example;
+package egovframework.SIPDamage;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
