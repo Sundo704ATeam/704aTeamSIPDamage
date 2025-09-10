@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@ComponentScan(basePackages = "egovframework.example")
 public class EgovBootApplication extends SpringBootServletInitializer {
 	
 	@Override

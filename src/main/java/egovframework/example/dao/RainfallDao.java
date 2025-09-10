@@ -8,5 +8,6 @@ public interface RainfallDao {
 
 	public String getLatestTime();
 	public void saveRainfalls(List<RainfallDto> rainfalls);
+	public List<String> getAllGuName();
 
 }

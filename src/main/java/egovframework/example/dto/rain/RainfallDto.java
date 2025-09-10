@@ -2,18 +2,17 @@ package egovframework.example.dto.rain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RainfallDto {
-	@JsonProperty("RAINGAUGE_CODE")
 	private int gaugeCode;
-	
-	@JsonProperty("RECEIVE_TIME")
 	private String time;
-	
-	@JsonProperty("RAINFALL10")
-	private String rainfall;
+	private double rainfall;
 }

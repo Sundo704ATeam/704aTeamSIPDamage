@@ -21,7 +21,20 @@ public class RainfallApiRespDto {
 		private int totalCount;
 		
 		@JsonProperty("row")
-		private List<RainfallDto> rainfalls;
+		private List<Rainfall> rainfalls;
+	}
+	
+	@Getter
+	@Setter
+	public static class Rainfall {
+		@JsonProperty("RAINGAUGE_CODE")
+		private int gaugeCode;
+		
+		@JsonProperty("RECEIVE_TIME")
+		private String time;
+		
+		@JsonProperty("RAINFALL10")
+		private String rainfall;
 	}
 
 }

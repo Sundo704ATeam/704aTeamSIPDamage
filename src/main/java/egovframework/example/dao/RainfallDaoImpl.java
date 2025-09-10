@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RainfallDaoImpl implements RainfallDao {
 	
-	// private final SqlSession session;
+	 private final SqlSession session;
 
 	@Override
 	public String getLatestTime() {
@@ -22,11 +22,24 @@ public class RainfallDaoImpl implements RainfallDao {
 
 	@Override
 	public void saveRainfalls(List<RainfallDto> rainfalls) {
-//		try {
-//			session.insert("insertRainfalls", rainfalls);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			session.insert("insertRainfalls", rainfalls);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<String> getAllGuName() {
+		List<String> guNames = null;
+		
+		try {
+			guNames = session.selectList("selectGuNames");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return guNames;
 	}
 
 }

@@ -77,7 +77,11 @@
 	    	<artifactId>spring-boot-starter-tomcat</artifactId>
 	    	<scope>provided</scope>
 	    </dependency>
-
+	    <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		
 		<!-- 표준프레임워크 실행환경 -->
         <dependency>
 		    <groupId>org.egovframe.rte</groupId>
@@ -166,29 +170,18 @@
 	    
 	    <!-- MyBatis -->
 	    <dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>3.5.19</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.mybatis</groupId>
-		    <artifactId>mybatis-spring</artifactId>
-		    <version>3.0.5</version>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>2.3.1</version>
 		</dependency>
 
-    	<!-- JDBC (spring 관련 dependency도 함께 지정해야함) -->
-	    <!--<dependency>
-	        <groupId>org.springframework</groupId>
-	        <artifactId>spring-jdbc</artifactId>
-	        <version>4.3.30.RELEASE</version>
-	    </dependency>-->
 	    
 	    <!-- DB connection pool -->
-	    <dependency>
+	    <!--<dependency>
 	        <groupId>org.apache.commons</groupId>
 	        <artifactId>commons-dbcp2</artifactId>
 	        <version>2.9.0</version>
-    	</dependency>
+    	</dependency>-->
 		
 	</dependencies>
 
