@@ -1,4 +1,4 @@
-package egovframework.example;
+package egovframework.sipdamage704a;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,4 +26,11 @@ public class DustController {
 		
 		return "sw/DustTest"; 
 	}
+	
+	@GetMapping("dustTest2")
+	public String dustTest2Page() {
+		
+		return "sw/DustTest2";
+	}
+	
 }

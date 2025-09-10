@@ -1,11 +1,11 @@
-package egovframework.example.dao;
+package egovframework.sipdamage704a.dao;
 
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import egovframework.example.dto.rain.RainfallDto;
+import egovframework.sipdamage704a.dto.rain.RainfallDto;
 import lombok.RequiredArgsConstructor;
 
 @Repository

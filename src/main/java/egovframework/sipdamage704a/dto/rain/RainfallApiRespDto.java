@@ -1,4 +1,4 @@
-package egovframework.example.dto.rain;
+package egovframework.sipdamage704a.dto.rain;
 
 import java.util.List;
 

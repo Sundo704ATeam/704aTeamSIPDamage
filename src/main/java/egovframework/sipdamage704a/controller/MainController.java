@@ -1,4 +1,4 @@
-package egovframework.example.controller;
+package egovframework.sipdamage704a.controller;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class MainController {
-	
-	private final DataSource dataSource;
 
 	@GetMapping("/")
 	public String mainPage(Model model) {
@@ -23,20 +21,4 @@ public class MainController {
 		return "main";
 	}
 	
-	@GetMapping("/healthcheck")
-	public String testPage(Model model) {
-		String message = "DB CONNECTION NULL";
-		
-		try { 
-			dataSource.getConnection();
-			message = "DB CONNECTION SUCCESS";
-		} catch (SQLException e) {
-			e.printStackTrace();
-			message = "DB CONNECTION ERROR";
-		}
-	
-		model.addAttribute("message", message);
-		
-		return "healthcheck";
-	}
 }

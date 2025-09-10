@@ -1,8 +1,8 @@
-package egovframework.example.service;
+package egovframework.sipdamage704a.service;
 
 import java.util.List;
 
-import egovframework.example.dto.rain.RainfallDto;
+import egovframework.sipdamage704a.dto.rain.RainfallDto;
 
 public interface RainfallService {
 	public List<RainfallDto> getRainfalls();
