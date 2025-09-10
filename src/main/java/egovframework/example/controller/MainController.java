@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class MainController {
 	
 	private final DataSource dataSource;
-	
+
 	@GetMapping("/")
 	public String mainPage(Model model) {
 		System.out.println("====================== START ======================");
