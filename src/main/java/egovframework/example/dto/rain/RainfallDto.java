@@ -1,4 +1,4 @@
-package egovframework.dto.rain;
+package egovframework.example.dto.rain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

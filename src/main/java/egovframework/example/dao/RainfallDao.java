@@ -1,8 +1,8 @@
-package egovframework.dao;
+package egovframework.example.dao;
 
 import java.util.List;
 
-import egovframework.dto.rain.RainfallDto;
+import egovframework.example.dto.rain.RainfallDto;
 
 public interface RainfallDao {
 

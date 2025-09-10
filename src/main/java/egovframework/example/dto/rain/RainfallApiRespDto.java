@@ -1,4 +1,4 @@
-package egovframework.dto.rain;
+package egovframework.example.dto.rain;
 
 import java.util.List;
 

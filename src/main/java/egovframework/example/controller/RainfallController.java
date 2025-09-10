@@ -1,10 +1,10 @@
-package egovframework.controller;
+package egovframework.example.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import egovframework.service.RainfallService;
+import egovframework.example.service.RainfallService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
