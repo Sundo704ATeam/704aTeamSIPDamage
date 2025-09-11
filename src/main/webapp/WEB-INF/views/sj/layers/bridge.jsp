@@ -32,8 +32,34 @@
               const props = json.features[0].properties;
               console.log("속성:", props);
               const nameVal = props.name || "(이름 없음)";
+           /* const lengVal = Number(props.leng).toFixed(2) || "미상";
+              const widtVal = Number(props.widt).toFixed(2) || "미상";
+               */
+              const KIND_MAP = {
+            		  BRK000: "미분류",
+            		  BRK001: "도로교",
+            		  BRK002: "보도교",
+            		  BRK003: "철교"
+            		};
+              const kindVal = KIND_MAP[props.kind] || "미상";
+              
+              const QUAL_MAP = {
+            		  BRQ000: "미분류",
+            		  BRQ001: "콘크리트",
+            		  BRQ002: "강재",
+            		  BRQ003: "목재",
+            		  BRQ004: "석재",
+            		  BRQ005: "기타",
+            		};
+      		  const qualVal = QUAL_MAP[props.qual] || "미상";
+              
               popupEl.innerHTML =
-              	  '<div><b>교량명:</b> ' + nameVal + '</div>' +
+              	  '<div><b>교량명:</b> ' + nameVal + 
+              	       /* '<br><b> 길이:</b> ' + lengVal +
+              	       '<br><b> 넓이:</b> ' + widtVal +
+              	        */
+              	       '<br><b> 용도:</b> ' + kindVal +
+              	       '<br><b> 구조:</b> ' + qualVal + '</div>' +
               	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
               	overlay.setPosition(evt.coordinate);
             } else {
