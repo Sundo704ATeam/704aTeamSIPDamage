@@ -25,14 +25,28 @@
       "EPSG:3857", { INFO_FORMAT: "application/json" }
     );
     if (url) {
-      fetch(url).then(r => r.json()).then(json => {
-        if (json.features.length > 0) {
-          const props = json.features[0].properties;
-          showPopup(evt.coordinate, "<b>교량명:</b> " + (props.name || "(이름 없음)"));
-        }
-      });
-    }
-  });
+        fetch(url)
+          .then(r => r.json())
+          .then(json => {
+            if (json.features && json.features.length > 0) {
+              const props = json.features[0].properties;
+              console.log("속성:", props);
+              const nameVal = props.name || "(이름 없음)";
+              popupEl.innerHTML =
+              	  '<div><b>교량명:</b> ' + nameVal + '</div>' +
+              	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
+              	overlay.setPosition(evt.coordinate);
+            } else {
+              overlay.setPosition(undefined);
+            }
+          })
+          .catch(err => {
+            console.error("GetFeatureInfo 에러:", err);
+            overlay.setPosition(undefined);
+          });
+      }
+    });
+
 </script>
 
 </body>
