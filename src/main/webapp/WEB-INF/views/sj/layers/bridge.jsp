@@ -60,7 +60,10 @@
               	        */
               	       '<br><b> 용도:</b> ' + kindVal +
               	       '<br><b> 구조:</b> ' + qualVal + '</div>' +
-              	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
+              	     '<div style="margin-top:6px; display:flex; gap:6px;">' +
+              	    '<button class="btn btn-sm btn-primary">상세 보기</button>' +
+              	    '<button class="btn btn-sm btn-danger">점검 하기</button>' +
+              	  	'</div>';
               	overlay.setPosition(evt.coordinate);
             } else {
               overlay.setPosition(undefined);
