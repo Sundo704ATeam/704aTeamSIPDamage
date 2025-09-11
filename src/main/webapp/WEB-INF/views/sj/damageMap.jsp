@@ -66,7 +66,7 @@
       position: absolute; background: white;
       box-shadow: 0 1px 4px rgba(0,0,0,0.2);
       padding: 10px; border-radius: 8px; border: 1px solid #cccccc;
-      min-width: 160px; 
+      min-width: 200px; 
     }
   </style>
 </head>
@@ -84,6 +84,7 @@
         <button id="btnTunnel" class="btn btn-light btn-sm">터널</button>
         <button id="btnStruc" class="btn btn-light btn-sm">건축물</button>
         <button id="btnCheoldo" class="btn btn-light btn-sm">철도</button>
+        <button id="btnHachun" class="btn btn-light btn-sm">하천</button>
         <button id="btnAll" class="btn btn-light btn-sm">전체 보기</button>
         <button id="btnAlldown" class="btn btn-light btn-sm">전체 해제</button>
       </div>
@@ -155,7 +156,8 @@
     ["btnFootbridge", "yookgyoLayer"],
     ["btnTunnel", "tunnelLayer"],
     ["btnStruc", "mapoLayer"],
-    ["btnCheoldo", "cheoldoLayer"]
+    ["btnCheoldo", "cheoldoLayer"],
+    ["btnHachun", "hachunLayer"]
   ];
 
   document.getElementById("btnAll").addEventListener("click", () => {
@@ -191,5 +193,6 @@
   <jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp"/>
   <jsp:include page="/WEB-INF/views/sj/layers/building.jsp"/>
   <jsp:include page="/WEB-INF/views/sj/layers/railway.jsp"/>
+  <jsp:include page="/WEB-INF/views/sj/layers/hachun.jsp"/>
 </body>
 </html>
