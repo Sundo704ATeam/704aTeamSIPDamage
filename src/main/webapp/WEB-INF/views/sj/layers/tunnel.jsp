@@ -4,99 +4,84 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>터널 레이어</title>
 </head>
 <body>
 <script>
-  window.tunnelLayer = new ol.layer.Tile({
-    source: new ol.source.TileWMS({
-      url: "http://172.30.1.33:8081/geoserver/wms",
-      params: { "LAYERS": "dbdbdb:tunnel", "TILED": true },
-      serverType: "geoserver", transition: 0
-    }), visible: false
+  // 1) 터널 레이어 (WFS + 파란색 스타일)
+  window.tunnelLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+      url: "http://172.30.1.33:8081/geoserver/wfs?service=WFS&version=1.0.0&" +
+           "request=GetFeature&typeName=dbdbdb:tunnel&outputFormat=application/json&srsName=EPSG:3857",
+      format: new ol.format.GeoJSON()
+    }),
+    style: new ol.style.Style({
+      stroke: new ol.style.Stroke({ color: 'blue', width: 2 }),           // 파란색 테두리
+      fill: new ol.style.Fill({ color: 'rgba(0,0,255,0.4)' })             // 반투명 파란색 채우기
+    }),
+    visible: false
   });
   map.addLayer(window.tunnelLayer);
   bindToggle("btnTunnel", window.tunnelLayer);
 
+  // 2) 클릭 이벤트 (WFS용)
   map.on("singleclick", evt => {
-    if (!window.tunnelLayer.getVisible()) return;
-    const url = window.tunnelLayer.getSource().getFeatureInfoUrl(
-      evt.coordinate, map.getView().getResolution(),
-      "EPSG:3857", { INFO_FORMAT: "application/json" }
-    );
-    if (url) {
-        fetch(url)
+    map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+      if (layer !== window.tunnelLayer) return;
+
+      const props = feature.getProperties();
+      const nameVal = props.name || "(이름 없음)";
+      const ufidVal = props.ufid;
+
+      // 팝업 HTML
+      popupEl.innerHTML =
+        '<div><b>터널명:</b> ' + nameVal +
+        '<br><b>도형번호:</b> ' + ufidVal + '</div>' +
+        '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
+        '<div style="margin-top:6px; display:flex; gap:6px;">' +
+          '<button id="btnTunnelDetail" class="btn btn-sm btn-primary">상세 보기</button>' +
+          '<button id="btnTunnelInspect" class="btn btn-sm btn-danger">점검 하기</button>' +
+        '</div>';
+
+      overlay.setPosition(evt.coordinate);
+
+      // 버튼 이벤트
+      document.getElementById("btnTunnelDetail")?.addEventListener("click", () => {
+        window.open("/tunnel/detail?id=" + props.id, "_blank", "width=1000,height=800");
+      });
+      document.getElementById("btnTunnelInspect")?.addEventListener("click", () => {
+        window.open("/tunnel/inspect?id=" + props.id, "_blank", "width=1200,height=900");
+      });
+
+      // 3) 안전진단표 조회
+      if (ufidVal) {
+        fetch("${pageContext.request.contextPath}/api/damage/" + ufidVal + "/inspection")
           .then(r => r.json())
-          .then(json => {
-            if (json.features && json.features.length > 0) {
-              var props = json.features[0].properties;
-              var nameVal = props.name || "(이름 없음)";
-              var ufidVal = props.ufid;
-              
-              popupEl.innerHTML =
-              	  '<div><b>터널명:</b> ' + nameVal + 
-              	  '<br><b>도형번호:</b> ' + ufidVal + '</div>' +
-	              '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">' +
-	              '안전진단표 불러오는 중...' +
-	              '</div>' +
-	              '<div style="margin-top:6px; display:flex; gap:6px;">' +
-	                '<button id="btnBridgeDetail" class="btn btn-sm btn-primary">상세 보기</button>' +
-	                '<button id="btnBridgeInspect" class="btn btn-sm btn-danger">점검 하기</button>' +
-	              '</div>';
-	              
-	              
-          	overlay.setPosition(evt.coordinate);
-          	
-            // 2) 안전진단표 조회
-            var tunnelId = props.ufid;
-
-            console.log("선택된 UFID:", tunnelId);
-
-            if (tunnelId) {
-              fetch("${pageContext.request.contextPath}/api/damage/" + tunnelId + "/inspection")
-                .then(function(r) { return r.json(); })
-                .then(function(map) {
-				  var inspBox = document.getElementById("inspBox");
-				
-				  // API가 에러 JSON을 반환한 경우 체크
-				  if (!map || map.error || map.status >= 400) {
-				    inspBox.innerHTML = "<div style='color:red;'>점검표 불러오기 실패</div>";
-				    return;
-				  }
-				
-				  if (Object.keys(map).length === 0) {
-				    inspBox.innerHTML = "<div>점검 이력 없음</div>";
-				  } else {
-				    var html = '<table class="table table-sm table-bordered mb-0">';
-				    html += "<thead><tr><th>손상유형</th><th>등급</th></tr></thead><tbody>";
-				    for (var key in map) {
-				      if (map.hasOwnProperty(key)) {
-				        var value = map[key];
-				        html += "<tr><td>" + key + "</td><td>" + (value != null && value !== "" ? value : '-') + "</td></tr>";
-				      }
-				    }
-				    html += "</tbody></table>";
-				    inspBox.innerHTML = html;
-				  }
-				})
-                .catch(function(err) {
-                  console.error("점검표 로드 오류:", err);
-                  document.getElementById("inspBox").innerHTML =
-                    "<div style='color:red;'>점검표 불러오기 실패</div>";
-                });
-            }
+          .then(map => {
+            const inspBox = document.getElementById("inspBox");
+            if (!map || Object.keys(map).length === 0) {
+              inspBox.innerHTML = "<div>점검 이력 없음</div>";
             } else {
-              /* overlay.setPosition(undefined); */
+              let html = '<table class="table table-sm table-bordered mb-0">';
+              html += "<thead><tr><th>손상유형</th><th>등급</th></tr></thead><tbody>";
+              for (var key in map) {
+            	  if (map.hasOwnProperty(key)) {
+            	    var value = map[key];
+            	    html += "<tr><td>" + key + "</td><td>" + (value != null && value !== "" && value !== false ? value : '-') + "</td></tr>";
+            	  }
+            	}
+              html += "</tbody></table>";
+              inspBox.innerHTML = html;
             }
           })
           .catch(err => {
-            console.error("GetFeatureInfo 에러:", err);
-            overlay.setPosition(undefined);
+            console.error("점검표 로드 오류:", err);
+            document.getElementById("inspBox").innerHTML =
+              "<div style='color:red;'>점검표 불러오기 실패</div>";
           });
       }
     });
-    
+  });
 </script>
-
 </body>
 </html>
