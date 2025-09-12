@@ -36,7 +36,7 @@
               	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
           	overlay.setPosition(evt.coordinate);
             } else {
-              overlay.setPosition(undefined);
+              /* overlay.setPosition(undefined) */;
             }
           })
           .catch(err => {

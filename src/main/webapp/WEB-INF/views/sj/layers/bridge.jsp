@@ -105,9 +105,9 @@
                 });
             }
 
-          } else {
+          }/*  else {
             overlay.setPosition(undefined);
-          }
+          } */
         })
         .catch(function(err) {
           console.error("GetFeatureInfo 에러:", err);
