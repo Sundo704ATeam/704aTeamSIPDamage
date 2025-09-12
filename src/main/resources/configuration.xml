@@ -8,4 +8,6 @@
 		<typeAlias type="egovframework.sipdamage704a.dto.dust.DustStationDto" alias="DustStationDto"/>
 		<typeAlias type="egovframework.sipdamage704a.dto.damage.Damage_InspectDto" alias="Damage_InspectDto"/> 
 	</typeAliases>
+	
+	
 </configuration>
