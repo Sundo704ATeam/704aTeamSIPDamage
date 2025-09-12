@@ -36,7 +36,8 @@
             console.log("속성:", props);
             console.log("교량 UFID:", props.ufid);
             var nameVal = props.name || "(이름 없음)";
-
+			var ufidVal = props.ufid;
+           
             var KIND_MAP = { BRK000: "미분류", BRK001: "도로교", BRK002: "보도교", BRK003: "철교" };
             var kindVal = KIND_MAP[props.kind] || "미상";
 
@@ -46,6 +47,7 @@
             // 1) 팝업 기본 골격 (inspBox 비워두기)
             popupEl.innerHTML =
               '<div><b>교량명:</b> ' + nameVal +
+              '<br><b>고유번호:</b> ' + ufidVal + 
               '<br><b>용도:</b> ' + kindVal +
               '<br><b>구조:</b> ' + qualVal + '</div>' +
               '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">' +
@@ -66,7 +68,7 @@
               window.open("/bridge/inspect?id=" + props.id, "_blank", "width=1200,height=900");
             });
 
-         // 2) 안전진단표 조회
+            // 2) 안전진단표 조회
             var bridgeId = props.ufid;
 
             console.log("선택된 UFID:", bridgeId);
