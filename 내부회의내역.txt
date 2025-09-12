@@ -35,3 +35,6 @@ ERD 설정, SRID 세팅, 레이어 안나오는거 트러블슈팅
 노후화 패턴 분석 데이터베이스 정규화
 Rest Api 사용
 레이어 별로 분리
+
+9/12 
+mybatis 안되는 문제 -> pom.xml 수정해야됨(spring starter)

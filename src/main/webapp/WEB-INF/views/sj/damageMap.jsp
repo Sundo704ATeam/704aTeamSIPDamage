@@ -101,7 +101,7 @@
   const vworldLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
       url: "http://api.vworld.kr/req/wmts/1.0.0/"
-           + "60DA3367-BC75-32D9-B593-D0386112A70C"  // 🔑 API 키
+           + "60DA3367-BC75-32D9-B593-D0386112A70C"
            + "/Base/{z}/{y}/{x}.png"
     })
   });
@@ -127,11 +127,41 @@
     overlay.setPosition(coord);
   }
 
-  // === 지도 빈 곳 클릭 시 팝업 닫기 ===
+  // === 통합 클릭 이벤트 ===
   map.on("singleclick", (evt) => {
-    const feature = map.forEachFeatureAtPixel(evt.pixel, f => f);
-    if (!feature) {
-      overlay.setPosition(undefined);
+    overlay.setPosition(undefined);
+    popupEl.innerHTML = "";
+
+    const layers = [
+      window.gyoryangLayer,
+      window.yookgyoLayer,
+      window.tunnelLayer,
+      window.mapoLayer,
+      window.cheoldoLayer,
+      window.hachunLayer
+    ];
+
+    for (const layer of layers) {
+      if (!layer || !layer.getVisible()) continue;
+
+      const url = layer.getSource().getFeatureInfoUrl(
+        evt.coordinate,
+        map.getView().getResolution(),
+        "EPSG:3857",
+        { INFO_FORMAT: "application/json" }
+      );
+
+      if (url) {
+        fetch(url).then(r => r.json()).then(json => {
+          if (json.features && json.features.length > 0) {
+            const props = json.features[0].properties;
+            showPopup(evt.coordinate,
+              "<b>이름:</b> " + (props.name || "없음")
+            );
+          }
+        });
+        break; // ★ 첫 번째로 걸린 레이어만 처리
+      }
     }
   });
 
@@ -172,7 +202,7 @@
       window[varName].setVisible(false);
       document.getElementById(id)?.classList.remove("active");
     });
-    overlay.setPosition(undefined); // 전체 해제 시 팝업 닫기
+    overlay.setPosition(undefined);
   });
 
   // === 사이드바 접기 ===
@@ -188,11 +218,11 @@
 </script>
 
   <!-- 레이어 분리 include -->
+  <jsp:include page="/WEB-INF/views/sj/layers/hachun.jsp"/>
+  <jsp:include page="/WEB-INF/views/sj/layers/footbridge.jsp"/> 
   <jsp:include page="/WEB-INF/views/sj/layers/bridge.jsp"/>
-  <jsp:include page="/WEB-INF/views/sj/layers/footbridge.jsp"/>
   <jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp"/>
   <jsp:include page="/WEB-INF/views/sj/layers/building.jsp"/>
   <jsp:include page="/WEB-INF/views/sj/layers/railway.jsp"/>
-  <%-- <jsp:include page="/WEB-INF/views/sj/layers/hachun.jsp"/> --%>
 </body>
 </html>

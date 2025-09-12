@@ -8,19 +8,19 @@
 </head>
 <body>
 <script>
-  window.tunnelLayer = new ol.layer.Tile({
+  window.hachunLayer = new ol.layer.Tile({
     source: new ol.source.TileWMS({
       url: "http://172.30.1.33:8081/geoserver/wms",
-      params: { "LAYERS": "dbdbdb:tunnel", "TILED": true },
+      params: { "LAYERS": "dbdbdb:river", "TILED": true },
       serverType: "geoserver", transition: 0
     }), visible: false
   });
-  map.addLayer(window.tunnelLayer);
-  bindToggle("btnTunnel", window.tunnelLayer);
+  map.addLayer(window.hachunLayer);
+  bindToggle("btnHachun", window.hachunLayer);
 
   map.on("singleclick", evt => {
-    if (!window.tunnelLayer.getVisible()) return;
-    const url = window.tunnelLayer.getSource().getFeatureInfoUrl(
+    if (!window.hachunLayer.getVisible()) return;
+    const url = window.hachunLayer.getSource().getFeatureInfoUrl(
       evt.coordinate, map.getView().getResolution(),
       "EPSG:3857", { INFO_FORMAT: "application/json" }
     );
@@ -30,9 +30,9 @@
           .then(json => {
             if (json.features && json.features.length > 0) {
               const props = json.features[0].properties;
-              const nameVal = props.name || "(이름 없음)";
+              const nameVal = props.dgm_nm || "(이름 없음)";
               popupEl.innerHTML =
-              	  '<div><b>터널명:</b> ' + nameVal + '</div>' +
+              	  '<div><b>하천명:</b> ' + nameVal + '</div>' +
               	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
           	overlay.setPosition(evt.coordinate);
             } else {
@@ -45,7 +45,6 @@
           });
       }
     });
-    
 </script>
 
 </body>
