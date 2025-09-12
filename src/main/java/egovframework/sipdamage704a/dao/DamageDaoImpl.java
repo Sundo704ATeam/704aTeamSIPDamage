@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import egovframework.sipdamage704a.dto.damage.bridgeDto;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -22,5 +23,16 @@ public class DamageDaoImpl implements DamageDao {
 		
 		return result;
 	}
+
+	@Override
+	public bridgeDto selectBridge(String ufid) {
+	    System.out.println("DamageDaoImpl selectBridge ufid => " + ufid);
+	    bridgeDto bridge = session.selectOne(
+	        "egovframework.DetailMapper.selectBridge", ufid
+	    );
+	    System.out.println("DamageDaoImpl selectBridge result => " + bridge);
+	    return bridge;
+	}
+
 
 }

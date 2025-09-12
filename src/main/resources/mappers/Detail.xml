@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.DetailMapper">
+	<select id="selectBridge" parameterType="String" resultType="egovframework.sipdamage704a.dto.damage.bridgeDto">
+	SELECT name,
+		   ufid, leng, widt, 
+		   eymd, rest, scls, fmta
+	FROM public.gyoryang
+	WHERE ufid = #{ufid}	
+	</select>
+	
+</mapper>

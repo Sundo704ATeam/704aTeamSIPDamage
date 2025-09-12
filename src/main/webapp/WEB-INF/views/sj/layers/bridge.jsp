@@ -60,7 +60,7 @@
 
             // 버튼 이벤트
             document.getElementById("btnBridgeDetail")?.addEventListener("click", function() {
-              window.open("/bridge/detail?id=" + props.id, "_blank", "width=1000,height=800");
+              window.open("/SIPDamage/bridge/detail?ufid=" + props.ufid, "_blank", "width=500,height=400");
             });
             document.getElementById("btnBridgeInspect")?.addEventListener("click", function() {
               window.open("/bridge/inspect?id=" + props.id, "_blank", "width=1200,height=900");
