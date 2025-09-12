@@ -38,3 +38,5 @@ Rest Api 사용
 
 9/12 
 mybatis 안되는 문제 -> pom.xml 수정해야됨(spring starter)
+wfs로 해볼까-> 이벤트 충돌나서 고민해봐야될듯 
+
