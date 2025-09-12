@@ -17,12 +17,12 @@ public class Damage_InspectDto {
 	private String ufid;
 	private String gid;
 	private String crack_ins;
-	private String elecLeakage_ins;
+	private String elecleakage_ins;
 	private String leakage_ins;
 	private String deformation_ins;
 	private String anomaly_ins;
 	private int crack_cnt;
-	private int elecLeakage_cnt;
+	private int elecleakage_cnt;
 	private int leakage_cnt;
 	private int deformation_cnt;
 	private int anomaly_cnt;
