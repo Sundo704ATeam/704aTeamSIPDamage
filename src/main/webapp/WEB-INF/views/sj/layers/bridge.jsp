@@ -61,10 +61,21 @@
               	       '<br><b> 용도:</b> ' + kindVal +
               	       '<br><b> 구조:</b> ' + qualVal + '</div>' +
               	     '<div style="margin-top:6px; display:flex; gap:6px;">' +
-              	    '<button class="btn btn-sm btn-primary">상세 보기</button>' +
-              	    '<button class="btn btn-sm btn-danger">점검 하기</button>' +
+              	    '<button id="btnBridgeDetail" class="btn btn-sm btn-primary">상세 보기</button>' +
+             	    '<button id="btnBridgeInspect" class="btn btn-sm btn-danger">점검 하기</button>' +
               	  	'</div>';
               	overlay.setPosition(evt.coordinate);
+              	
+                // 상세 보기 버튼 이벤트
+                document.getElementById("btnBridgeDetail")?.addEventListener("click", () => {
+                  window.open("/bridge/detail?id=" + props.id, "_blank", "width=1000,height=800");
+                });
+
+                // 점검 하기 버튼 이벤트
+                document.getElementById("btnBridgeInspect")?.addEventListener("click", () => {
+                  window.open("/bridge/inspect?id=" + props.id, "_blank", "width=1200,height=900");
+                });
+
             } else {
               overlay.setPosition(undefined);
             }

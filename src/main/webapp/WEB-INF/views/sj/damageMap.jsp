@@ -193,6 +193,6 @@
   <jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp"/>
   <jsp:include page="/WEB-INF/views/sj/layers/building.jsp"/>
   <jsp:include page="/WEB-INF/views/sj/layers/railway.jsp"/>
-  <jsp:include page="/WEB-INF/views/sj/layers/hachun.jsp"/>
+  <%-- <jsp:include page="/WEB-INF/views/sj/layers/hachun.jsp"/> --%>
 </body>
 </html>

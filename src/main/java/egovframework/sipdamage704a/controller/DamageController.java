@@ -1,4 +1,4 @@
-package egovframework.sipdamage704a;
+package egovframework.sipdamage704a.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
