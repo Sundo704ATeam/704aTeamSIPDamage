@@ -1,5 +1,8 @@
-package egovframework.sipdamage704a.dao;
-
-public interface DustDao {
-
-}
+/*
+ * package egovframework.sipdamage704a.dao;
+ * 
+ * 
+ * public interface DustDao {
+ * 
+ * }
+ */
