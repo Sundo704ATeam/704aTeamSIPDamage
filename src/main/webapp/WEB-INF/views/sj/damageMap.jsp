@@ -128,23 +128,52 @@
   }
 
   // === 통합 클릭 이벤트 ===
-  map.on("singleclick", (evt) => {
+  map.on("singleclick", function(evt) {
     overlay.setPosition(undefined);
     popupEl.innerHTML = "";
 
-    const layers = [
+    var handled = false;
+
+    // 1) === WFS 그룹 (교량, 육교, 터널, 철도, 하천) ===
+    var wfsLayers = [
       window.gyoryangLayer,
       window.yookgyoLayer,
       window.tunnelLayer,
-      window.mapoLayer,
       window.cheoldoLayer,
       window.hachunLayer
     ];
 
-    for (const layer of layers) {
+    map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+      if (wfsLayers.includes(layer)) {
+        handled = true;
+        var props = feature.getProperties();
+        var ufidVal = props.ufid || "-";
+        var nameVal = props.name || props.dgm_nm || "(이름 없음)";
+
+        var infraType = "시설물";
+        if (layer === window.gyoryangLayer) infraType = "교량";
+        else if (layer === window.yookgyoLayer) infraType = "육교";
+        else if (layer === window.tunnelLayer) infraType = "터널";
+        else if (layer === window.cheoldoLayer) infraType = "철도";
+        else if (layer === window.hachunLayer) infraType = "하천";
+
+        popupEl.innerHTML =
+          "<div><b>" + infraType + "명:</b> " + nameVal +
+          "<br><b>고유번호:</b> " + ufidVal + "</div>";
+
+        overlay.setPosition(evt.coordinate);
+      }
+    });
+
+    if (handled) return; // WFS에서 처리되면 끝
+
+    // 2) === WMS 그룹 (건축물만) ===
+    var wmsLayers = [window.mapoLayer];
+    for (var i=0; i<wmsLayers.length; i++) {
+      var layer = wmsLayers[i];
       if (!layer || !layer.getVisible()) continue;
 
-      const url = layer.getSource().getFeatureInfoUrl(
+      var url = layer.getSource().getFeatureInfoUrl(
         evt.coordinate,
         map.getView().getResolution(),
         "EPSG:3857",
@@ -152,36 +181,33 @@
       );
 
       if (url) {
-        fetch(url).then(r => r.json()).then(json => {
+        fetch(url).then(function(r) { return r.json(); }).then(function(json) {
           if (json.features && json.features.length > 0) {
-            const props = json.features[0].properties;
-            showPopup(evt.coordinate,
-              "<b>이름:</b> " + (props.name || "없음")
-            );
+            var props = json.features[0].properties;
+            showPopup(evt.coordinate, "<b>이름:</b> " + (props.name || "없음"));
           }
         });
-        break; // ★ 첫 번째로 걸린 레이어만 처리
+        break;
       }
     }
   });
 
   // === 토글 유틸 ===
   function bindToggle(btnId, layer) {
-    const btn = document.getElementById(btnId);
+    var btn = document.getElementById(btnId);
     if (!btn) return;
-    btn.addEventListener("click", () => {
-      const next = !layer.getVisible();
+    btn.addEventListener("click", function() {
+      var next = !layer.getVisible();
       layer.setVisible(next);
       btn.classList.toggle("active", next);
-
       if (!next) {
-        overlay.setPosition(undefined); // 레이어 꺼지면 팝업 닫기
+        overlay.setPosition(undefined);
       }
     });
   }
 
   // === 전체 보기/해제 ===
-  const allBtns = [
+  var allBtns = [
     ["btnBridge", "gyoryangLayer"],
     ["btnFootbridge", "yookgyoLayer"],
     ["btnTunnel", "tunnelLayer"],
@@ -190,15 +216,17 @@
     ["btnHachun", "hachunLayer"]
   ];
 
-  document.getElementById("btnAll").addEventListener("click", () => {
-    allBtns.forEach(([id, varName]) => {
+  document.getElementById("btnAll").addEventListener("click", function() {
+    allBtns.forEach(function(item) {
+      var id = item[0], varName = item[1];
       window[varName].setVisible(true);
       document.getElementById(id)?.classList.add("active");
     });
   });
 
-  document.getElementById("btnAlldown").addEventListener("click", () => {
-    allBtns.forEach(([id, varName]) => {
+  document.getElementById("btnAlldown").addEventListener("click", function() {
+    allBtns.forEach(function(item) {
+      var id = item[0], varName = item[1];
       window[varName].setVisible(false);
       document.getElementById(id)?.classList.remove("active");
     });
@@ -206,14 +234,14 @@
   });
 
   // === 사이드바 접기 ===
-  const toggleBtn = document.getElementById("toggleRailBtn");
-  toggleBtn?.addEventListener("click", () => {
+  var toggleBtn = document.getElementById("toggleRailBtn");
+  toggleBtn?.addEventListener("click", function() {
     document.body.classList.toggle("rail-collapsed");
-    const collapsed = document.body.classList.contains("rail-collapsed");
+    var collapsed = document.body.classList.contains("rail-collapsed");
     toggleBtn.setAttribute("aria-expanded", String(!collapsed));
     toggleBtn.title = collapsed ? "데이터레일 펼치기" : "데이터레일 접기";
     toggleBtn.textContent = collapsed ? "▶" : "◀";
-    setTimeout(() => map.updateSize(), 260);
+    setTimeout(function() { map.updateSize(); }, 260);
   });
 </script>
 
