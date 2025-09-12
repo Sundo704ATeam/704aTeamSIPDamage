@@ -4,49 +4,84 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>육교 레이어</title>
 </head>
 <body>
 <script>
-  window.yookgyoLayer = new ol.layer.Tile({
-    source: new ol.source.TileWMS({
-      url: "http://172.30.1.33:8081/geoserver/wms",
-      params: { "LAYERS": "dbdbdb:yookgyo", "TILED": true },
-      serverType: "geoserver", transition: 0
-    }), visible: false
+  // 1) 육교 레이어 (WFS + 스타일)
+  window.yookgyoLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+      url: "http://172.30.1.33:8081/geoserver/wfs?service=WFS&version=1.0.0&" +
+           "request=GetFeature&typeName=dbdbdb:yookgyo&outputFormat=application/json&srsName=EPSG:3857",
+      format: new ol.format.GeoJSON()
+    }),
+    style: new ol.style.Style({
+    	stroke: new ol.style.Stroke({ color: 'green', width: 2 }),          // 초록색 테두리
+        fill: new ol.style.Fill({ color: 'rgba(0,128,0,0.4)' }) 
+    }),
+    visible: false
   });
   map.addLayer(window.yookgyoLayer);
   bindToggle("btnFootbridge", window.yookgyoLayer);
 
+  // 2) 클릭 이벤트 (WFS용)
   map.on("singleclick", evt => {
-    if (!window.yookgyoLayer.getVisible()) return;
-    const url = window.yookgyoLayer.getSource().getFeatureInfoUrl(
-      evt.coordinate, map.getView().getResolution(),
-      "EPSG:3857", { INFO_FORMAT: "application/json" }
-    );
-    if (url) {
-        fetch(url)
+    map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
+      if (layer !== window.yookgyoLayer) return;
+
+      const props = feature.getProperties();
+      const nameVal = props.name || "(이름 없음)";
+      const ufidVal = props.ufid;
+
+      // 팝업 HTML
+      popupEl.innerHTML =
+        '<div><b>육교명:</b> ' + nameVal +
+        '<br><b>고유번호:</b> ' + ufidVal + '</div>' +
+        '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
+        '<div style="margin-top:6px; display:flex; gap:6px;">' +
+          '<button id="btnFootbridgeDetail" class="btn btn-sm btn-primary">상세 보기</button>' +
+          '<button id="btnFootbridgeInspect" class="btn btn-sm btn-danger">점검 하기</button>' +
+        '</div>';
+
+      overlay.setPosition(evt.coordinate);
+
+      // 버튼 이벤트
+      document.getElementById("btnFootbridgeDetail")?.addEventListener("click", () => {
+        window.open("/footbridge/detail?id=" + props.id, "_blank", "width=1000,height=800");
+      });
+      document.getElementById("btnFootbridgeInspect")?.addEventListener("click", () => {
+        window.open("/footbridge/inspect?id=" + props.id, "_blank", "width=1200,height=900");
+      });
+
+      // 3) 안전진단표 조회
+      if (ufidVal) {
+        fetch("${pageContext.request.contextPath}/api/damage/" + ufidVal + "/inspection")
           .then(r => r.json())
-          .then(json => {
-            if (json.features && json.features.length > 0) {
-              const props = json.features[0].properties;
-              const nameVal = props.name || "(이름 없음)";
-              popupEl.innerHTML =
-              	  '<div><b>육교명:</b> ' + nameVal + '</div>' +
-              	  '<button class="btn btn-sm btn-primary" style="margin-top:6px;">상세 보기</button>';
-          	overlay.setPosition(evt.coordinate);
+          .then(map => {
+            const inspBox = document.getElementById("inspBox");
+            if (!map || Object.keys(map).length === 0) {
+              inspBox.innerHTML = "<div>점검 이력 없음</div>";
             } else {
-              /* overlay.setPosition(undefined); */
+              let html = '<table class="table table-sm table-bordered mb-0">';
+              html += "<thead><tr><th>손상유형</th><th>등급</th></tr></thead><tbody>";
+              for (var key in map) {
+            	  if (map.hasOwnProperty(key)) {
+            	    var value = map[key];
+            	    html += "<tr><td>" + key + "</td><td>" + (value != null && value !== "" && value !== false ? value : '-') + "</td></tr>";
+            	  }
+            	}
+              html += "</tbody></table>";
+              inspBox.innerHTML = html;
             }
           })
           .catch(err => {
-            console.error("GetFeatureInfo 에러:", err);
-            overlay.setPosition(undefined);
+            console.error("점검표 로드 오류:", err);
+            document.getElementById("inspBox").innerHTML =
+              "<div style='color:red;'>점검표 불러오기 실패</div>";
           });
       }
     });
-
+  });
 </script>
-
 </body>
 </html>
