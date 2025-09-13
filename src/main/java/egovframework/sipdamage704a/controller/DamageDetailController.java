@@ -37,7 +37,7 @@ public class DamageDetailController {
     @GetMapping("/tunnel/detail")
     public String tunnelDetail(@RequestParam("ufid") String ufid, Model model) {
         TunnelDto tunnel = damageService.getTunnel(ufid);
-        model.addAttribute("Tunnel", tunnel);
+        model.addAttribute("tunnel", tunnel);
 
         return "sj/layersDetail/tunnelDetail";
     }
