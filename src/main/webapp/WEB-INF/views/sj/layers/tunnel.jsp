@@ -27,7 +27,7 @@
   // 2) 클릭 이벤트 (WFS용)
   map.on("singleclick", evt => {
     map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-      if (layer !== window.tunnelLayer) return;
+      if (layer !== window.tunnelLayer) return; //터널 레이어만 처리 
 
       const props = feature.getProperties();
       const nameVal = props.name || "(이름 없음)";
@@ -47,10 +47,10 @@
 
       // 버튼 이벤트
       document.getElementById("btnTunnelDetail")?.addEventListener("click", () => {
-        window.open("/tunnel/detail?id=" + props.id, "_blank", "width=1000,height=800");
+	    	window.open("${pageContext.request.contextPath}/tunnel/detail?ufid=" + props.ufid, "_blank", "width=500,height=400");
       });
       document.getElementById("btnTunnelInspect")?.addEventListener("click", () => {
-        window.open("/tunnel/inspect?id=" + props.id, "_blank", "width=1200,height=900");
+        window.open("/tunnel/inspect?ufid=" + props.ufid, "_blank", "width=1200,height=900");
       });
 
       // 3) 안전진단표 조회
