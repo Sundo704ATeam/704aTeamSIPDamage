@@ -5,7 +5,9 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import egovframework.sipdamage704a.dto.damage.bridgeDto;
+import egovframework.sipdamage704a.dto.damage.BridgeDto;
+import egovframework.sipdamage704a.dto.damage.FootBridgeDto;
+import egovframework.sipdamage704a.dto.damage.TunnelDto;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -16,22 +18,32 @@ public class DamageDaoImpl implements DamageDao {
 	
 	@Override
 	public Map<String, Object> findLatestByUfid(String ufid) {
-		
-		System.out.println("DamageDaoImpl findLatestByUfid ufid => "+ufid);
 		Map<String, Object> result = session.selectOne("egovframework.DamageMapper.findLatestByUfid",ufid);
-		System.out.println("DamageDaoImpl findLatestByUfid result => "+result);
-		
 		return result;
 	}
 
 	@Override
-	public bridgeDto selectBridge(String ufid) {
-	    System.out.println("DamageDaoImpl selectBridge ufid => " + ufid);
-	    bridgeDto bridge = session.selectOne(
+	public BridgeDto selectBridge(String ufid) {
+	    BridgeDto bridge = session.selectOne(
 	        "egovframework.DetailMapper.selectBridge", ufid
 	    );
-	    System.out.println("DamageDaoImpl selectBridge result => " + bridge);
 	    return bridge;
+	}
+
+	@Override
+	public FootBridgeDto selectFootBridge(String ufid) {
+	    FootBridgeDto footbridge = session.selectOne(
+	    	"egovframework.DetailMapper.selectFootBridge", ufid
+	    );
+	    return footbridge;
+	}
+
+	@Override
+	public TunnelDto selectTunnel(String ufid) {
+	    TunnelDto tunnel = session.selectOne(
+	    	"egovframework.DetailMapper.selectTunnel", ufid
+	    );
+	    return tunnel;
 	}
 
 

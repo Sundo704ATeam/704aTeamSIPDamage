@@ -3,12 +3,25 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="egovframework.DetailMapper">
-	<select id="selectBridge" parameterType="String" resultType="egovframework.sipdamage704a.dto.damage.bridgeDto">
+	<select id="selectBridge" parameterType="String" resultType="egovframework.sipdamage704a.dto.damage.BridgeDto">
 	SELECT name,
 		   ufid, leng, widt, 
 		   eymd, rest, scls, fmta
 	FROM public.gyoryang
 	WHERE ufid = #{ufid}	
 	</select>
-	
+	<select id="selectFootBridge" parameterType="String" resultType="egovframework.sipdamage704a.dto.damage.FootBridgeDto">
+	SELECT name,
+		   ufid, leng, widt, 
+		   heig, rest, scls, fmta
+	FROM public.yookgyo
+	WHERE ufid = #{ufid}	
+	</select>
+	<select id="selectTunnel" parameterType="String" resultType="egovframework.sipdamage704a.dto.damage.TunnelDto">
+	SELECT name,
+		   ufid, leng, widt, 
+		   heig, scls, fmta
+	FROM public.tunnel
+	WHERE ufid = #{ufid}	
+	</select>
 </mapper>
