@@ -9,7 +9,7 @@
 <body>
 <script>
   // 1) 철도 레이어 (WFS + 회색 스타일)
-  const cheoldoLayer = new ol.layer.Vector({
+  window.cheoldoLayer = new ol.layer.Vector({
     source: new ol.source.Vector({
       url: "http://172.30.1.33:8081/geoserver/wfs?service=WFS&version=1.0.0&" +
            "request=GetFeature&typeName=dbdbdb:cheoldo_shifted2&outputFormat=application/json&srsName=EPSG:3857",

@@ -16,8 +16,8 @@
       format: new ol.format.GeoJSON()
     }),
     style: new ol.style.Style({
-    	stroke: new ol.style.Stroke({ color: 'green', width: 2 }),          // 초록색 테두리
-        fill: new ol.style.Fill({ color: 'rgba(0,128,0,0.4)' }) 
+    stroke: new ol.style.Stroke({ color: 'green', width: 2 }),          // 초록색 테두리
+    fill: new ol.style.Fill({ color: 'rgba(0,128,0,0.4)' }) 
     }),
     visible: false
   });
@@ -25,18 +25,22 @@
   bindToggle("btnFootbridge", window.yookgyoLayer);
 
   // 2) 클릭 이벤트 (WFS용)
-  map.on("singleclick", evt => {
+  map.on("singleclick", function(evt) {
     map.forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
       if (layer !== window.yookgyoLayer) return;
 
       const props = feature.getProperties();
-      const nameVal = props.name || "(이름 없음)";
-      const ufidVal = props.ufid;
+      var nameVal = props.name || "(이름 없음)";
+      var ufidVal = props.ufid;
 
+   	  var TYPE_MAP = { OBT000: "미분류", OBT001: "장애인이용가능", OBT002: "장애인이용불가"};
+	  var typeVal = TYPE_MAP[props.type] || "미상";
+	    
       // 팝업 HTML
       popupEl.innerHTML =
         '<div><b>육교명:</b> ' + nameVal +
-        '<br><b>고유번호:</b> ' + ufidVal + '</div>' +
+        '<br><b>고유번호:</b> ' + ufidVal + 
+        '<br><b>형태:</b> ' + typeVal +'</div>' +
         '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
         '<div style="margin-top:6px; display:flex; gap:6px;">' +
           '<button id="btnFootbridgeDetail" class="btn btn-sm btn-primary">상세 보기</button>' +
@@ -47,10 +51,10 @@
 
       // 버튼 이벤트
       document.getElementById("btnFootbridgeDetail")?.addEventListener("click", () => {
-        window.open("/footbridge/detail?id=" + props.id, "_blank", "width=1000,height=800");
+	    	window.open("${pageContext.request.contextPath}/footbridge/detail?ufid=" + props.ufid, "_blank", "width=500,height=400");
       });
       document.getElementById("btnFootbridgeInspect")?.addEventListener("click", () => {
-        window.open("/footbridge/inspect?id=" + props.id, "_blank", "width=1200,height=900");
+	    	window.open("${pageContext.request.contextPath}/inspect/detail?ufid=" + props.ufid, "_blank", "width=500,height=400");
       });
 
       // 3) 안전진단표 조회

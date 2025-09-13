@@ -8,7 +8,9 @@ import org.springframework.ui.Model;
 
 import lombok.RequiredArgsConstructor;
 import egovframework.sipdamage704a.service.DamageService;
-import egovframework.sipdamage704a.dto.damage.bridgeDto;
+import egovframework.sipdamage704a.dto.damage.BridgeDto;
+import egovframework.sipdamage704a.dto.damage.FootBridgeDto;
+import egovframework.sipdamage704a.dto.damage.TunnelDto;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,9 +20,25 @@ public class DamageDetailController {
 
     @GetMapping("/bridge/detail")
     public String bridgeDetail(@RequestParam("ufid") String ufid, Model model) {
-        bridgeDto bridge = damageService.getBridge(ufid);
+        BridgeDto bridge = damageService.getBridge(ufid);
         model.addAttribute("bridge", bridge);
 
         return "sj/layersDetail/bridgeDetail";
+    }
+    
+    @GetMapping("/footbridge/detail")
+    public String footbridgeDetail(@RequestParam("ufid") String ufid, Model model) {
+        FootBridgeDto footbridge = damageService.getFootBridge(ufid);
+        model.addAttribute("footbridge", footbridge);
+
+        return "sj/layersDetail/footbridgeDetail";
+    }
+    
+    @GetMapping("/tunnel/detail")
+    public String tunnelDetail(@RequestParam("ufid") String ufid, Model model) {
+        TunnelDto tunnel = damageService.getTunnel(ufid);
+        model.addAttribute("Tunnel", tunnel);
+
+        return "sj/layersDetail/tunnelDetail";
     }
 }

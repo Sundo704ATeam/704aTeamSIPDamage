@@ -1,7 +1,9 @@
 package egovframework.sipdamage704a.service;
 
 import java.util.Map;
-import egovframework.sipdamage704a.dto.damage.bridgeDto;
+import egovframework.sipdamage704a.dto.damage.BridgeDto;
+import egovframework.sipdamage704a.dto.damage.FootBridgeDto;
+import egovframework.sipdamage704a.dto.damage.TunnelDto;
 
 public interface DamageService {
 
@@ -9,5 +11,11 @@ public interface DamageService {
     Map<String, Object> findLatestByUfid(String ufid);
 
     // 교량 단건 조회
-    bridgeDto getBridge(String ufid);
+    BridgeDto getBridge(String ufid);
+
+    //육교 단건 조회
+	FootBridgeDto getFootBridge(String ufid);
+
+	//터널 단건 조회 
+	TunnelDto getTunnel(String ufid);
 }

@@ -4,11 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>교량 레이어</title>
 </head>
 <body>
-
-	<script>
+<script>
 	// 1) 교량 레이어 (WFS 벡터, 색상 지정)
 	window.gyoryangLayer = new ol.layer.Vector({
   	source: new ol.source.Vector({
@@ -31,8 +30,6 @@
 	    if (layer !== gyoryangLayer) return;  // 교량 레이어만 처리
 
 	    const props = feature.getProperties();
-	    console.log("속성:", props);
-
 	    var nameVal = props.name || "(이름 없음)";
 	    var ufidVal = props.ufid;
 
@@ -83,10 +80,8 @@
 	            	}
 	            html += "</tbody></table>";
 	            inspBox.innerHTML = html;
-	            
-	          }
-	          
-	        })
+	            }
+			})
 	        .catch(err => {
 	          console.error("점검표 로드 오류:", err);
 	          document.getElementById("inspBox").innerHTML =
