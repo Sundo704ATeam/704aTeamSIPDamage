@@ -7,8 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import egovframework.sipdamage704a.dao.DamageDao;
 import egovframework.sipdamage704a.dto.damage.BridgeDto;
-import egovframework.sipdamage704a.dto.damage.FootBridgeDto;
-import egovframework.sipdamage704a.dto.damage.TunnelDto;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,13 +27,4 @@ public class DamageServiceImpl implements DamageService {
         return damageDao.selectBridge(ufid);
     }
 
-	@Override
-	public FootBridgeDto getFootBridge(String ufid) {
-		return damageDao.selectFootBridge(ufid);
-	}
-
-	@Override
-	public TunnelDto getTunnel(String ufid) {
-		return damageDao.selectTunnel(ufid);
-	}
 }
