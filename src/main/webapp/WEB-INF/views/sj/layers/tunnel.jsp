@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Insert title here</title>
+  <title>터널</title>
 </head>
 <body>
   <script>
@@ -23,7 +23,7 @@
       style: new ol.style.Style({
         image: new ol.style.Circle({
           radius: 10,
-          fill: new ol.style.Fill({ color: 'black	' }),
+          fill: new ol.style.Fill({ color: 'black' }),
           stroke: new ol.style.Stroke({ color: 'black', width: 2 })
         })
       }),
@@ -36,8 +36,7 @@
         map.addLayer(tunnelLayer);
       }
 
-      const current = tunnelLayer.getVisible();
-      tunnelLayer.setVisible(!current);
+      tunnelLayer.setVisible(!tunnelLayer.getVisible());
 
       const btn = document.getElementById("btnTunnel");
       if (tunnelLayer.getVisible()) {
