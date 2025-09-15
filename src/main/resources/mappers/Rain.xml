@@ -29,7 +29,9 @@
 	</select>
 	
 	<delete id="deleteOldRainfalls">
-		delete from seoul_rain
-		where to_date(time, 'YYYY-MM-DD') < current_date - interval '14 days';
+		<![CDATA[
+			delete from seoul_rain
+			where to_date(time, 'YYYY-MM-DD') < current_date - interval '14 days';
+		]]>
 	</delete>
 </mapper>
