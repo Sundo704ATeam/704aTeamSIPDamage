@@ -7,12 +7,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<script>
+   <script>
     // ✅ GeoServer WFS 레이어
     const gyoryangLayer = new ol.layer.Vector({
       source: new ol.source.Vector({
-        url: 'http://localhost:1221/geoserver/gisdb/ows?service=WFS&' +
-             'version=1.0.0&request=GetFeature&typeName=gisdb:test&' +
+        url: 'http://172.30.1.33:8081/geoserver/dbdbdb/ows?service=WFS&' +
+             'version=1.0.0&request=GetFeature&typeName=dbdbdb:building&' +
              'outputFormat=application/json&srsName=EPSG:3857',
         format: new ol.format.GeoJSON()
       }),
@@ -69,12 +69,14 @@
 
           // ✅ 팝업 표시
           const props = feature.getProperties();
-	      var name = props.name || "(이름 없음)";
-	      var address = props.address|| "(주소 없음)";
-	      
+         var name = props.name || "(이름 없음)";
+         var type = props.type || "(정보 없음)";
+         var address = props.address|| "(주소 없음)";
+         
           popupOverlay.setPosition(center); // 중심 좌표에 표시
           popupContent.innerHTML =
-              "<b>이름:</b> " + name + "<br>"+	
+              "<b>이름:</b> " + name + "<br>"+
+              "<b>종류:</b> " + type + "<br>"+
               "<b>소재지:</b> " + address +
               "<div style='margin-top:6px; display:flex; gap:6px;'>" +
                 "<button id='btnInspect' class='btn btn-sm btn-primary'>점검 하기</button>" +
@@ -84,7 +86,7 @@
               console.log(props);
 
           found = true;
-        }	
+        }   
       });
 
       if (!found) {

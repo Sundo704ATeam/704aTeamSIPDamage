@@ -57,7 +57,7 @@
       </tr>
       <tr>
         <td class="label">위치:</td>
-        <td><input type="text" name="address" /></td>
+        <td><input type="text" name="address" value="${address}" /> </td>
       </tr>
       <tr>
         <td class="label">X 좌표:</td>
