@@ -9,7 +9,7 @@
 	<insert id="insertRainfalls" parameterType="java.util.List">
 		insert into seoul_rain values
 		<foreach collection="list" item="item" separator=", ">
-			(#{item.gaugeCode}, #{item.time}, #{item.rainfall})
+			(#{item.gauge_code}, #{item.time}, #{item.rainfall})
 		</foreach>
 		on conflict (gauge_code, time)
     	do update set rainfall = EXCLUDED.rainfall
