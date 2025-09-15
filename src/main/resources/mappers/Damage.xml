@@ -3,13 +3,13 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="egovframework.DamageMapper">
-  	<select id="findLatestByUfid" parameterType="String" resultType="map">
-    SELECT ufid,
-           crack_ins, elecleakage_ins, leakage_ins,
-           deformation_ins, anomaly_ins,
-           ins_date, inspector
+  	<select id="findLatestByUfid" parameterType="int" resultType="map">
+    SELECT inscode, managecode,
+           crackrate, elecleakrate,
+           leakrate, variationrate,
+           abnomalityrate, ins_date, inspactor
     FROM public.damage_inspect
-    WHERE ufid = #{ufid}
+    WHERE managecode = #{value}
     ORDER BY ins_date DESC
     LIMIT 1
   </select> 
