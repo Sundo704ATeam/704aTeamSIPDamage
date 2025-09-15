@@ -8,8 +8,6 @@
 		<typeAlias type="egovframework.sipdamage704a.dto.dust.DustStationDto" alias="DustStationDto"/>
 		<typeAlias type="egovframework.sipdamage704a.dto.damage.Damage_InspectDto" alias="Damage_InspectDto"/> 
 		 <typeAlias type="egovframework.sipdamage704a.dto.damage.BridgeDto" alias="BridgeDto"/>
-		 <typeAlias type="egovframework.sipdamage704a.dto.damage.FootBridgeDto" alias="FootBridgeDto"/>
-		 <typeAlias type="egovframework.sipdamage704a.dto.damage.TunnelDto" alias="TunnelDto"/>
 	</typeAliases>
 	
 	

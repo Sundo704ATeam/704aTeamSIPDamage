@@ -62,12 +62,37 @@
     .rail-toggle:active { transform: translateY(-50%) scale(.97); }
     body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
     #dataRail .btn.active { background:#e5e7eb; }
+
+    /* 팝업 스타일 */
     .ol-popup {
-      position: absolute; background: white;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      padding: 10px; border-radius: 8px; border: 1px solid #cccccc;
-      min-width: 200px; 
+      position: absolute;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      padding: 16px 12px 12px 12px;
+      border-radius: 8px;
+      border: 1px solid #cccccc;
+      min-width: 200px;
+      font-size: 14px;
+      color: #111;
     }
+    .popup-close {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 22px;
+      height: 22px;
+      border: none;
+      border-radius: 50%;
+      background: #e02424;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .popup-close:hover { background: #b91c1c; }
   </style>
 </head>
 <body>
@@ -76,181 +101,159 @@
   <jsp:include page="/WEB-INF/views/sidebar.jsp" />
 
   <aside id="dataRail">
+       <!-- 지역 선택 -->
+   <div style="text-align: center; margin-bottom: 12px;">
+     <label class="form-label text-black">지역 선택</label>
+     <div style="margin-top: 6px;">
+       <select id="region1" class="form-select form-select-sm">
+         <option>서울특별시</option>         
+       </select>
+      <select id="region2" class="form-select form-select-sm">
+        <option>전체</option>
+        <option>은평구</option>
+        <option>서대문구</option>
+        <option>종로구</option>
+        <option>마포구</option>
+      </select>
+     </div>
+   </div>
+     <!-- 사회기반시설 선택 -->
     <div style="text-align: center;">
       <label class="form-label text-black">사회기반시설 선택</label>
       <div class="d-grid gap-2">
-        <button id="btnBridge" class="btn btn-light btn-sm">교량</button>
-        <button id="btnFootbridge" class="btn btn-light btn-sm">육교</button>
-        <button id="btnTunnel" class="btn btn-light btn-sm">터널</button>
-        <button id="btnStruc" class="btn btn-light btn-sm">건축물</button>
-        <button id="btnCheoldo" class="btn btn-light btn-sm">철도</button>
-        <button id="btnHachun" class="btn btn-light btn-sm">하천</button>
-        <button id="btnAll" class="btn btn-light btn-sm">전체 보기</button>
-        <button id="btnAlldown" class="btn btn-light btn-sm">전체 해제</button>
+        <button id="btnGyoryang" class="btn btn-light btn-sm">교량</button>
+        <button id="btnTunnel" class="btn btn-light btn-sm">터널</button>       
       </div>
     </div>
   </aside>
 
   <button id="toggleRailBtn" class="rail-toggle" aria-expanded="true" title="데이터레일 접기">◀</button>
   <div id="map"></div>
-  <div id="popup" class="ol-popup"></div>
   <footer>© 사회기반시설 스마트 유지관리 시스템</footer>
 
-<script>
-  // === Vworld WMTS 배경지도 ===
-  const vworldLayer = new ol.layer.Tile({
-    source: new ol.source.XYZ({
-      url: "http://api.vworld.kr/req/wmts/1.0.0/"
-           + "60DA3367-BC75-32D9-B593-D0386112A70C"
-           + "/Base/{z}/{y}/{x}.png"
-    })
-  });
+  <script>
+    // ✅ 배경지도 (VWorld)
+    const vworldLayer = new ol.layer.Tile({
+      source: new ol.source.XYZ({
+         url: "http://api.vworld.kr/req/wmts/1.0.0/60DA3367-BC75-32D9-B593-D0386112A70C/Base/{z}/{y}/{x}.png"
+      })
+    });
 
-  const map = new ol.Map({
-    target: "map",
-    layers: [vworldLayer],
-    view: new ol.View({
-      center: ol.proj.fromLonLat([127.024612, 37.5326]),
-      zoom: 12, projection: "EPSG:3857"
-    })
-  });
+    // ✅ 지도 생성 (EPSG:3857)
+    const map = new ol.Map({
+      target: "map",
+      layers: [vworldLayer],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([127.024612, 37.5326]), // 서울 중심
+        zoom: 12
+      })
+    });
+  </script>
 
-  // === 팝업 ===
-  const popupEl = document.getElementById("popup");
-  const overlay = new ol.Overlay({
-    element: popupEl, autoPan:true, autoPanAnimation:{duration:250}
-  });
-  map.addOverlay(overlay);
+  <!-- ✅ 시설별 레이어 정의 JSP include -->
+  
+  <jsp:include page="/WEB-INF/views/sj/layers/gyoryang.jsp" />
+  <jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp" />
 
-  function showPopup(coord, html) {
-    popupEl.innerHTML = html;
-    overlay.setPosition(coord);
-  }
-
-  // === 통합 클릭 이벤트 ===
-  map.on("singleclick", function(evt) {
-    overlay.setPosition(undefined);
-    popupEl.innerHTML = "";
-
-    var handled = false;
-
-    // 1) === WFS 그룹 (교량, 육교, 터널, 철도, 하천) ===
-    var wfsLayers = [
-      window.gyoryangLayer,
-      window.yookgyoLayer,
-      window.tunnelLayer,
-      window.cheoldoLayer,
-      window.hachunLayer
-    ];
-
-    map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-      if (wfsLayers.includes(layer)) {
-        handled = true;
-        var props = feature.getProperties();
-        var ufidVal = props.ufid || "-";
-        var nameVal = props.name || props.dgm_nm || "(이름 없음)";
-
-        var infraType = "시설물";
-        if (layer === window.gyoryangLayer) infraType = "교량";
-        else if (layer === window.yookgyoLayer) infraType = "육교";
-        else if (layer === window.tunnelLayer) infraType = "터널";
-        else if (layer === window.cheoldoLayer) infraType = "철도";
-        else if (layer === window.hachunLayer) infraType = "하천";
-
-        popupEl.innerHTML =
-          "<div><b>" + infraType + "명:</b> " + nameVal +
-          "<br><b>고유번호:</b> " + ufidVal + "</div>";
-
-        overlay.setPosition(evt.coordinate);
+  <script>
+    // ✅ 레일 토글 버튼 동작
+    const toggleBtn = document.getElementById("toggleRailBtn");
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("rail-collapsed");
+      if (document.body.classList.contains("rail-collapsed")) {
+        toggleBtn.textContent = "▶";
+        toggleBtn.setAttribute("title", "데이터레일 열기");
+        toggleBtn.setAttribute("aria-expanded", "false");
+      } else {
+        toggleBtn.textContent = "◀";
+        toggleBtn.setAttribute("title", "데이터레일 접기");
+        toggleBtn.setAttribute("aria-expanded", "true");
       }
     });
 
-    if (handled) return; // WFS에서 처리되면 끝
+    // ✅ 팝업 컨테이너 + 닫기 버튼
+    const popupContainer = document.createElement('div');
+    popupContainer.className = 'ol-popup';
+    popupContainer.innerHTML = `
+      <button class="popup-close">×</button>
+      <div id="popup-content"></div>
+    `;
+    document.body.appendChild(popupContainer);
 
-    // 2) === WMS 그룹 (건축물만) ===
-    var wmsLayers = [window.mapoLayer];
-    for (var i=0; i<wmsLayers.length; i++) {
-      var layer = wmsLayers[i];
-      if (!layer || !layer.getVisible()) continue;
+    const popupContent = popupContainer.querySelector('#popup-content');
+    const closeBtn = popupContainer.querySelector('.popup-close');
 
-      var url = layer.getSource().getFeatureInfoUrl(
-        evt.coordinate,
-        map.getView().getResolution(),
-        "EPSG:3857",
-        { INFO_FORMAT: "application/json" }
-      );
+    const popupOverlay = new ol.Overlay({
+      element: popupContainer,
+      positioning: 'bottom-center',
+      stopEvent: true,
+      offset: [0, -10]
+    });
+    map.addOverlay(popupOverlay);
 
-      if (url) {
-        fetch(url).then(function(r) { return r.json(); }).then(function(json) {
-          if (json.features && json.features.length > 0) {
-            var props = json.features[0].properties;
-            showPopup(evt.coordinate, "<b>이름:</b> " + (props.name || "없음"));
-          }
+    // 닫기 버튼 → 팝업 숨김
+    closeBtn.addEventListener('click', () => {
+      popupOverlay.setPosition(undefined);
+    });
+
+ // 우클릭 이벤트 → 좌표 표시, 건물 등록
+    map.on("contextmenu", function(evt) {
+      evt.preventDefault();
+
+      // EPSG:3857 좌표 그대로 사용 (DB 저장용)
+      const coord = evt.coordinate; 
+      const x = coord[0];
+      const y = coord[1];
+
+      popupOverlay.setPosition(coord);
+
+      // 버튼마다 고유한 ID 생성
+      const btnId = "registerButton_" + Date.now();
+
+      // 화면에는 보기 좋게 소수점 2자리만
+      popupContent.innerHTML =
+        "<b>좌표</b><br/>" +
+        "X: " + x.toFixed(2) + "<br/>" +
+        "Y: " + y.toFixed(2) + "<br/>" +
+        '<div style="margin-top:6px; display:flex; gap:6px;">' +
+          '<button id="' + btnId + '" class="btn btn-sm btn-primary">건물 등록</button>' +
+        '</div>';
+
+      // innerHTML로 버튼이 만들어진 직후 이벤트 연결
+      const btn = document.getElementById(btnId);
+      if (btn) {
+        btn.addEventListener("click", () => {
+          // URL 파라미터에는 double 원본값 그대로 넘김
+          const url = "${pageContext.request.contextPath}/sj/registerPage"
+        	  + "?x=" + x.toFixed(2) 
+              + "&y=" + y.toFixed(2);
+          window.open(url, "_blank", "width=600,height=400");
         });
-        break;
-      }
-    }
-  });
-
-  // === 토글 유틸 ===
-  function bindToggle(btnId, layer) {
-    var btn = document.getElementById(btnId);
-    if (!btn) return;
-    btn.addEventListener("click", function() {
-      var next = !layer.getVisible();
-      layer.setVisible(next);
-      btn.classList.toggle("active", next);
-      if (!next) {
-        overlay.setPosition(undefined);
       }
     });
-  }
 
-  // === 전체 보기/해제 ===
-  var allBtns = [
-    ["btnBridge", "gyoryangLayer"],
-    ["btnFootbridge", "yookgyoLayer"],
-    ["btnTunnel", "tunnelLayer"],
-    ["btnStruc", "mapoLayer"],
-    ["btnCheoldo", "cheoldoLayer"],
-    ["btnHachun", "hachunLayer"]
-  ];
+    // ✅ 각 구 중심 좌표 (EPSG:4326 → 변환해서 EPSG:3857 사용)
+   const regionCenters = {
+     "전체": [127.024612, 37.5326], // 서울 중심
+     "마포구": [126.9104, 37.5663],
+     "서대문구": [126.9386, 37.5791],
+     "종로구": [126.9794, 37.5720],
+     "은평구": [126.9271, 37.6027],
+   };
 
-  document.getElementById("btnAll").addEventListener("click", function() {
-    allBtns.forEach(function(item) {
-      var id = item[0], varName = item[1];
-      window[varName].setVisible(true);
-      document.getElementById(id)?.classList.add("active");
+    // ✅ 지역 선택 이벤트
+    document.getElementById("region2").addEventListener("change", function () {
+      const selected = this.value;
+      if (regionCenters[selected]) {
+        const view = map.getView();
+        const center = ol.proj.fromLonLat(regionCenters[selected]); 
+        view.animate({
+          center: center,
+          zoom: 14,
+          duration: 800
+        });
+      }
     });
-  });
-
-  document.getElementById("btnAlldown").addEventListener("click", function() {
-    allBtns.forEach(function(item) {
-      var id = item[0], varName = item[1];
-      window[varName].setVisible(false);
-      document.getElementById(id)?.classList.remove("active");
-    });
-    overlay.setPosition(undefined);
-  });
-
-  // === 사이드바 접기 ===
-  var toggleBtn = document.getElementById("toggleRailBtn");
-  toggleBtn?.addEventListener("click", function() {
-    document.body.classList.toggle("rail-collapsed");
-    var collapsed = document.body.classList.contains("rail-collapsed");
-    toggleBtn.setAttribute("aria-expanded", String(!collapsed));
-    toggleBtn.title = collapsed ? "데이터레일 펼치기" : "데이터레일 접기";
-    toggleBtn.textContent = collapsed ? "▶" : "◀";
-    setTimeout(function() { map.updateSize(); }, 260);
-  });
-</script>
-
-  <!-- 레이어 분리 include -->
-  <jsp:include page="/WEB-INF/views/sj/layers/hachun.jsp"/>
-  <jsp:include page="/WEB-INF/views/sj/layers/footbridge.jsp"/> 
-  <jsp:include page="/WEB-INF/views/sj/layers/bridge.jsp"/>
-  <jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp"/>
-  <jsp:include page="/WEB-INF/views/sj/layers/building.jsp"/>
-  <jsp:include page="/WEB-INF/views/sj/layers/railway.jsp"/>
+  </script>
 </body>
 </html>
