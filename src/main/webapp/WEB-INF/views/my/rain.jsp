@@ -142,7 +142,7 @@
   <div id="timelineDock">
     <div id="pastlabel"><strong>현재</strong></div>
     <input id="slider" type="range" min="0" max="${fn:length(rainfalls)-1}" step="1" value="${fn:length(rainfalls)-1}" />
-    <div id="tslabel"><strong>현재</strong></div>
+    <div id="tslabel"><strong></strong></div>
   </div>
   
   <footer>© 사회기반시설 스마트 유지관리 시스템</footer>
