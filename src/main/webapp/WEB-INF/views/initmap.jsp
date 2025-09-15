@@ -1,36 +1,33 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>OpenLayers 기본</title>
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/ol@7.4.0/ol.css"
-  />
-  <script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
+  <meta charset="UTF-8">
+  <title>Vworld 2.0 지도</title>
+  <!-- Vworld API 2.0 -->
+<script type="text/javascript" src="https://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=60DA3367-BC75-32D9-B593-D0386112A70C"></script>
   <style>
-    #map {
-      width: 100%;
-      height: 100vh;
-    }
+    body, html { margin:0; padding:0; width:100%; height:100%; }
+    #map { width:100%; height:100%; }
   </style>
 </head>
 <body>
   <div id="map"></div>
-
   <script>
-    const map = new ol.Map({
-      target: 'map',
-      layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM(),
-        }),
-      ],
-      view: new ol.View({
-        center: ol.proj.fromLonLat([127.024612, 37.5326]),
-        zoom: 12,
-      }),
-    });
+    // API 로드 확인 후 실행
+    window.onload = function() {
+/*   if (typeof vworld === "undefined") {
+        alert("Vworld API 로드 실패 (Key 확인 필요)");
+        return;
+      }
+ */      vworld.init("map", "base", {
+        basemapType: "GRAPHIC",   // "GRAPHIC", "PHOTO", "HYBRID"
+        controlDensity: "FULL",
+        interaction: "ALL",
+        controlsAutoArrange: true,
+        initPosition: { x: 127.024612, y: 37.5326, z: 11 }
+      });
+    }
   </script>
 </body>
 </html>

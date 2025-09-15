@@ -1,0 +1,49 @@
+<<<<<<< HEAD
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.rainMapper">
+	<select id="selectLatestTime" resultType="java.lang.String">
+		select max(time) from seoul_rain
+	</select>
+	<insert id="insertRainfalls" parameterType="java.util.List">
+		insert into seoul_rain values
+		<foreach collection="list" item="item" separator=", ">
+			(#{item.gaugeCode}, #{item.time}, #{item.rainfall})
+		</foreach>
+		on conflict (gauge_code, time)
+    	do update set rainfall = EXCLUDED.rainfall
+	</insert>
+	
+	<select id="selectGuNames" resultType="java.lang.String">
+		select distinct(split_part(regexp_replace(location, '\s+', ' ', 'g'), ' ', 2))
+		from seoul_rain_gauge
+	</select>
+	
+	<select id="selectRainfalls" resultType="RainfallDto">
+		select * from seoul_rain
+	</select>
+	
+	<select id="selectGauges" resultType="GaugeDto">
+		select * from seoul_rain_gauge
+	</select>
+	
+	<delete id="deleteOldRainfalls">
+		delete from seoul_rain
+		where to_date(time, 'YYYY-MM-DD') < current_date - interval '14 days';
+	</delete>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.rainMapper">
+	<insert id="insertRainfalls" parameterType="java.util.List">
+		insert into rainfall values
+		<foreach collection="list" item="item" separator=", ">
+			(#{item.gaugeCode}, #{item.time}, #{item.rainfall})
+		</foreach>
+	</insert>
+>>>>>>> 4bc59cf01ba128871a28552a1c463bc7f511c887
+</mapper>
