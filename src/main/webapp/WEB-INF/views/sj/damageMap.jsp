@@ -151,7 +151,6 @@
   </script>
 
   <!-- ✅ 시설별 레이어 정의 JSP include -->
-  
   <jsp:include page="/WEB-INF/views/sj/layers/gyoryang.jsp" />
   <jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp" />
 
@@ -196,6 +195,57 @@
       popupOverlay.setPosition(undefined);
     });
 
+ // ✅ 모든 벡터 레이어 공통 팝업
+    map.on("singleclick", function(evt) {
+      let found = false;
+
+      map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+        if (!feature || !feature.getGeometry()) return;
+
+        let center;
+        if (feature.getGeometry().getType() === "Point") {
+          center = feature.getGeometry().getCoordinates();
+        } else {
+          const extent = feature.getGeometry().getExtent();
+          center = ol.extent.getCenter(extent);
+        }
+
+        // 지도 이동 & 줌
+        map.getView().animate({
+          center: center,
+          zoom: 16,
+          duration: 800
+        });
+
+        // 속성값 가져오기
+        const props = feature.getProperties();
+        const name = props.name || "(이름 없음)";
+        const type = props.type || "(정보 없음)";
+        const sort = props.sort || "(정보 없음)";
+        const address = props.address || "(주소 없음)";
+
+        // 팝업 표시
+        popupOverlay.setPosition(center);
+        popupContent.innerHTML =
+          "<b>이름:</b> " + name + "<br>" +
+          "<b>종류:</b> " + type + "<br>" +
+          "<b>종별:</b> " + sort + "<br>" +
+          "<b>소재지:</b> " + address +
+          "<div style='margin-top:6px; display:flex; gap:6px;'>" +
+            "<button id='btnInspect' class='btn btn-sm btn-primary'>점검 하기</button>" +
+            "<button id='btnHistory' class='btn btn-sm btn-secondary'>점검 내역</button>" +
+          "</div>";
+
+        console.log("클릭된 feature:", props);
+        found = true;
+      });
+
+      // 피처 없으면 팝업 닫기
+      if (!found) {
+        popupOverlay.setPosition(undefined);
+      }
+    });
+ 
  // 우클릭 이벤트 → 좌표 표시, 건물 등록
     map.on("contextmenu", function(evt) {
       evt.preventDefault();
