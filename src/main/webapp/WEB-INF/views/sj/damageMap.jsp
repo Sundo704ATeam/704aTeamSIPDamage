@@ -127,7 +127,7 @@
         <button id="btnSudo" class="btn btn-light btn-sm">상하수도</button>
         <button id="btnWall" class="btn btn-light btn-sm">옹벽</button>
         <button id="btnSamyun" class="btn btn-light btn-sm">절토사면</button>
-        <button id="btnStructure" class="btn btn-light btn-sm">건축물</button>     
+        <button id="btnBuilding" class="btn btn-light btn-sm">건축물</button>     
         <button id="btnALLON" class="btn btn-light btn-sm">전체</button>     
         <button id="btnALLOFF" class="btn btn-light btn-sm">전체 해제</button>     
       </div>
@@ -164,7 +164,7 @@
   <jsp:include page="/WEB-INF/views/sj/layers/sudo.jsp" />
   <jsp:include page="/WEB-INF/views/sj/layers/wall.jsp" />
   <jsp:include page="/WEB-INF/views/sj/layers/samyun.jsp" />
-  <jsp:include page="/WEB-INF/views/sj/layers/structure.jsp" />
+  <jsp:include page="/WEB-INF/views/sj/layers/building.jsp" />
 
   <script>
     // ✅ 레일 토글 버튼 동작
@@ -338,8 +338,8 @@ map.on("singleclick", function(evt) {
     
     // ✅ 전체 켜기 버튼
    document.getElementById("btnALLON").addEventListener("click", () => {
-     const layers = [gyoryangLayer, tunnelLayer, riverLayer, sudoLayer, wallLayer, samyunLayer, structureLayer];
-     const buttons = ["btnGyoryang","btnTunnel","btnRiver","btnSudo","btnWall","btnSamyun","btnStructure"];
+     const layers = [gyoryangLayer, tunnelLayer, riverLayer, sudoLayer, wallLayer, samyunLayer, buildingLayer];
+     const buttons = ["btnGyoryang","btnTunnel","btnRiver","btnSudo","btnWall","btnSamyun","btnBuilding"];
 
      layers.forEach(layer => layer && layer.setVisible(true));
      buttons.forEach(id => document.getElementById(id)?.classList.add("active"));
@@ -349,8 +349,8 @@ map.on("singleclick", function(evt) {
 
 	// ✅ 전체 해제 버튼
    document.getElementById("btnALLOFF").addEventListener("click", () => {
-     const layers = [gyoryangLayer, tunnelLayer, riverLayer, sudoLayer, wallLayer, samyunLayer, structureLayer];
-     const buttons = ["btnGyoryang","btnTunnel","btnRiver","btnSudo","btnWall","btnSamyun","btnStructure"];
+     const layers = [gyoryangLayer, tunnelLayer, riverLayer, sudoLayer, wallLayer, samyunLayer, buildingLayer];
+     const buttons = ["btnGyoryang","btnTunnel","btnRiver","btnSudo","btnWall","btnSamyun","btnBuilding"];
 
      layers.forEach(layer => layer && layer.setVisible(false));
      buttons.forEach(id => document.getElementById(id)?.classList.remove("active"));

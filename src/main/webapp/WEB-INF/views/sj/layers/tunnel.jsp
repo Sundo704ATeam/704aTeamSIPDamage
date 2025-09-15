@@ -14,9 +14,8 @@
         url: function(extent) {
           return 'http://172.30.1.33:8081/geoserver/dbdbdb/ows?' +
                  'service=WFS&version=1.0.0&request=GetFeature&' +
-                 'typeName=dbdbdb:building&outputFormat=application/json&' +
-                 'srsName=EPSG:3857&' +
-                 "CQL_FILTER=type='터널'";
+                 'typeName=dbdbdb:tunnel&outputFormat=application/json&' +
+                 'srsName=EPSG:3857&' 
         },
         format: new ol.format.GeoJSON()
       }),
@@ -29,6 +28,8 @@
       }),
       visible: false   // 처음엔 안 보이게
     });
+
+	map.addLayer(tunnelLayer);
 
     // ✅ 버튼 클릭 시 레이어 토글
     document.getElementById("btnTunnel").addEventListener("click", () => {
