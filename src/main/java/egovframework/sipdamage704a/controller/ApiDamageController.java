@@ -20,6 +20,7 @@ public class ApiDamageController {
 
 	private final DamageService damageService;
 	
+	
 	@GetMapping("/{ufid}/inspection")
 	public Map<String, String> getInspection(@PathVariable(name = "ufid") String ufid){
 		System.out.println("ApiDamageController getInspection ufid => " +ufid);
@@ -36,5 +37,7 @@ public class ApiDamageController {
         result.put("구조이상", (String) row.get("anomaly_ins"));
         return result;
 	}
+	
+	
 	
 }
