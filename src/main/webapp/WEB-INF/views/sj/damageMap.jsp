@@ -122,7 +122,14 @@
       <label class="form-label text-black">사회기반시설 선택</label>
       <div class="d-grid gap-2">
         <button id="btnGyoryang" class="btn btn-light btn-sm">교량</button>
-        <button id="btnTunnel" class="btn btn-light btn-sm">터널</button>       
+        <button id="btnTunnel" class="btn btn-light btn-sm">터널</button>  
+        <button id="btnRiver" class="btn btn-light btn-sm">하천</button>
+        <button id="btnSudo" class="btn btn-light btn-sm">상하수도</button>
+        <button id="btnWall" class="btn btn-light btn-sm">옹벽</button>
+        <button id="btnSamyun" class="btn btn-light btn-sm">절토사면</button>
+        <button id="btnStructure" class="btn btn-light btn-sm">건축물</button>     
+        <button id="btnALLON" class="btn btn-light btn-sm">전체</button>     
+        <button id="btnALLOFF" class="btn btn-light btn-sm">전체 해제</button>     
       </div>
     </div>
   </aside>
@@ -153,6 +160,11 @@
   <!-- ✅ 시설별 레이어 정의 JSP include -->
   <jsp:include page="/WEB-INF/views/sj/layers/gyoryang.jsp" />
   <jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp" />
+  <jsp:include page="/WEB-INF/views/sj/layers/river.jsp" />
+  <jsp:include page="/WEB-INF/views/sj/layers/sudo.jsp" />
+  <jsp:include page="/WEB-INF/views/sj/layers/wall.jsp" />
+  <jsp:include page="/WEB-INF/views/sj/layers/samyun.jsp" />
+  <jsp:include page="/WEB-INF/views/sj/layers/structure.jsp" />
 
   <script>
     // ✅ 레일 토글 버튼 동작
@@ -194,6 +206,7 @@
     closeBtn.addEventListener('click', () => {
       popupOverlay.setPosition(undefined);
     });
+    
 
  // ✅ 모든 벡터 레이어 공통 팝업
     map.on("singleclick", function(evt) {
@@ -290,6 +303,29 @@
      "종로구": [126.9794, 37.5720],
      "은평구": [126.9271, 37.6027],
    };
+    
+	// ✅ 전체 켜기 버튼
+   document.getElementById("btnALLON").addEventListener("click", () => {
+     const layers = [gyoryangLayer, tunnelLayer, riverLayer, sudoLayer, wallLayer, samyunLayer, structureLayer];
+     const buttons = ["btnGyoryang","btnTunnel","btnRiver","btnSudo","btnWall","btnSamyun","btnStructure"];
+
+     layers.forEach(layer => layer && layer.setVisible(true));
+     buttons.forEach(id => document.getElementById(id)?.classList.add("active"));
+
+   });
+
+
+	// ✅ 전체 해제 버튼
+   document.getElementById("btnALLOFF").addEventListener("click", () => {
+     const layers = [gyoryangLayer, tunnelLayer, riverLayer, sudoLayer, wallLayer, samyunLayer, structureLayer];
+     const buttons = ["btnGyoryang","btnTunnel","btnRiver","btnSudo","btnWall","btnSamyun","btnStructure"];
+
+     layers.forEach(layer => layer && layer.setVisible(false));
+     buttons.forEach(id => document.getElementById(id)?.classList.remove("active"));
+
+   });
+
+
 
     // ✅ 지역 선택 이벤트
     document.getElementById("region2").addEventListener("change", function () {
