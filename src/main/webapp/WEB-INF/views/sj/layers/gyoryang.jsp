@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Insert title here</title>
+  <title>교량</title>
 </head>
 <body>
   <script>
@@ -14,9 +14,8 @@
         url: function(extent) {
           return 'http://172.30.1.33:8081/geoserver/dbdbdb/ows?' +
                  'service=WFS&version=1.0.0&request=GetFeature&' +
-                 'typeName=dbdbdb:building&outputFormat=application/json&' +
-                 'srsName=EPSG:3857&' +
-                 "CQL_FILTER=type='교량'";
+                 'typeName=dbdbdb:bridge&outputFormat=application/json&' +
+                 'srsName=EPSG:3857&'
         },
         format: new ol.format.GeoJSON()
       }),
@@ -24,11 +23,13 @@
         image: new ol.style.Circle({
           radius: 10,
           fill: new ol.style.Fill({ color: 'red' }),
-          stroke: new ol.style.Stroke({ color: 'black', width: 2 })
+          stroke: new ol.style.Stroke({ color: 'red', width: 2 })
         })
       }),
       visible: false   // 처음엔 안 보이게
     });
+
+	map.addLayer(gyoryangLayer);
 
     // ✅ 버튼 클릭 시 레이어 토글
     document.getElementById("btnGyoryang").addEventListener("click", () => {
@@ -36,8 +37,7 @@
         map.addLayer(gyoryangLayer);
       }
 
-      const current = gyoryangLayer.getVisible();
-      gyoryangLayer.setVisible(!current);
+      gyoryangLayer.setVisible(!gyoryangLayer.getVisible());
 
       const btn = document.getElementById("btnGyoryang");
       if (gyoryangLayer.getVisible()) {

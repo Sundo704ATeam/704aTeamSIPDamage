@@ -18,8 +18,8 @@ public class DamageServiceImpl implements DamageService {
     private final DamageDao damageDao;
 
     @Override
-    public Map<String, Object> findLatestByUfid(String ufid) {
-        return damageDao.findLatestByUfid(ufid);
+    public Map<String, Object> findLatestByUfid(int managecode) {
+        return damageDao.findLatestByUfid(managecode);
     }
 
     @Override
