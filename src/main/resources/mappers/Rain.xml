@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -32,4 +33,17 @@
 		delete from seoul_rain
 		where to_date(time, 'YYYY-MM-DD') < current_date - interval '14 days';
 	</delete>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.rainMapper">
+	<insert id="insertRainfalls" parameterType="java.util.List">
+		insert into rainfall values
+		<foreach collection="list" item="item" separator=", ">
+			(#{item.gaugeCode}, #{item.time}, #{item.rainfall})
+		</foreach>
+	</insert>
+>>>>>>> 4bc59cf01ba128871a28552a1c463bc7f511c887
 </mapper>
