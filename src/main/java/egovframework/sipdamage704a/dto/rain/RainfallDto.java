@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RainfallDto {
-	private int gaugeCode;
+	private int gauge_code;
 	private String time;
 	private double rainfall;
 }

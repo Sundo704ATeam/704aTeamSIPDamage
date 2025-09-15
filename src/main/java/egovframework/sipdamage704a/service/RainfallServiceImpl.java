@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import egovframework.sipdamage704a.dao.RainfallDao;
+import egovframework.sipdamage704a.dto.rain.GaugeDto;
 import egovframework.sipdamage704a.dto.rain.RainfallApiRespDto;
 import egovframework.sipdamage704a.dto.rain.RainfallApiRespDto.Rainfall;
 import egovframework.sipdamage704a.dto.rain.RainfallDto;
@@ -43,15 +43,23 @@ public class RainfallServiceImpl implements RainfallService {
 	
 	/**
 	 * 현재까지의 강우량 정보 DB 동기화
-	 * 스케줄러를 사용하여 새벽에 작업
 	 */
-	@Scheduled(cron = "")
+	@Scheduled(cron = "0 0 4 * * *")
 	protected void saveRainfallsUntilNow() {
 		List<String> guNames = rainfallDao.getAllGuName();
-		
 		String latestTime = rainfallDao.getLatestTime();
+		if (latestTime == null) {
+			latestTime = LocalDate.now().minusDays(14).format(DateTimeFormatter.ofPattern("YYYY-MM-dd 00:00"));
+		}
 		
-		List<RainfallDto> rainfalls = getRainfallsUntilNow(null, "");
+		for (String guName: guNames) saveRainfallsUntilNow(latestTime, guName);
+		// rainfallDao.deleteOldRainfalls();
+	}
+	
+	public void saveRainfallsUntilNow(String startTime, String guName) {
+		List<RainfallDto> rainfalls = getRainfallsUntilNow(startTime, guName);
+		rainfallDao.saveRainfalls(rainfalls);
+		System.out.printf("========== [%s] 강우량 수집 완료 ==========\n", guName);
 	}
 	
 	/**
@@ -61,11 +69,7 @@ public class RainfallServiceImpl implements RainfallService {
 	 * @param startTime 데이터가 시작하는 정각 시간 (YYYY-MM-DD HH:00)
 	 * @param guName 지역구 이름
 	 */
-	protected List<RainfallDto> getRainfallsUntilNow(String startTime, String guName) {
-		if (startTime == null) {
-			startTime = LocalDate.now().minusDays(14).format(DateTimeFormatter.ofPattern("YYYY-MM-dd 00:00"));
-		}
-
+	public List<RainfallDto> getRainfallsUntilNow(String startTime, String guName) {
 		// API request
 		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -79,15 +83,20 @@ public class RainfallServiceImpl implements RainfallService {
 		// {gaugeCode: {time: rainfall}}
 		Map<Integer, Map<String, RainfallDto>> gauges = new HashMap<>();
 		boolean isStop = false;
+		int retry = 0;
+		
 		while (!isStop) {
 			String pagingUrl = url + "/" + start + "/" + end + "/" + guName;
 			List<RainfallApiRespDto.Rainfall> respRainfalls = null;
 			try {
-			ResponseEntity<RainfallApiRespDto> resp = rest.exchange(pagingUrl, HttpMethod.GET, entity, RainfallApiRespDto.class);
-			
+				ResponseEntity<RainfallApiRespDto> resp = rest.exchange(pagingUrl, HttpMethod.GET, entity, RainfallApiRespDto.class);
 				respRainfalls = resp.getBody().getRespData().getRainfalls();
+				if (respRainfalls.size() < 1000) isStop = true;
+				
 			} catch (Exception e) {
-				e.printStackTrace();
+				// server error
+				if (retry++ < 3) continue;
+				else break;
 			}
 			for (Rainfall r : respRainfalls) {
 				int gaugeCode = r.getGaugeCode();
@@ -118,22 +127,18 @@ public class RainfallServiceImpl implements RainfallService {
 		for (Map<String, RainfallDto> inner : gauges.values()) {
 		    rainfalls.addAll(inner.values());
 		}
-		rainfallDao.saveRainfalls(rainfalls);
-		
 		return rainfalls;
 	}
 
-	/**
-	 * DB에 저장되지 않은 현재까지의 강우량 정보 조회
-	 */
 	@Override
 	public List<RainfallDto> getRainfalls() {
-		
-		List<String> guNames = rainfallDao.getAllGuName();
-		
-		getRainfallsUntilNow(null, "마포구");
-		
-		return null;
+		List<RainfallDto> savedRainfalls = rainfallDao.getRainfalls();
+		return savedRainfalls;
+	}
+
+	@Override
+	public List<GaugeDto> getGauges() {
+		return rainfallDao.getGauges();
 	}
 	
 }

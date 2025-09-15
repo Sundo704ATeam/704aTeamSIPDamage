@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import egovframework.sipdamage704a.dto.rain.GaugeDto;
 import egovframework.sipdamage704a.dto.rain.RainfallDto;
 import lombok.RequiredArgsConstructor;
 
@@ -16,8 +17,14 @@ public class RainfallDaoImpl implements RainfallDao {
 
 	@Override
 	public String getLatestTime() {
-		// TODO Auto-generated method stub
-		return null;
+		String time = null;
+		
+		try {
+			time = session.selectOne("selectLatestTime");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return time;
 	}
 
 	@Override
@@ -38,8 +45,40 @@ public class RainfallDaoImpl implements RainfallDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return guNames;
+	}
+
+	@Override
+	public List<RainfallDto> getRainfalls() {
+		List<RainfallDto> rainfalls = null;
+		
+		try {
+			rainfalls = session.selectList("selectRainfalls");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rainfalls;
+	}
+
+	@Override
+	public List<GaugeDto> getGauges() {
+		List<GaugeDto> gauges = null;
+		
+		try {
+			gauges = session.selectList("selectGauges");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return gauges;
+	}
+
+	@Override
+	public void deleteOldRainfalls() {
+		try {
+			session.delete("deleteOldRainfalls");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

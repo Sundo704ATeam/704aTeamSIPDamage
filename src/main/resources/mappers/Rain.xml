@@ -3,6 +3,9 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="egovframework.rainMapper">
+	<select id="selectLatestTime" resultType="java.lang.String">
+		select max(time) from seoul_rain
+	</select>
 	<insert id="insertRainfalls" parameterType="java.util.List">
 		insert into seoul_rain values
 		<foreach collection="list" item="item" separator=", ">
@@ -13,7 +16,20 @@
 	</insert>
 	
 	<select id="selectGuNames" resultType="java.lang.String">
-		select distinct(split_part(location,' ',2))
+		select distinct(split_part(regexp_replace(location, '\s+', ' ', 'g'), ' ', 2))
 		from seoul_rain_gauge
 	</select>
+	
+	<select id="selectRainfalls" resultType="RainfallDto">
+		select * from seoul_rain
+	</select>
+	
+	<select id="selectGauges" resultType="GaugeDto">
+		select * from seoul_rain_gauge
+	</select>
+	
+	<delete id="deleteOldRainfalls">
+		delete from seoul_rain
+		where to_date(time, 'YYYY-MM-DD') < current_date - interval '14 days';
+	</delete>
 </mapper>
