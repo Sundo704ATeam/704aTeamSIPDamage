@@ -6,7 +6,7 @@ import egovframework.sipdamage704a.dto.damage.BridgeDto;
 
 public interface DamageDao {
 
-	Map<String, Object> findLatestByUfid(String ufid);
+	Map<String, Object> findLatestByUfid(int managecode);
 
     BridgeDto selectBridge(String ufid);
 

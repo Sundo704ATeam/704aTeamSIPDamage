@@ -16,8 +16,8 @@ public class DamageDaoImpl implements DamageDao {
 	private final SqlSession session;
 	
 	@Override
-	public Map<String, Object> findLatestByUfid(String ufid) {
-		Map<String, Object> result = session.selectOne("egovframework.DamageMapper.findLatestByUfid",ufid);
+	public Map<String, Object> findLatestByUfid(int managecode) {
+		Map<String, Object> result = session.selectOne("egovframework.DamageMapper.findLatestByUfid",managecode);
 		return result;
 	}
 
