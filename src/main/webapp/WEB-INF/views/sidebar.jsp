@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" %>
 
 <style>
   .rail{
@@ -36,6 +36,6 @@
   <a class="menu-item" href="${pageContext.request.contextPath}/">HOME</a>
   <a class="menu-item" href="${pageContext.request.contextPath}/damageMap">노후화 패턴분석</a>
   <a class="menu-item" href="${pageContext.request.contextPath}/diagnose">건물상세</a>
-  <a class="menu-item" href="${pageContext.request.contextPath}/dust">손상진단 시뮬</a>
+  <a class="menu-item" href="${pageContext.request.contextPath}/dustTest2">손상진단 시뮬</a>
 </nav>
 
