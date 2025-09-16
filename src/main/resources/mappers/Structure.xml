@@ -27,22 +27,31 @@
 	</select>
 
 	<!-- managecode 단건 조회 -->
-	<select id="getStructureByManagecode" parameterType="int"
-		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
-		SELECT
-			managecode,
-			type,
-			name,
-			address,
-			x,
-			y,
-			sort,
-			hoshi,
-			materials,
-			typedetail
-		FROM structure
-		WHERE managecode = #{managecode}
+	<select id="getStructureByManagecode"
+	        parameterType="int"
+	        resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+	    SELECT
+	        s.managecode,
+	        s.type,
+	        s.name,
+	        s.address,
+	        s.x,
+	        s.y,
+	        s.sort,
+	        s.hoshi,
+	        s.materials,
+	        s.typedetail,
+	        c.crack,
+	        c.elecleak,
+	        c.leak,
+	        c.variation,
+	        c.abnormality
+	    FROM structure s
+	    LEFT JOIN constimp c
+	           ON s.managecode = c.managecode
+	    WHERE s.managecode = #{managecode}
 	</select>
+
 	<select id="getHoshiList"
 		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
 		SELECT
@@ -63,5 +72,56 @@
 		UPDATE structure
 		SET hoshi = 1 - hoshi
 		WHERE managecode = #{value};
+	</update>
+	 <!-- 특정 건물의 점검 이력 조회 -->
+	<select id="getInspectsByManagecode" 
+        parameterType="int" 
+        resultType="egovframework.sipdamage704a.dto.damage.Damage_InspectDto">
+    SELECT 
+        i.inscode,
+        i.managecode,
+        i.crackcnt,
+        i.elecleakcnt,
+        i.leakcnt,
+        i.variationcnt,
+        i.abnomalitycnt,
+        i.ins_date,
+        i.inspactor,
+        c.crack,
+        c.elecleak,
+        c.leak,
+        c.variation,
+        c.abnormality
+    FROM damage_inspect i
+    LEFT JOIN constimp c 
+           ON i.managecode = c.managecode
+    WHERE i.managecode = #{managecode}
+    ORDER BY i.ins_date DESC
+</select>
+
+
+	<update id="updateStructureBase" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+	    UPDATE structure
+	    SET 
+	        name = #{name},
+	        type = #{type},
+	        typedetail = #{typedetail},
+	        address = #{address},
+	        sort = #{sort},
+	        x = #{x},
+	        y = #{y},
+	        materials = #{materials}
+	    WHERE managecode = #{managecode}
+	</update>
+
+	<update id="updateStructureImpact" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+	    UPDATE constimp
+	    SET 
+	        crack = #{crack},
+	        elecleak = #{elecleak},
+	        leak = #{leak},
+	        variation = #{variation},
+	        abnormality = #{abnormality}
+	    WHERE managecode = #{managecode}
 	</update>
 </mapper>

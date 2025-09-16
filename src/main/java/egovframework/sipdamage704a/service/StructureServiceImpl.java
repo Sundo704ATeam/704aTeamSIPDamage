@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.sipdamage704a.dao.StructureDao;
+import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 import egovframework.sipdamage704a.dto.damage.StructureDto;
 
 @Service
@@ -37,5 +38,22 @@ public class StructureServiceImpl implements StructureService {
 	public void updateHoshi(int managecode) {
 		structureDao.updateHoshi(managecode);
 	}
+
+	@Override
+	public List<Damage_InspectDto> getInspectsByManagecode(int managecode) {
+	    return structureDao.getInspectsByManagecode(managecode);
+	}
+
+	@Override
+	public void updateStructureBase(StructureDto dto) {
+        structureDao.updateStructureBase(dto);
+	}
+
+	@Override
+	public void updateStructureImpact(StructureDto dto) {
+        structureDao.updateStructureImpact(dto);
+	}
+
+
 
 }
