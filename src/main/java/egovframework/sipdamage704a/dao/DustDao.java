@@ -12,4 +12,5 @@ public interface DustDao {
 	List<String> 			getActiveDustStations();
 	void 					upsertDustMeasure(List<DustDto> list);
 	List<DustDto> 			getDustMeasurements(String sido);
+	List<DustDto> 			getLatestDustData();
 }

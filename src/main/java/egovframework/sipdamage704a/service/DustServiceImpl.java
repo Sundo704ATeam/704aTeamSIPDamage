@@ -65,7 +65,7 @@ public class DustServiceImpl implements DustService {
 		}
 	}
 
-	/** 매 시간별 측정값 수집 */
+	/** 매 시간별 측정값 수집 */	
 	@Override
 	@Scheduled(cron = "0 15 * * * *")
 	public void fetchDustMeasureHourly() { //1시간마다 권역별 측정소 데이터 api 호출 -> DB저장
@@ -94,6 +94,7 @@ public class DustServiceImpl implements DustService {
 				for (DustDto dto : dtos) {
 				    if (dto.getMeasureTime() == null) {
 				        dto.setMeasureTime(LocalDateTime.now());
+				        dto.setSidoName(sido);
 				    }
 				}
 
@@ -143,4 +144,12 @@ public class DustServiceImpl implements DustService {
 		
 		return dustDao.getDustMeasurements(sido);
 	}
+
+	@Override
+	public List<DustDto> getLatestDustData() {
+		System.out.println("DustServiceImpl getDustMeasurements start...1");
+		
+		return dustDao.getLatestDustData();
+	}
+	
 }

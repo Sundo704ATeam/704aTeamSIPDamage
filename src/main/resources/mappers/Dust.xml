@@ -6,7 +6,7 @@
 <mapper namespace="egovframework.DustMapper">
 	<insert id="upsertStation" parameterType="DustDto">
 	    INSERT INTO dust_station (
-	      station_name, addr, mang_name, dmX, dmY, station_active
+	      station_name, addr, mang_name, dmX, dmY, station_active, sido_name
 	    )
 	    VALUES (
 	      #{stationName}, #{stationAddr}, #{mangName}, #{lat}, #{lon}, #{stationActive}
@@ -59,15 +59,31 @@
 	</select>
 	
 	<select id="getDustMeasurements" parameterType="String" resultType="DustDto">
-		SLEECT 	station_name AS stationName,
+		SELECT 	station_name AS stationName,
 				measure_time AS measureTime,
 				pm10		 AS pm10,
 				pm2_5		 AS pm2_5,
 				sido_name    AS sidoName
 		FROM 	station_measurements	
-		WHERE 	sidoName = #{sido}
+		WHERE 	sido_name = #{sido}
 		AND 	measure_time >= NOW() - INTERVAL '7 days'
     	ORDER BY measure_time
 	</select>
-
+	
+	<select id="getLatestDustData" resultType="DustDto">
+	    SELECT DISTINCT ON (m.station_name)
+	           m.station_name AS stationName,
+	           m.measure_time AS measureTime,
+	           m.pm10,
+	           m.pm2_5,
+	           m.sido_name    AS sidoName,
+	           s.dmx          AS lon,
+	           s.dmy          AS lat
+	    FROM station_measurements m
+	    LEFT JOIN dust_station s 
+	    	ON m.station_name = s.station_name
+	    AND s.station_active = true
+	    ORDER BY m.station_name, m.measure_time DESC
+	</select>
+	
 </mapper>
