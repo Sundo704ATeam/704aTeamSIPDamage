@@ -33,4 +33,9 @@ public class StructureServiceImpl implements StructureService {
 		return structureDao.getHoshiList();
 	}
 
+	@Override
+	public void updateHoshi(int managecode) {
+		structureDao.updateHoshi(managecode);
+	}
+
 }

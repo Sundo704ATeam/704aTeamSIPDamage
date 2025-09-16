@@ -9,6 +9,7 @@ public interface StructureDao {
 	List<StructureDto> getAllStructures();
 	StructureDto getStructureByManagecode(int managecode);
 	List<StructureDto> getHoshiList();
+	void updateHoshi(int managecode);
 
 
 }
