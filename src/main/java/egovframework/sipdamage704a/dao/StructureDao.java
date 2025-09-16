@@ -7,6 +7,6 @@ import egovframework.sipdamage704a.dto.damage.StructureDto;
 public interface StructureDao {
 
 	List<StructureDto> getAllStructures();
-	StructureDto getStructureByManagecode(String managecode);
+	StructureDto getStructureByManagecode(int managecode);
 
 }
