@@ -15,11 +15,4 @@ public class DamageController {
 		return "sj/damageMap";
 	}
 	
-	@GetMapping("diagnose")
-	public String diagnose() {
-		
-		return "sj/diagnose";
-	}
-
-	
 }
