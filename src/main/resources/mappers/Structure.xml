@@ -26,39 +26,48 @@
 	        GROUP BY managecode
 	    ) di ON s.managecode = di.managecode
 	    ORDER BY s.managecode
+
 	</select>
 
-    <!-- managecode 단건 조회 -->
-    <select id="getStructureByManagecode" parameterType="int" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
-        SELECT 
-            managecode,
-            type,
-            name,
-            address,
-            x,
-            y,
-            sort,
-            hoshi,
-            materials,
-            typedetail
-        FROM structure
-        WHERE managecode = #{managecode}
-    </select>
-
-	<select id="getHoshiList" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
-		SELECT 
-            managecode,
-            type,
-            name,
-            address,
-            x,
-            y,
-            sort,
-            hoshi,
-            materials
-        FROM structure
-        where hoshi = 1 
-        ORDER BY managecode
+	<!-- managecode 단건 조회 -->
+	<select id="getStructureByManagecode" parameterType="int"
+		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+		SELECT
+			managecode,
+			type,
+			name,
+			address,
+			x,
+			y,
+			sort,
+			hoshi,
+			materials,
+			typedetail
+		FROM structure
+		WHERE managecode = #{managecode}
 	</select>
+
+	<select id="getHoshiList"
+		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+		SELECT
+			managecode,
+			type,
+			name,
+			address,
+			x,
+			y,
+			sort,
+			hoshi,
+			materials
+		FROM structure
+		where hoshi = 1
+		ORDER BY managecode
+	</select>
+
+	<update id="updateHoshi" parameterType="int">
+		UPDATE structure
+		SET hoshi = 1 - hoshi
+		WHERE managecode = #{value};
+	</update>
 
 </mapper>

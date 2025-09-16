@@ -6,7 +6,10 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;import egovframework.sipdamage704a.dao.StructureDao;
 import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 import egovframework.sipdamage704a.dto.damage.StructureDto;
@@ -46,6 +49,32 @@ public class ApiDamageController {
 		System.out.println("ApiDamageController getHoshiList result => " +result.size());
 		
 		return result;
+	}
+	
+	@GetMapping("/hoshi/status")
+	public StructureDto hoshiStatus(@RequestParam int managecode) {
+		System.out.println("ApiDamageController hoshiStatus managecode => "+managecode);
+		StructureDto result = structureService.getStructureByManagecode(managecode);
+		
+		return result;
+		
+	}
+	
+	@PostMapping("/hoshi/toggle")
+	public StructureDto hoshitoggle(@RequestBody Map<String, String> body){
+		System.out.println("ApiDamageController hoshiStatus body => "+body);
+		int managecode = Integer.parseInt(body.get("managecode"));
+		System.out.println("ApiDamageController hoshiStatus managecode => "+managecode);
+		
+		// 증겨찾기 정보수정
+		structureService.updateHoshi(managecode);
+		
+		// 변경된 정보 조회
+		StructureDto resultDto = structureService.getStructureByManagecode(managecode);
+		System.out.println("hoshiStatus hoshitoggle resultDto => " +resultDto.getHoshi());
+		
+		
+		return resultDto;
 	}
 	
 	
