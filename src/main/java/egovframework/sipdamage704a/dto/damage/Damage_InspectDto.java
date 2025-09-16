@@ -22,4 +22,12 @@ public class Damage_InspectDto {
 	private int abnomalitycnt;	//구조이상객체수
 	private LocalDate ins_date;	//점검일
 	private String inspactor;	//점검자
+	
+    // 영향도
+    private int crack;		//균열등급
+    private int elecleak;	//누전등급
+    private int leak;		//누수등급	
+    private int variation;	//변형등급
+    private int abnormality;	//구조이상등급
+    
 }
