@@ -37,4 +37,20 @@
         WHERE managecode = #{managecode}
     </select>
 
+	<select id="getHoshiList" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+		SELECT 
+            managecode,
+            type,
+            name,
+            address,
+            x,
+            y,
+            sort,
+            hoshi,
+            materials
+        FROM structure
+        where hoshi = 1 
+        ORDER BY managecode
+	</select>
+
 </mapper>

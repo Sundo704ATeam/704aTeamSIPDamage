@@ -25,4 +25,10 @@ public class StructureDaoImpl implements StructureDao {
     public StructureDto getStructureByManagecode(String managecode) {
         return sqlSession.selectOne(namespace + ".getStructureByManagecode", managecode);
     }
+
+	@Override
+	public List<StructureDto> getHoshiList() {
+		
+		return sqlSession.selectList(namespace + ".getHoshiList");
+	}
 }
