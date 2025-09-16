@@ -10,11 +10,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOInvalidTreeException;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
+import javax.imageio.stream.ImageOutputStream;
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -52,7 +62,7 @@ public class RainfallScheduler {
 	public void init() {
 		File rainfallPath = new File(imgPath);
 		if(rainfallPath.exists() == false) {
-			rainfallPath.mkdir();
+			rainfallPath.mkdirs();
 		}
 	}
 	
@@ -71,7 +81,7 @@ public class RainfallScheduler {
 	 * 어제의 시간별 강우량 이미지로 하나의 GIF 생성
 	 */
 	@Async
-	@Scheduled(cron = "0 2 16 * * *")
+	@Scheduled(cron = "0 0 2 * * *")
 	public void saveYesterdayGif() {
 		String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("YYYYMMdd"));
 		
@@ -82,7 +92,7 @@ public class RainfallScheduler {
 		List<BufferedImage> imgs = new ArrayList<BufferedImage>();
 		for (String url : imgUrls) {
 			try {
-				ImageIO.read(new URL(url));
+				imgs.add(ImageIO.read(new URL(url)));
 			} catch (MalformedURLException e) {
 				continue;
 			} catch (IOException e) {
@@ -91,7 +101,7 @@ public class RainfallScheduler {
 		}
 
 		// gif 생성 및 저장
-		createAndSaveGif(imgs, yesterday, 100);
+		createAndSaveGif(imgs, yesterday, 1);
 	}
 	
 	/**
@@ -121,9 +131,76 @@ public class RainfallScheduler {
 	 * 
 	 * @param imgs Gif로 생성할 이미지 목록
 	 * @param fileName 저장할 git 파일 이름
-	 * @param delayTime 프레임당 멈출 시간 (ms)
+	 * @param delayTime 프레임당 멈출 시간 (10ms 단위)
 	 */
 	private void createAndSaveGif(List<BufferedImage> imgs, String fileName, int delayTime) {
+		File outputFile = new File(imgPath + "/" + fileName + ".gif");
 		
+		// Gif writer
+		Iterator<ImageWriter> writerIt = ImageIO.getImageWritersByFormatName("gif");
+        if (!writerIt.hasNext()) {
+            throw new RuntimeException("GIF ImageWriter를 찾을 수 없습니다. TwelveMonkeys 의존성을 확인하세요.");
+        }
+        ImageWriter writer = writerIt.next();
+        
+		try (ImageOutputStream ios = ImageIO.createImageOutputStream(outputFile)) {
+            writer.setOutput(ios);
+            ImageWriteParam param = writer.getDefaultWriteParam();
+            writer.prepareWriteSequence(null);
+
+            boolean firstFrame = true;
+            for (BufferedImage frame : imgs) {
+                IIOMetadata metadata = writer.getDefaultImageMetadata(new ImageTypeSpecifier(frame), param);
+                String metaFormat = metadata.getNativeMetadataFormatName();
+                IIOMetadataNode root = (IIOMetadataNode) metadata.getAsTree(metaFormat);
+
+                // GraphicControlExtension (프레임 딜레이 등)
+                IIOMetadataNode gce = getNode(root, "GraphicControlExtension");
+                gce.setAttribute("disposalMethod", "none");
+                gce.setAttribute("userInputFlag", "FALSE");
+                gce.setAttribute("transparentColorFlag", "FALSE");
+                gce.setAttribute("delayTime", Integer.toString(delayTime)); // 단위: 1/100초 (여기선 10 => 100ms)
+
+                // ApplicationExtensions (NETSCAPE loop) - 첫프레임에만 추가
+                if (firstFrame) {
+                    IIOMetadataNode appExtensions = getNode(root, "ApplicationExtensions");
+                    IIOMetadataNode appNode = new IIOMetadataNode("ApplicationExtension");
+                    appNode.setAttribute("applicationID", "NETSCAPE");
+                    appNode.setAttribute("authenticationCode", "2.0");
+                    // 무한 반복: 0x1, 0x00, 0x00
+                    appNode.setUserObject(new byte[]{0x1, 0x0, 0x0});
+                    appExtensions.appendChild(appNode);
+                    firstFrame = false;
+                }
+
+                try {
+					metadata.setFromTree(metaFormat, root);
+					writer.writeToSequence(new IIOImage(frame, null, metadata), param);
+					
+				} catch (IIOInvalidTreeException e) {
+					continue;
+				} catch (IOException e) {
+					continue;
+				}
+            }
+
+            writer.endWriteSequence();
+            
+        } catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+            writer.dispose();
+        }
 	}
+	
+	private static IIOMetadataNode getNode(IIOMetadataNode rootNode, String nodeName) {
+        for (int i = 0; i < rootNode.getLength(); i++) {
+            if (rootNode.item(i).getNodeName().equalsIgnoreCase(nodeName)) {
+                return (IIOMetadataNode) rootNode.item(i);
+            }
+        }
+        IIOMetadataNode node = new IIOMetadataNode(nodeName);
+        rootNode.appendChild(node);
+        return node;
+    }
 }

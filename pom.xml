@@ -170,6 +170,13 @@
 			<artifactId>javax.json</artifactId>
 			<version>1.1.4</version>
 		</dependency>
+		
+		<!-- Image to Animated Gif -->
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-core</artifactId>
+			<version>3.12.0</version>
+		</dependency>
 
 		<!-- Test -->
 		<dependency>
