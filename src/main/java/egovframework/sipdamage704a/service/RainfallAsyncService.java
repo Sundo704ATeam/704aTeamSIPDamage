@@ -40,7 +40,7 @@ public class RainfallAsyncService {
 	
 	private LocalDateTime lastCallTime = null;
 	
-	public RainfallAsyncService(RainfallDao rainfallDao, @Value("${dataPortal.key}") String apiKey) {
+	public RainfallAsyncService(RainfallDao rainfallDao, @Value("${seoulData.key}") String apiKey) {
 		this.rainfallDao = rainfallDao;
 		this.apiKey = apiKey;
 	}

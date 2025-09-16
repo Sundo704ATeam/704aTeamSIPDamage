@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.sipdamage704a.dto.rain.GaugeDto;
 import egovframework.sipdamage704a.dto.rain.RainfallDto;
+import egovframework.sipdamage704a.service.RainfallScheduler;
 import egovframework.sipdamage704a.service.RainfallService;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +20,9 @@ public class RainfallController {
 	
 	private final RainfallService rainfallService;
 	
+	
+	private final RainfallScheduler sched;
+	
 	@GetMapping("")
 	public String rainfallPage(Model model) {
 		List<GaugeDto> gauges = rainfallService.getGauges();
@@ -26,6 +30,12 @@ public class RainfallController {
 		
 		model.addAttribute("gauges", gauges);
 		model.addAttribute("rainfalls", rainfalls);
+		return "my/rain";
+	}
+	
+	@GetMapping("/test")
+	public String test(Model model) {
+		sched.saveYesterdayGif();
 		return "my/rain";
 	}
 	
