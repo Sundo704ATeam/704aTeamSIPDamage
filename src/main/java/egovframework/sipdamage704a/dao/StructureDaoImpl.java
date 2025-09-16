@@ -22,7 +22,7 @@ public class StructureDaoImpl implements StructureDao {
     }
 
     @Override
-    public StructureDto getStructureByManagecode(String managecode) {
+    public StructureDto getStructureByManagecode(int managecode) {
         return sqlSession.selectOne(namespace + ".getStructureByManagecode", managecode);
     }
 

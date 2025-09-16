@@ -21,11 +21,11 @@ public class StructureController {
         return "sj/StructureList";  
     }
 
-    // managecode 상세 페이지 이동
+    // 상세 조회
     @GetMapping("/StructureDetail")
-    public String getStructureByManagecode(@RequestParam("managecode") String managecode, Model model) {
+    public String getStructureByManagecode(@RequestParam("managecode") int managecode, Model model) {
         StructureDto dto = structureService.getStructureByManagecode(managecode);
         model.addAttribute("structure", dto);
-        return "StructureDetail"; 
+        return "sj/StructureDetail"; 
     }
 }

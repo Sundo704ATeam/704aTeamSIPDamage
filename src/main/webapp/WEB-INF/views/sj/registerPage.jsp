@@ -37,11 +37,25 @@
         <td><input type="text" name="name" /></td>
       </tr>
       <tr>
-        <td class="label">건축물 구분:</td>
+        <td class="label">종류:</td>
         <td>
-          <select name="category">
+          <select name="category" id="category" onchange="updateSubcategory()">
+            <option value="">-- 선택 --</option>
             <option value="교량">교량</option>
             <option value="터널">터널</option>
+            <option value="하천">하천</option>
+            <option value="상하수도">상하수도</option>
+            <option value="옹벽">옹벽</option>
+            <option value="절토사면">절토사면</option>
+            <option value="건축물">건축물</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">세부 구분:</td>
+        <td>
+          <select name="subcategory" id="subcategory">
+            <option value="">-- 먼저 종류를 선택하세요 --</option>
           </select>
         </td>
       </tr>
@@ -73,5 +87,40 @@
       </tr>
     </table>
   </form>
+
+  <script>
+    // ✅ 종류별 세부 구분 목록
+    const subcategories = {
+      "교량": ["도로교량", "복개구조물", "철도교량","육교"],
+      "터널": ["도로터널", "지하차도", "철도터널","방음터널"],
+      "하천": ["하구독", "수문 및 통문", "제방", "보", "배수펌프장"],
+      "상하수도": ["광역상수도", "공업용수도", "지방상수도","공공하수처리시설","폐기물매립시설"],
+      "옹벽": ["도로용벽", "철도옹벽","항만용벽","댐용벽","건축물용벽","기타용벽"],
+      "절토사면": ["도로사면", "철도사면","항만사면","댐사면","건축물사면","기타사면"],
+      "건축물": ["공동주택","대형건축물","다중이용건축물", "철도역시설", "지하도상가","기타"]
+    };
+
+    function updateSubcategory() {
+      const category = document.getElementById("category").value;
+      const subSelect = document.getElementById("subcategory");
+
+      // 기존 옵션 제거
+      subSelect.innerHTML = "";
+
+      if (category && subcategories[category]) {
+        subcategories[category].forEach(item => {
+          const opt = document.createElement("option");
+          opt.value = item;
+          opt.text = item;
+          subSelect.appendChild(opt);
+        });
+      } else {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.text = "-- 먼저 구분을 선택하세요 --";
+        subSelect.appendChild(opt);
+      }
+    }
+  </script>
 </body>
 </html>

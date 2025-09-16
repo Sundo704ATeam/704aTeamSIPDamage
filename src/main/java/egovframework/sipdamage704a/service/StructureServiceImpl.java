@@ -23,7 +23,7 @@ public class StructureServiceImpl implements StructureService {
 	}
 
 	@Override
-	public StructureDto getStructureByManagecode(String managecode) {
+	public StructureDto getStructureByManagecode(int managecode) {
         return structureDao.getStructureByManagecode(managecode);
 	}
 
