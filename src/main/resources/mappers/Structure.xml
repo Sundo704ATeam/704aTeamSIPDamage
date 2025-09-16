@@ -5,22 +5,28 @@
 
 <mapper namespace="egovframework.sipdamage704a.dao.StructureDao">
 
-    <!-- 건물 전체 목록 조회 -->
-    <select id="getAllStructures" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
-        SELECT 
-            managecode,
-            type,
-            name,
-            address,
-            x,
-            y,
-            sort,
-            hoshi,
-            materials,
-            typedetail
-        FROM structure
-        ORDER BY managecode
-    </select>
+	<!-- 건물 전체 목록 조회 + 최신 점검일 -->
+	<select id="getAllStructures" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+	    SELECT 
+	        s.managecode,
+	        s.type,
+	        s.typedetail,
+	        s.name,
+	        s.address,
+	        s.x,
+	        s.y,
+	        s.sort,
+	        s.hoshi,
+	        s.materials,
+	        di.latest_ins_date
+	    FROM structure s
+	    LEFT JOIN (
+	        SELECT managecode, MAX(ins_date) AS latest_ins_date
+	        FROM damage_inspect
+	        GROUP BY managecode
+	    ) di ON s.managecode = di.managecode
+	    ORDER BY s.managecode
+	</select>
 
     <!-- managecode 단건 조회 -->
     <select id="getStructureByManagecode" parameterType="int" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
