@@ -5,8 +5,6 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import egovframework.sipdamage704a.dto.damage.BridgeDto;
-
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -16,19 +14,10 @@ public class DamageDaoImpl implements DamageDao {
 	private final SqlSession session;
 	
 	@Override
-	public Map<String, Object> findLatestByUfid(String ufid) {
-		Map<String, Object> result = session.selectOne("egovframework.DamageMapper.findLatestByUfid",ufid);
+	public Map<String, Object> findLatestByUfid(int managecode) {
+		Map<String, Object> result = session.selectOne("egovframework.DamageMapper.findLatestByUfid",managecode);
 		return result;
 	}
-
-	@Override
-	public BridgeDto selectBridge(String ufid) {
-	    BridgeDto bridge = session.selectOne(
-	        "egovframework.DetailMapper.selectBridge", ufid
-	    );
-	    return bridge;
-	}
-
 
 
 }

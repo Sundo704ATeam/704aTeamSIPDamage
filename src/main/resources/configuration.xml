@@ -5,10 +5,10 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="egovframework.sipdamage704a.dto.rain.RainfallDto" alias="RainfallDto"/>
+		<typeAlias type="egovframework.sipdamage704a.dto.rain.GaugeDto" alias="GaugeDto"/>
 		<typeAlias type="egovframework.sipdamage704a.dto.dust.DustDto" alias="DustDto"/>
 		<typeAlias type="egovframework.sipdamage704a.dto.damage.Damage_InspectDto" alias="Damage_InspectDto"/> 
-		 <typeAlias type="egovframework.sipdamage704a.dto.damage.BridgeDto" alias="BridgeDto"/>
+		<typeAlias type="egovframework.sipdamage704a.dto.damage.StructureDto" alias="StructureDto"/> 
 	</typeAliases>
-	
 	
 </configuration>

@@ -1,10 +1,5 @@
 package egovframework.sipdamage704a.controller;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,5 +15,4 @@ public class MainController {
 		System.out.println("====================== START ======================");
 		return "main";
 	}
-	
 }
