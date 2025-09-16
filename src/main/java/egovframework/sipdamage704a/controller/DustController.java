@@ -48,8 +48,10 @@ public class DustController {
 		log.info("DustController realDustPage start");
 		
 		List<DustDto> getDustStation = dustService.getDustStation();
+		List<DustDto> getLatestDustData = dustService.getLatestDustData();
 		
 		model.addAttribute("getDustStation", getDustStation);
+		model.addAttribute("getLatestDustData", getLatestDustData);
 		
 		return "sw/RealDust";
 	}

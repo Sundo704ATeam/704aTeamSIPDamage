@@ -17,6 +17,7 @@ public class DustDaoImpl implements DustDao {
 	public void upsertStation(DustDto dto) {
 		
 		session.insert("upsertStation", dto);
+		session.insert("upsertStationSido", dto);
 	}
 
 	@Override
@@ -47,6 +48,12 @@ public class DustDaoImpl implements DustDao {
 	public List<DustDto> getDustMeasurements(String sido) {
 
 		return session.selectList("getDustMeasurements", sido);
+	}
+
+	@Override
+	public List<DustDto> getLatestDustData() {
+
+		return session.selectList("getLatestDustData");
 	}
 	
 }
