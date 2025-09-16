@@ -97,3 +97,4 @@
 		SET hoshi = 1 - hoshi
 		WHERE managecode = #{value};
 	</update>
+</mapper>
