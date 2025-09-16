@@ -121,8 +121,7 @@
       <a class="sub-link" href="${pageContext.request.contextPath}/dust24">PM10 예측정보</a>
       <a class="sub-link" href="${pageContext.request.contextPath}/dustTest">측정소 3개월 타임라인</a>
       <a class="sub-link" href="${pageContext.request.contextPath}/dustTest2">측정소 1개월 타임라인+실시간</a>
-      <a class="sub-link" href="${pageContext.request.contextPath}/realDust">진짜 실시간+2주 타임라인</a>
-      
+      <a class="sub-link" href="${pageContext.request.contextPath}/realDust">실시간 PM10/PM2.5 측정 정보</a>
     </div>
   </aside>
 
