@@ -7,10 +7,11 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RestController;import egovframework.sipdamage704a.dao.StructureDao;
 import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
+import egovframework.sipdamage704a.dto.damage.StructureDto;
 import egovframework.sipdamage704a.service.DamageService;
+import egovframework.sipdamage704a.service.StructureService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class ApiDamageController {
 
 	private final DamageService damageService;
-	
+	private final StructureService structureService;
 	
 	@GetMapping("/{managecode}/inspection")
 	public Map<String, String> getInspection(@PathVariable(name = "managecode") int managecode){
@@ -38,6 +39,14 @@ public class ApiDamageController {
         return result;
 	}
 	
+	
+	@GetMapping("/hoshi")
+	public List<StructureDto> getHoshiList(){
+		List<StructureDto> result = structureService.getHoshiList();
+		System.out.println("ApiDamageController getHoshiList result => " +result.size());
+		
+		return result;
+	}
 	
 	
 }

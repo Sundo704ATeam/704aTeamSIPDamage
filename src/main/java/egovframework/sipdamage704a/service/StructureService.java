@@ -8,4 +8,5 @@ public interface StructureService {
 	
 	  List<StructureDto> getAllStructures();
 	  StructureDto getStructureByManagecode(String managecode);
+	  List<StructureDto> getHoshiList();
 }

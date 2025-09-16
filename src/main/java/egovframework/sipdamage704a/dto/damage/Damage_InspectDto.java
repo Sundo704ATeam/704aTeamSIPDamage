@@ -13,21 +13,24 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Damage_InspectDto {
 	
-	private String safetyIns_code;
-	private String ufid;
-	private String gid;
-	private String crack_ins;
-	private String elecleakage_ins;
-	private String leakage_ins;
-	private String deformation_ins;
-	private String anomaly_ins;
-	private int crack_cnt;
-	private int elecleakage_cnt;
-	private int leakage_cnt;
-	private int deformation_cnt;
-	private int anomaly_cnt;
-	private String inspector;
+	private int inscode;
+	private int managecode;
+
+	private String crackrate;
+	private int crackcnt;
+	
+	private String elecleakrate;
+	private int elecleakcnt;
+	
+	private String leakrate;
+	private int leakcnt;
+	
+	private String variationrate;
+	private int variationcnt;
+	
+	private String abnomalityrate;
+	private int abnomalitycnt;
+	
 	private LocalDate ins_date;
-	
-	
+	private String inspactor;
 }
