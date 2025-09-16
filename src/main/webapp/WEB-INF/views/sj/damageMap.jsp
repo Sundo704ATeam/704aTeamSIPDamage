@@ -241,6 +241,7 @@ body.rail-collapsed .rail-toggle {
 	<jsp:include page="/WEB-INF/views/sj/layers/wall.jsp" />
 	<jsp:include page="/WEB-INF/views/sj/layers/samyun.jsp" />
 	<jsp:include page="/WEB-INF/views/sj/layers/building.jsp" />
+	<jsp:include page="/WEB-INF/views/sh/hoshiLayer.jsp" />
 
 	<script>
     // ✅ 레일 토글 버튼 동작
@@ -383,6 +384,12 @@ body.rail-collapsed .rail-toggle {
 	            ? '<i class="bi bi-bookmark-star-fill" style="font-size:30px; color:gold;"></i>'
 	            : '<i class="bi bi-bookmark" style="font-size:30px; color:gray;"></i>';
 	          loadFavoriteList();
+	          
+	       	  // ✅ hoshiLayer 소스 갱신
+	          if (window.hoshiLayer) {
+	            window.hoshiLayer.getSource().clear();      // 기존 캐시 제거
+	            window.hoshiLayer.getSource().refresh();    // 서버에서 다시 가져오기
+	          }
 	        })
 	        .catch(err => console.error("즐겨찾기 업데이트 실패:", err));
 	      };
@@ -519,7 +526,14 @@ body.rail-collapsed .rail-toggle {
       if (favBtn.classList.contains("active")) {
         favBtn.innerHTML = "⭐ 즐겨찾기";
         favList.style.display = "block";   // 리스트 보여주기
-
+        
+        document.getElementById("btnALLOFF").click();
+        
+        if (window.hoshiLayer) {
+            window.hoshiLayer.setVisible(true);   // ✅ hoshiLayer 켜기
+          }
+        
+        
         // AJAX 호출 (예: /api/favorites)
         fetch("${pageContext.request.contextPath}/api/damage/hoshi")
         .then(r => r.json())
@@ -562,6 +576,9 @@ body.rail-collapsed .rail-toggle {
       } else {
     	    favBtn.innerHTML = "☆ 즐겨찾기";
     	    favList.style.display = "none";   // 리스트 숨기기
+    	    if (window.hoshiLayer) {
+    	        window.hoshiLayer.setVisible(false);  // ✅ hoshiLayer 끄기
+    	    }
       }
    });
  	// ✅ 맵 바깥쪽 클릭 시 팝업 닫기
