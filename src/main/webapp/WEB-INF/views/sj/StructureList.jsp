@@ -147,7 +147,7 @@
               <td>${s.typedetail}</td>
               <td>${s.sort}</td>
               <td>${s.address}</td>
-              <td>${s.managecode}</td>
+			  <td>${s.latest_ins_date}</td>
               <td>
 			  <a href="${pageContext.request.contextPath}/StructureDetail?managecode=${s.managecode}" class="btn">
 			    내역 보기 

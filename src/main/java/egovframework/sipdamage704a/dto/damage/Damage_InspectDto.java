@@ -13,24 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Damage_InspectDto {
 	
-	private int inscode;
-	private int managecode;
-
-	private String crackrate;
-	private int crackcnt;
-	
-	private String elecleakrate;
-	private int elecleakcnt;
-	
-	private String leakrate;
-	private int leakcnt;
-	
-	private String variationrate;
-	private int variationcnt;
-	
-	private String abnomalityrate;
-	private int abnomalitycnt;
-	
-	private LocalDate ins_date;
-	private String inspactor;
+	private int inscode;		//점검번호	
+	private int managecode;		//관리번호
+	private int crackcnt;		//균열객체수
+	private int elecleakcnt;	//누전객체수
+	private int leakcnt;		//누수객체수
+	private int variationcnt;	//변형객체수
+	private int abnomalitycnt;	//구조이상객체수
+	private LocalDate ins_date;	//점검일
+	private String inspactor;	//점검자
 }
