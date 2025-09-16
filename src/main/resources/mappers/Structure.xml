@@ -5,54 +5,63 @@
 
 <mapper namespace="egovframework.sipdamage704a.dao.StructureDao">
 
-    <!-- 건물 전체 목록 조회 -->
-    <select id="getAllStructures" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
-        SELECT 
-            managecode,
-            type,
-            name,
-            address,
-            x,
-            y,
-            sort,
-            hoshi,
-            materials,
-            typedetail
-        FROM structure
-        ORDER BY managecode
-    </select>
-
-    <!-- managecode 단건 조회 -->
-    <select id="getStructureByManagecode" parameterType="int" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
-        SELECT 
-            managecode,
-            type,
-            name,
-            address,
-            x,
-            y,
-            sort,
-            hoshi,
-            materials,
-            typedetail
-        FROM structure
-        WHERE managecode = #{managecode}
-    </select>
-
-	<select id="getHoshiList" resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
-		SELECT 
-            managecode,
-            type,
-            name,
-            address,
-            x,
-            y,
-            sort,
-            hoshi,
-            materials
-        FROM structure
-        where hoshi = 1 
-        ORDER BY managecode
+	<!-- 건물 전체 목록 조회 -->
+	<select id="getAllStructures"
+		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+		SELECT
+			managecode,
+			type,
+			name,
+			address,
+			x,
+			y,
+			sort,
+			hoshi,
+			materials,
+			typedetail
+		FROM structure
+		ORDER BY managecode
 	</select>
+
+	<!-- managecode 단건 조회 -->
+	<select id="getStructureByManagecode" parameterType="int"
+		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+		SELECT
+			managecode,
+			type,
+			name,
+			address,
+			x,
+			y,
+			sort,
+			hoshi,
+			materials,
+			typedetail
+		FROM structure
+		WHERE managecode = #{managecode}
+	</select>
+
+	<select id="getHoshiList"
+		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+		SELECT
+			managecode,
+			type,
+			name,
+			address,
+			x,
+			y,
+			sort,
+			hoshi,
+			materials
+		FROM structure
+		where hoshi = 1
+		ORDER BY managecode
+	</select>
+
+	<update id="updateHoshi" parameterType="int">
+		UPDATE structure
+		SET hoshi = 1 - hoshi
+		WHERE managecode = #{value};
+	</update>
 
 </mapper>

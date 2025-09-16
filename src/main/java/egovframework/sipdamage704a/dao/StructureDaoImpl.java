@@ -31,4 +31,9 @@ public class StructureDaoImpl implements StructureDao {
 		
 		return sqlSession.selectList(namespace + ".getHoshiList");
 	}
+
+	@Override
+	public void updateHoshi(int managecode) {
+		sqlSession.update(namespace + ".updateHoshi", managecode);
+	}
 }

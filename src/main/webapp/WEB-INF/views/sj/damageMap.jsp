@@ -6,6 +6,8 @@
 <title>OpenLayers + GeoServer</title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/ol@7.4.0/ol.css" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
 <style>
 :root {
@@ -256,150 +258,211 @@ body.rail-collapsed .rail-toggle {
       }
     });
 
-    // ✅ 팝업 컨테이너 + 닫기 버튼
-    const popupContainer = document.createElement('div');
-    popupContainer.className = 'ol-popup';
-    popupContainer.innerHTML = `
-      <button class="popup-close">×</button>
-      <div id="popup-content"></div>
-    `;
-    document.body.appendChild(popupContainer);
+	     
+	// ✅ 우클릭용 팝업 + 닫기 버튼
+	const coordPopupContainer = document.createElement('div');
+	coordPopupContainer.className = 'ol-popup';
+	coordPopupContainer.innerHTML = `
+	  <button class="popup-close">×</button>
+	  <div id="coord-popup-content"></div>
+	`;
+	document.body.appendChild(coordPopupContainer);
+	
+	const coordPopupContent = coordPopupContainer.querySelector('#coord-popup-content');
+	const coordCloseBtn = coordPopupContainer.querySelector('.popup-close');
+	
+	const coordPopupOverlay = new ol.Overlay({
+	  element: coordPopupContainer,
+	  positioning: 'bottom-center',
+	  stopEvent: true,
+	  offset: [0, -10]
+	});
+	map.addOverlay(coordPopupOverlay);
+	
+	// 닫기 버튼 → 우클릭 팝업만 닫기
+	coordCloseBtn.addEventListener('click', () => {
+	  coordPopupOverlay.setPosition(undefined);
+	});
+	
+	// ✅ 좌클릭용 팝업 + 즐겨찾기
+	const infoPopupContainer = document.createElement('div');
+	infoPopupContainer.className = 'ol-popup';
+	
+	// ✨ 즐겨찾기 버튼 추가 (우상단)
+	infoPopupContainer.innerHTML = `
+	  <div style="position:relative;">
+	    <div id="info-popup-content"></div>
+	  </div>
+	`;
+	document.body.appendChild(infoPopupContainer);
+	
+	const infoPopupContent = infoPopupContainer.querySelector('#info-popup-content');
+	const infoPopupOverlay = new ol.Overlay({
+	  element: infoPopupContainer,
+	  positioning: 'bottom-center',
+	  stopEvent: true,
+	  offset: [0, -10]
+	});
+	map.addOverlay(infoPopupOverlay);
+	
+	// ✅ 모든 벡터 레이어 공통 팝업 (좌클릭)
+	map.on("singleclick", function(evt) {
+	  let found = false;
 
-    const popupContent = popupContainer.querySelector('#popup-content');
-    const closeBtn = popupContainer.querySelector('.popup-close');
+	  map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+	    if (!feature || !feature.getGeometry()) return;
 
-    const popupOverlay = new ol.Overlay({
-      element: popupContainer,
-      positioning: 'bottom-center',
-      stopEvent: true,
-      offset: [0, -10]
-    });
-    map.addOverlay(popupOverlay);
+	    let center;
+	    if (feature.getGeometry().getType() === "Point") {
+	      center = feature.getGeometry().getCoordinates();
+	    } else {
+	      const extent = feature.getGeometry().getExtent();
+	      center = ol.extent.getCenter(extent);
+	    }
 
-    // 닫기 버튼 → 팝업 숨김
-    closeBtn.addEventListener('click', () => {
-      popupOverlay.setPosition(undefined);
-    });
-    
+	    map.getView().animate({
+	      center: center,
+	      zoom: 16,
+	      duration: 800
+	    });
 
- // ✅ 모든 벡터 레이어 공통 팝업
-map.on("singleclick", function(evt) {
-  let found = false;
+	    const props   = feature.getProperties();
+	    const name    = props.name    || "(이름 없음)";
+	    const type    = props.type    || "(정보 없음)";
+	    const sort    = props.sort    || "(정보 없음)";
+	    const address = props.address || "(주소 없음)";
+	    const managecode = props.managecode;
 
-  map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
-    if (!feature || !feature.getGeometry()) return;
+	    // ✅ 팝업 열기
+	    infoPopupOverlay.setPosition(center);
 
-    let center;
-    if (feature.getGeometry().getType() === "Point") {
-      center = feature.getGeometry().getCoordinates();
-    } else {
-      const extent = feature.getGeometry().getExtent();
-      center = ol.extent.getCenter(extent);
-    }
+	    // ✅ 팝업 내용 채우기 (이름 + 즐겨찾기 아이콘 한 줄)
+	    infoPopupContent.innerHTML =
+	      '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">' +
+	        '<div style="font-size:15px;"><b>이름:</b> ' + name + '</div>' +
+	        '<button id="favToggleBtn" style="border:none; background:none; cursor:pointer; line-height:1;">' +
+	          '<i class="bi bi-bookmark" style="font-size:30px; color:gray;"></i>' +
+	        '</button>' +
+	      '</div>' +
+	      '<div style="margin-bottom:4px;"><b>종류:</b> ' + type + '</div>' +
+	      '<div style="margin-bottom:4px;"><b>종별:</b> ' + sort + '</div>' +
+	      '<div style="margin-bottom:8px;"><b>소재지:</b> ' + address + '</div>' +
+	      '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
+	      '<div style="margin-top:6px; display:flex; gap:6px;">' +
+	        '<button id="btnInspect" class="btn btn-sm btn-primary">점검 하기</button>' +
+	        '<button id="btnHistory" class="btn btn-sm btn-secondary">점검 내역</button>' +
+	      '</div>';
 
-    map.getView().animate({
-      center: center,
-      zoom: 16,
-      duration: 800
-    });
+	    found = true;
 
-    const props = feature.getProperties();
-    const name = props.name || "(이름 없음)";
-    const type = props.type || "(정보 없음)";
-    const sort = props.sort || "(정보 없음)";
-    const address = props.address || "(주소 없음)";
+	    // ✅ 즐겨찾기 버튼 가져오기
+	    const favBtn = document.getElementById("favToggleBtn");
 
-    popupOverlay.setPosition(center);
-    popupContent.innerHTML =
-      "<b>이름:</b> " + name + "<br>" +
-      "<b>종류:</b> " + type + "<br>" +
-      "<b>종별:</b> " + sort + "<br>" +
-      "<b>소재지:</b> " + address +
-      "<div id='inspBox' style='margin-top:8px; font-size:0.9em; color:#555;'>안전진단표 불러오는 중...</div>" +
-      "<div style='margin-top:6px; display:flex; gap:6px;'>" +
-        "<button id='btnInspect' class='btn btn-sm btn-primary'>점검 하기</button>" +
-        "<button id='btnHistory' class='btn btn-sm btn-secondary'>점검 내역</button>" +
-      "</div>";
+	    if (managecode) {
+	      // 현재 즐겨찾기 여부 조회
+	      fetch("${pageContext.request.contextPath}/api/damage/hoshi/status?managecode=" + managecode)
+	        .then(r => r.json())
+	        .then(data => {
+	          favBtn.innerHTML = (data.hoshi === 1)
+	            ? '<i class="bi bi-bookmark-star-fill" style="font-size:30px; color:gold;"></i>'
+	            : '<i class="bi bi-bookmark" style="font-size:30px; color:gray;"></i>';
+	          loadFavoriteList();
+	        })
+	        .catch(err => console.error("즐겨찾기 상태 조회 실패:", err));
 
-    console.log("클릭된 feature:", props);
-    found = true;
+	      // 클릭 시 즐겨찾기 토글
+	      favBtn.onclick = function() {
+	        fetch("${pageContext.request.contextPath}/api/damage/hoshi/toggle", {
+	          method: "POST",
+	          headers: { "Content-Type": "application/json" },
+	          body: JSON.stringify({ managecode: managecode })
+	        })
+	        .then(r => r.json())
+	        .then(data => {
+	          favBtn.innerHTML = data.hoshi
+	            ? '<i class="bi bi-bookmark-star-fill" style="font-size:30px; color:gold;"></i>'
+	            : '<i class="bi bi-bookmark" style="font-size:30px; color:gray;"></i>';
+	          loadFavoriteList();
+	        })
+	        .catch(err => console.error("즐겨찾기 업데이트 실패:", err));
+	      };
+	    }
 
-    var managecode = props.managecode;
-    console.log("선택된 관리번호:", managecode);
+	    // ✅ 진단표 fetch (기존 코드 그대로)
+	    if (managecode) {
+	      fetch("${pageContext.request.contextPath}/api/damage/" + managecode + "/inspection")
+	        .then(r => r.json())
+	        .then(data => {
+	          const inspBox = document.getElementById("inspBox");
+	          if (!data || data.error || data.status >= 400) {
+	            inspBox.innerHTML = "<div style='color:red;'>점검표 불러오기 실패</div>";
+	            return;
+	          }
+	          if (Object.keys(data).length === 0) {
+	            inspBox.innerHTML = "<div>점검 이력 없음</div>";
+	          } else {
+	            let html = '<table class="table table-sm table-bordered mb-0">';
+	            html += "<thead><tr><th>손상유형</th><th>등급</th></tr></thead><tbody>";
+	            for (const key in data) {
+	              if (Object.prototype.hasOwnProperty.call(data, key)) {
+	                const value = data[key];
+	                html += "<tr><td>" + key + "</td><td>" + (value ? value : '-') + "</td></tr>";
+	              }
+	            }
+	            html += "</tbody></table>";
+	            inspBox.innerHTML = html;
+	          }
+	        })
+	        .catch(err => {
+	          console.error("점검표 로드 오류:", err);
+	          const insp = document.getElementById("inspBox");
+	          if (insp) insp.innerHTML = "<div style='color:red;'>점검표 불러오기 실패</div>";
+	        });
+	    }
+	  });
 
-    if (managecode) {
-      fetch("${pageContext.request.contextPath}/api/damage/" + managecode + "/inspection")
-        .then(r => r.json())
-        .then(map => {
-          var inspBox = document.getElementById("inspBox");
-          if (!map || map.error || map.status >= 400) {
-            inspBox.innerHTML = "<div style='color:red;'>점검표 불러오기 실패</div>";
-            return;
-          }
+	  if (!found) {
+	    infoPopupOverlay.setPosition(undefined);
+	  }
+	});
+	
+	
+	// ✅ 우클릭 이벤트 → 좌표 표시, 건물 등록
+	map.on("contextmenu", function(evt) {
+	  evt.preventDefault();
 
-          if (Object.keys(map).length === 0) {
-            inspBox.innerHTML = "<div>점검 이력 없음</div>";
-          } else {
-            var html = '<table class="table table-sm table-bordered mb-0">';
-            html += "<thead><tr><th>손상유형</th><th>등급</th></tr></thead><tbody>";
-            for (var key in map) {
-              if (map.hasOwnProperty(key)) {
-                var value = map[key];
-                html += "<tr><td>" + key + "</td><td>" + (value ? value : '-') + "</td></tr>";
-              }
-            }
-            html += "</tbody></table>";
-            inspBox.innerHTML = html;
-          }
-        })
-        .catch(err => {
-          console.error("점검표 로드 오류:", err);
-          document.getElementById("inspBox").innerHTML =
-            "<div style='color:red;'>점검표 불러오기 실패</div>";
-        });
-    }
-  });
+	  // OpenLayers에서 제공하는 픽셀 → 좌표 변환
+	  const coord = map.getCoordinateFromPixel(evt.pixel);
+	  const x = coord[0];
+	  const y = coord[1];
 
-  
-  if (!found) {
-    popupOverlay.setPosition(undefined);
-  }
-});
- // 우클릭 이벤트 → 좌표 표시, 건물 등록
-    map.on("contextmenu", function(evt) {
-      evt.preventDefault();
+	  // 우클릭 팝업을 정확히 클릭 지점에 표시
+	  coordPopupOverlay.setPosition(coord);
 
-      // EPSG:3857 좌표 그대로 사용 (DB 저장용)
-      const coord = evt.coordinate; 
-      const x = coord[0];
-      const y = coord[1];
+	  const btnId = "registerButton_" + Date.now();
 
-      popupOverlay.setPosition(coord);
+	  coordPopupContent.innerHTML =
+	    "<b>좌표</b><br/>" +
+	    "X: " + x.toFixed(2) + "<br/>" +
+	    "Y: " + y.toFixed(2) + "<br/>" +
+	    '<div style="margin-top:6px; display:flex; gap:6px;">' +
+	      '<button id="' + btnId + '" class="btn btn-sm btn-primary">건물 등록</button>' +
+	    '</div>';
 
-      // 버튼마다 고유한 ID 생성
-      const btnId = "registerButton_" + Date.now();
+	  // 좌클릭 팝업 닫기
+	  infoPopupOverlay.setPosition(undefined);
 
-      // 화면에는 보기 좋게 소수점 2자리만
-      popupContent.innerHTML =
-        "<b>좌표</b><br/>" +
-        "X: " + x.toFixed(2) + "<br/>" +
-        "Y: " + y.toFixed(2) + "<br/>" +
-        '<div style="margin-top:6px; display:flex; gap:6px;">' +
-          '<button id="' + btnId + '" class="btn btn-sm btn-primary">건물 등록</button>' +
-        '</div>';
-
-      // innerHTML로 버튼이 만들어진 직후 이벤트 연결
-      const btn = document.getElementById(btnId);
-      if (btn) {
-        btn.addEventListener("click", () => {
-          // URL 파라미터에는 double 원본값 그대로 넘김
-          const url = "${pageContext.request.contextPath}/sj/registerPage"
-        	  + "?x=" + x.toFixed(2) 
-              + "&y=" + y.toFixed(2);
-          window.open(url, "_blank", "width=600,height=400");
-        });
-      }
-    });
+	  // 버튼 이벤트
+	  const btn = document.getElementById(btnId);
+	  if (btn) {
+	    btn.addEventListener("click", () => {
+	      const url = "${pageContext.request.contextPath}/sj/registerPage"
+	        + "?x=" + x.toFixed(2)
+	        + "&y=" + y.toFixed(2);
+	      window.open(url, "_blank", "width=600,height=400");
+	    });
+	  }
+	});
 
     // ✅ 각 구 중심 좌표 (EPSG:4326 → 변환해서 EPSG:3857 사용)
    const regionCenters = {
@@ -501,6 +564,64 @@ map.on("singleclick", function(evt) {
     	    favList.style.display = "none";   // 리스트 숨기기
       }
    });
+ 	// ✅ 맵 바깥쪽 클릭 시 팝업 닫기
+    map.on("singleclick", function(evt) {
+      const feature = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
+        return feature;
+      });
+
+      if (!feature) {
+        infoPopupOverlay.setPosition(undefined);   // 좌클릭 팝업 닫기
+        coordPopupOverlay.setPosition(undefined);  // 우클릭 팝업 닫기
+      }
+    });
+
+    // ✅ 맵 아무데나 우클릭하면 기존 좌표 팝업 닫기
+    map.on("pointerdown", function(evt) {
+      if (evt.originalEvent.button === 2) { // 우클릭
+        coordPopupOverlay.setPosition(undefined);
+      }
+    });
+    
+    function loadFavoriteList() {
+    	  const favList = document.getElementById("favoriteList");
+    	  fetch("${pageContext.request.contextPath}/api/damage/hoshi")
+    	    .then(r => r.json())
+    	    .then(data => {
+    	      if (!data || data.length === 0) {
+    	        favList.innerHTML = "<div style='color:#888;'>즐겨찾기 없음</div>";
+    	        return;
+    	      }
+
+    	      let html = "<ul style='list-style:none; margin:0; padding:0;'>";
+    	      data.forEach(item => {
+    	        html +=
+    	          '<li data-x="' + item.x + '" data-y="' + item.y + '"' +
+    	          ' style="padding:4px 2px; border-bottom:1px solid #eee; cursor:pointer;">' +
+    	          '🔖 ' + item.name +
+    	          '</li>';
+    	      });
+    	      html += "</ul>";
+    	      favList.innerHTML = html;
+
+    	      // ✅ 리스트 클릭 이벤트 → 지도 이동
+    	      favList.querySelectorAll("li").forEach(li => {
+    	        li.addEventListener("click", function() {
+    	          const x = parseFloat(this.getAttribute("data-x"));
+    	          const y = parseFloat(this.getAttribute("data-y"));
+    	          map.getView().animate({
+    	            center: [x, y],
+    	            zoom: 16,
+    	            duration: 800
+    	          });
+    	        });
+    	      });
+    	    })
+    	    .catch(err => {
+    	      console.error("즐겨찾기 로드 오류:", err);
+    	      favList.innerHTML = "<div style='color:red;'>불러오기 실패</div>";
+    	    });
+    	}
   </script>
 </body>
 </html>
