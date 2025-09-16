@@ -9,4 +9,5 @@ public interface StructureDao {
 	List<StructureDto> getAllStructures();
 	StructureDto getStructureByManagecode(int managecode);
 
+
 }

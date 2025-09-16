@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.DustMapper">
+	<insert id="upsertStation" parameterType="DustDto">
+	    INSERT INTO dust_station (
+	      station_name, addr, mang_name, dmX, dmY, station_active
+	    )
+	    VALUES (
+	      #{stationName}, #{stationAddr}, #{mangName}, #{lat}, #{lon}, #{stationActive}
+	    )
+	    ON CONFLICT (station_name)
+	    DO UPDATE SET
+	      addr 		= EXCLUDED.addr,
+	      mang_name = EXCLUDED.mang_name,
+	      dmx 		= EXCLUDED.dmx,
+	      dmy 		= EXCLUDED.dmy,
+	      station_active = EXCLUDED.station_active
+	</insert>
+	
+	<select id="getDustStation" resultType="DustDto">
+	    SELECT station_name AS stationName,
+	           addr         AS stationAddr,
+	           mang_name    AS mangName,
+	           dmx          AS lon,
+	           dmy          AS lat,
+	           station_active AS stationActive
+	    FROM dust_station
+	    WHERE station_active = true
+	    ORDER BY station_name
+	</select>
+  	
+  	<update id="deactivateAllStations">
+	    UPDATE dust_station
+	    SET station_active = false
+	</update>
+	
+	<insert id="upsertDustMeasure" parameterType="List">
+	    INSERT INTO station_measurements (
+	      station_name, measure_time, pm10, pm2_5, sido_name
+	    )
+	    VALUES 
+	    <foreach collection="list" item="dto" separator=",">
+	        (#{dto.stationName}, #{dto.measureTime}, #{dto.pm10}, #{dto.pm2_5}, #{dto.sidoName})
+	    </foreach>
+	    ON CONFLICT (station_name, measure_time)
+	    DO UPDATE SET
+	      pm10 = EXCLUDED.pm10,
+	      pm2_5 = EXCLUDED.pm2_5;
+	</insert>
+	
+	<select id="getActiveDustStations" resultType="String">
+	    SELECT station_name AS stationName
+	    FROM dust_station
+	    WHERE station_active = true
+	    ORDER BY station_name
+	</select>
+	
+	<select id="getDustMeasurements" parameterType="String" resultType="DustDto">
+		SLEECT 	station_name AS stationName,
+				measure_time AS measureTime,
+				pm10		 AS pm10,
+				pm2_5		 AS pm2_5,
+				sido_name    AS sidoName
+		FROM 	station_measurements	
+		WHERE 	sidoName = #{sido}
+		AND 	measure_time >= NOW() - INTERVAL '7 days'
+    	ORDER BY measure_time
+	</select>
+
+</mapper>

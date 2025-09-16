@@ -27,4 +27,10 @@ public class StructureServiceImpl implements StructureService {
         return structureDao.getStructureByManagecode(managecode);
 	}
 
+	@Override
+	public List<StructureDto> getHoshiList() {
+		
+		return structureDao.getHoshiList();
+	}
+
 }

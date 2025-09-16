@@ -1,144 +1,218 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>OpenLayers + GeoServer</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.4.0/ol.css" />
-  <script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
-  <style>
-    :root {
-      --header-h: 60px;
-      --footer-h: 40px;
-      --rail-w: 120px;
-      --tool-w: 200px;
-    }
-    #dataRail {
-      position: fixed; z-index: 900;
-      top: var(--header-h, 60px);
-      left: var(--rail-w);
-      bottom: var(--footer-h);
-      width: var(--tool-w);
-      background: #f3f3f3;
-      border-right: 1px solid #ddd;
-      padding: 12px 10px;
-      display: flex; flex-direction: column; gap: 10px;
-      transition: transform .25s ease; will-change: transform;
-    }
-    footer {
-      position: fixed; left: 0; right: 0; bottom: 0;
-      height: var(--footer-h, 40px);
-      background: #333; color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      border-top: 1px solid #444; z-index: 1000;
-    }
-    #map {
-      position: fixed;
-      top: var(--header-h);
-      left: calc(var(--rail-w) + var(--tool-w));
-      right: 0; bottom: var(--footer-h);
-      z-index: 10; min-height: 300px;
-    }
-    #dataRail button {
-      display: block; width: 100%; padding: 10px 12px;
-      text-align: center; border-radius: 10px;
-      border: 1px solid #6b7280; background: #fff; color: #111;
-    }
-    #dataRail button:hover { background: #e5e7eb; }
-    body.rail-collapsed #dataRail { transform: translateX(-100%); }
-    body.rail-collapsed #map { left: var(--rail-w); }
-    .rail-toggle {
-      position: fixed; z-index: 1200; top: 50%;
-      transform: translateY(-50%);
-      left: calc(var(--rail-w) + var(--tool-w) - 1px);
-      width: 18px; height: 80px;
-      border: 1px solid #c9ccd1; background: #fff;
-      cursor: pointer; user-select: none;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; line-height: 1;
-      transition: left .25s ease, background .15s ease, box-shadow .15s ease, transform .1s ease;
-    }
-    .rail-toggle:hover { background: #f6f7f9; box-shadow: 0 4px 8px rgba(0,0,0,.18); }
-    .rail-toggle:active { transform: translateY(-50%) scale(.97); }
-    body.rail-collapsed .rail-toggle { left: calc(var(--rail-w) - 1px); }
-    #dataRail .btn.active { background:#e5e7eb; }
+<meta charset="UTF-8" />
+<title>OpenLayers + GeoServer</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/ol@7.4.0/ol.css" />
+<script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
+<style>
+:root {
+	--header-h: 60px;
+	--footer-h: 40px;
+	--rail-w: 120px;
+	--tool-w: 200px;
+}
 
-    /* 팝업 스타일 */
-    .ol-popup {
-      position: absolute;
-      background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      padding: 16px 12px 12px 12px;
-      border-radius: 8px;
-      border: 1px solid #cccccc;
-      min-width: 200px;
-      font-size: 14px;
-      color: #111;
-    }
-    .popup-close {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 22px;
-      height: 22px;
-      border: none;
-      border-radius: 50%;
-      background: #e02424;
-      color: white;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .popup-close:hover { background: #b91c1c; }
-  </style>
+#dataRail {
+	position: fixed;
+	z-index: 900;
+	top: var(--header-h, 60px);
+	left: var(--rail-w);
+	bottom: var(--footer-h);
+	width: var(--tool-w);
+	background: #f3f3f3;
+	border-right: 1px solid #ddd;
+	padding: 12px 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	transition: transform .25s ease;
+	will-change: transform;
+}
+
+footer {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: var(--footer-h, 40px);
+	background: #333;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-top: 1px solid #444;
+	z-index: 1000;
+}
+
+#map {
+	position: fixed;
+	top: var(--header-h);
+	left: calc(var(--rail-w)+ var(--tool-w));
+	right: 0;
+	bottom: var(--footer-h);
+	z-index: 10;
+	min-height: 300px;
+	width: 100%;
+	height: 100%;
+}
+
+#dataRail button {
+	display: block;
+	width: 100%;
+	padding: 10px 12px;
+	text-align: center;
+	border-radius: 10px;
+	border: 1px solid #6b7280;
+	background: #fff;
+	color: #111;
+}
+
+#dataRail button:hover {
+	background: #e5e7eb;
+}
+
+body.rail-collapsed #dataRail {
+	transform: translateX(-100%);
+}
+
+body.rail-collapsed #map {
+	left: var(--rail-w);
+}
+
+.rail-toggle {
+	position: fixed;
+	z-index: 1200;
+	top: 50%;
+	transform: translateY(-50%);
+	left: calc(var(--rail-w)+ var(--tool-w)- 1px);
+	width: 18px;
+	height: 80px;
+	border: 1px solid #c9ccd1;
+	background: #fff;
+	cursor: pointer;
+	user-select: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+	line-height: 1;
+	transition: left .25s ease, background .15s ease, box-shadow .15s ease,
+		transform .1s ease;
+}
+
+.rail-toggle:hover {
+	background: #f6f7f9;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, .18);
+}
+
+.rail-toggle:active {
+	transform: translateY(-50%) scale(.97);
+}
+
+body.rail-collapsed .rail-toggle {
+	left: calc(var(--rail-w)- 1px);
+}
+
+#dataRail .btn.active {
+	background: #e5e7eb;
+}
+
+/* 팝업 스타일 */
+.ol-popup {
+	position: absolute;
+	background: white;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+	padding: 16px 12px 12px 12px;
+	border-radius: 8px;
+	border: 1px solid #cccccc;
+	min-width: 200px;
+	font-size: 14px;
+	color: #111;
+}
+
+.popup-close {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	width: 22px;
+	height: 22px;
+	border: none;
+	border-radius: 50%;
+	background: #e02424;
+	color: white;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 20px;
+	text-align: center;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.popup-close:hover {
+	background: #b91c1c;
+}
+</style>
 </head>
 <body>
-  <!-- 메뉴 -->
-  <jsp:include page="/WEB-INF/views/header.jsp" />
-  <jsp:include page="/WEB-INF/views/sidebar.jsp" />
+	<!-- 메뉴 -->
+	<jsp:include page="/WEB-INF/views/header.jsp" />
+	<jsp:include page="/WEB-INF/views/sidebar.jsp" />
 
-  <aside id="dataRail">
-       <!-- 지역 선택 -->
-   <div style="text-align: center; margin-bottom: 12px;">
-     <label class="form-label text-black">지역 선택</label>
-     <div style="margin-top: 6px;">
-       <select id="region1" class="form-select form-select-sm">
-         <option>서울특별시</option>         
-       </select>
-      <select id="region2" class="form-select form-select-sm">
-        <option>전체</option>
-        <option>은평구</option>
-        <option>서대문구</option>
-        <option>종로구</option>
-        <option>마포구</option>
-      </select>
-     </div>
-   </div>
-     <!-- 사회기반시설 선택 -->
-    <div style="text-align: center;">
-      <label class="form-label text-black">사회기반시설 선택</label>
-      <div class="d-grid gap-2">
-        <button id="btnGyoryang" class="btn btn-light btn-sm">교량</button>
-        <button id="btnTunnel" class="btn btn-light btn-sm">터널</button>  
-        <button id="btnRiver" class="btn btn-light btn-sm">하천</button>
-        <button id="btnSudo" class="btn btn-light btn-sm">상하수도</button>
-        <button id="btnWall" class="btn btn-light btn-sm">옹벽</button>
-        <button id="btnSamyun" class="btn btn-light btn-sm">절토사면</button>
-        <button id="btnBuilding" class="btn btn-light btn-sm">건축물</button>     
-        <button id="btnALLON" class="btn btn-light btn-sm">전체</button>     
-        <button id="btnALLOFF" class="btn btn-light btn-sm">전체 해제</button>     
-      </div>
-    </div>
-  </aside>
+	<aside id="dataRail">
+		<!-- 지역 선택 -->
+		<div style="text-align: center; margin-bottom: 12px;">
+			<label class="form-label text-black">지역 선택</label>
+			<div style="margin-top: 6px;">
+				<select id="region1" class="form-select form-select-sm">
+					<option>서울특별시</option>
+				</select> <select id="region2" class="form-select form-select-sm">
+					<option>전체</option>
+					<option>은평구</option>
+					<option>서대문구</option>
+					<option>종로구</option>
+					<option>마포구</option>
+				</select>
+			</div>
+		</div>
+		<!-- 사회기반시설 선택 -->
+		<div style="text-align: center;">
+			<label class="form-label text-black">사회기반시설 선택</label>
+			<div class="d-grid gap-2">
+				<button id="btnGyoryang" class="btn btn-light btn-sm">교량</button>
+				<button id="btnTunnel" class="btn btn-light btn-sm">터널</button>
+				<button id="btnRiver" class="btn btn-light btn-sm">하천</button>
+				<button id="btnSudo" class="btn btn-light btn-sm">상하수도</button>
+				<button id="btnWall" class="btn btn-light btn-sm">옹벽</button>
+				<button id="btnSamyun" class="btn btn-light btn-sm">절토사면</button>
+				<button id="btnBuilding" class="btn btn-light btn-sm">건축물</button>
+				<button id="btnALLON" class="btn btn-light btn-sm">전체</button>
+				<button id="btnALLOFF" class="btn btn-light btn-sm">전체 해제</button>
+			</div>
+		</div>
 
-  <button id="toggleRailBtn" class="rail-toggle" aria-expanded="true" title="데이터레일 접기">◀</button>
-  <div id="map"></div>
-  <footer>© 사회기반시설 스마트 유지관리 시스템</footer>
 
-  <script>
+		<!-- ✅ 즐겨찾기 토글 -->
+		<div
+			style="margin-top: auto; text-align: center; padding-top: 12px; border-top: 1px solid #ddd;">
+			<button id="btnFavoriteToggle" class="btn btn-light btn-sm"
+				style="width: 100%;">⭐ 즐겨찾기</button>
+			<!-- 즐겨찾기 리스트 -->
+			<div id="favoriteList"
+				style="margin-top: 8px; max-height: 150px; overflow-y: auto; text-align: left; display: none; border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 6px; font-size: 14px;">
+			</div>
+		</div>
+	</aside>
+
+
+	<button id="toggleRailBtn" class="rail-toggle" aria-expanded="true"
+		title="데이터레일 접기">◀</button>
+	<div id="map"></div>
+	<footer>© 사회기반시설 스마트 유지관리 시스템</footer>
+
+	<script>
     // ✅ 배경지도 (VWorld)
     const vworldLayer = new ol.layer.Tile({
       source: new ol.source.XYZ({
@@ -157,16 +231,16 @@
     });
   </script>
 
-  <!-- ✅ 시설별 레이어 정의 JSP include -->
-  <jsp:include page="/WEB-INF/views/sj/layers/gyoryang.jsp" />
-  <jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp" />
-  <jsp:include page="/WEB-INF/views/sj/layers/river.jsp" />
-  <jsp:include page="/WEB-INF/views/sj/layers/sudo.jsp" />
-  <jsp:include page="/WEB-INF/views/sj/layers/wall.jsp" />
-  <jsp:include page="/WEB-INF/views/sj/layers/samyun.jsp" />
-  <jsp:include page="/WEB-INF/views/sj/layers/building.jsp" />
+	<!-- ✅ 시설별 레이어 정의 JSP include -->
+	<jsp:include page="/WEB-INF/views/sj/layers/gyoryang.jsp" />
+	<jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp" />
+	<jsp:include page="/WEB-INF/views/sj/layers/river.jsp" />
+	<jsp:include page="/WEB-INF/views/sj/layers/sudo.jsp" />
+	<jsp:include page="/WEB-INF/views/sj/layers/wall.jsp" />
+	<jsp:include page="/WEB-INF/views/sj/layers/samyun.jsp" />
+	<jsp:include page="/WEB-INF/views/sj/layers/building.jsp" />
 
-  <script>
+	<script>
     // ✅ 레일 토글 버튼 동작
     const toggleBtn = document.getElementById("toggleRailBtn");
     toggleBtn.addEventListener("click", () => {
@@ -372,6 +446,61 @@ map.on("singleclick", function(evt) {
         });
       }
     });
+    
+ 	// ✅ 즐겨찾기 토글 버튼
+    const favBtn = document.getElementById("btnFavoriteToggle");
+    const favList = document.getElementById("favoriteList");
+
+    favBtn.addEventListener("click", () => {
+      favBtn.classList.toggle("active");
+      if (favBtn.classList.contains("active")) {
+        favBtn.innerHTML = "⭐ 즐겨찾기";
+        favList.style.display = "block";   // 리스트 보여주기
+
+        // AJAX 호출 (예: /api/favorites)
+        fetch("${pageContext.request.contextPath}/api/damage/hoshi")
+        .then(r => r.json())
+        .then(data => {
+          if (!data || data.length === 0) {
+            favList.innerHTML = "<div style='color:#888;'>즐겨찾기 없음</div>";
+            return;
+          }
+
+          let html = "<ul style='list-style:none; margin:0; padding:0;'>";
+          data.forEach(item => {
+            html +=
+              '<li data-x="' + item.x + '" data-y="' + item.y + '"' +
+              ' style="padding:4px 2px; border-bottom:1px solid #eee; cursor:pointer;">' +
+              '🔖 ' + item.name +
+              '</li>';
+          });
+          html += "</ul>";
+          favList.innerHTML = html;
+
+          // ✅ 리스트 클릭 이벤트 → 지도 이동
+          favList.querySelectorAll("li").forEach(li => {
+            li.addEventListener("click", function() {
+              const x = parseFloat(this.getAttribute("data-x"));
+              const y = parseFloat(this.getAttribute("data-y"));
+
+              const coord = [x, y]; // EPSG:3857
+              map.getView().animate({
+                center: coord,
+                zoom: 16,
+                duration: 800
+              });
+            });
+          });
+        })
+        .catch(err => {
+          console.error("즐겨찾기 로드 오류:", err);
+          favList.innerHTML = "<div style='color:red;'>불러오기 실패</div>";
+        });
+      } else {
+    	    favBtn.innerHTML = "☆ 즐겨찾기";
+    	    favList.style.display = "none";   // 리스트 숨기기
+      }
+   });
   </script>
 </body>
 </html>
