@@ -32,7 +32,7 @@ public class DamageController {
 	
 	
 	@GetMapping("/inspect/new")
-	public String inspectNewPage(@RequestParam int managecode, Model model) {
+	public String inspectNewPage(@RequestParam("managecode") int managecode, Model model) {
 		model.addAttribute("managecode", managecode);
 		return "sj/inspectPage";
 	}
@@ -45,6 +45,20 @@ public class DamageController {
 	    Map<String, Object> res = new HashMap<>();
 	    res.put("success", result > 0);
 	    return res;
+	}
+	
+	@GetMapping("/inspect/detail")
+	public String inspectDetail(@RequestParam("inscode") int inscode ,Model model) {
+		
+		Damage_InspectDto damage_InspectDto = damageService.getFindByInscode(inscode);
+		System.out.println("DamageController inspectDetail damage_InspectDto.겟매니지코드 => "+damage_InspectDto.getManagecode());
+		
+		
+		
+		
+		model.addAttribute("damage_InspectDto", damage_InspectDto);
+		model.addAttribute("managecode", damage_InspectDto.getManagecode());
+		return "sh/inspectDetail";
 	}
 	
 }

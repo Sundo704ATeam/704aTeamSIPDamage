@@ -29,4 +29,28 @@
 	</insert>
 	
 	
+	<select id="getFindByInscode" parameterType="int" resultType="Damage_InspectDto">
+		select dmgins.inscode,
+			   dmgins.managecode,
+			   dmgins.crackcnt,
+			   dmgins.elecleakcnt,
+			   dmgins.leakcnt,
+			   dmgins.variationcnt,
+			   dmgins.abnormalitycnt,
+			  (dmgins.crackcnt * cons.crack) as crack,
+			  (dmgins.elecleakcnt * cons.elecleak) as elecleak,
+			  (dmgins.leakcnt * cons.leak) as leak,
+			  (dmgins.variationcnt * cons.variation) as variation,
+			  (dmgins.abnormalitycnt * cons.abnormality) as abnormality,
+			  dmgins.ins_date,
+			  dmgins.inspactor
+		from
+			(select *
+			 from damage_inspect
+			 where inscode = #{value}
+			 ORDER BY ins_date DESC
+			 LIMIT 1) dmgins
+		left join constimp cons on dmgins.managecode = cons.managecode
+	</select>
+	
 </mapper>

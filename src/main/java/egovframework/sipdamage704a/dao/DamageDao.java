@@ -10,5 +10,7 @@ public interface DamageDao {
 
 	int saveInspect(Damage_InspectDto damage_InspectDto);
 
+	Damage_InspectDto getFindByInscode(int inscode);
+
 }
  	
