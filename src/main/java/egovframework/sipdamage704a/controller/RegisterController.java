@@ -45,9 +45,12 @@ public class RegisterController {
 	    return "sj/registerPage";
 	}
 	
-    @PostMapping("/saveBuilding")
-    public String saveBuilding(StructureDto dto) {
-        structureService.registerStructure(dto);
-        return "sj/structureList"; 
-    }
+	@PostMapping("/saveBuilding")
+	public String saveBuilding(StructureDto dto, Model model) {
+	    structureService.registerStructure(dto);
+	    model.addAttribute("success", true); 
+	    return "sj/registerPage"; 
+	}
+
+
 }

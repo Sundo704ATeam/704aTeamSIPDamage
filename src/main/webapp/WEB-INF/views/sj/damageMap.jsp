@@ -350,7 +350,7 @@ body.rail-collapsed .rail-toggle {
 	        '<a href="javascript:void(0);" ' +
 	        '   class="btn btn-sm btn-secondary" ' +
 	        '   onclick="window.open(\'' + '${pageContext.request.contextPath}/inspectList?managecode=' + managecode + '\', ' +
-	        '   \'inspectWin\', \'width=900,height=600,scrollbars=yes,resizable=yes\');">점검 내역</a>'
+	        '   \'inspectWin\', \'width=1000,height=600,scrollbars=yes,resizable=yes\');">점검 내역</a>'
 
 	      '</div>';
 
