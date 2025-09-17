@@ -97,7 +97,7 @@
     LEFT JOIN constimp c 
            ON i.managecode = c.managecode
     WHERE i.managecode = #{managecode}
-    ORDER BY i.ins_date DESC
+    ORDER BY i.inscode DESC
     
 	</select>
     <!-- 구조물 신규 등록 -->

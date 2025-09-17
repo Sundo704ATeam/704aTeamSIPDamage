@@ -22,8 +22,8 @@
       style: new ol.style.Style({
         image: new ol.style.Circle({
           radius: 10,
-          fill: new ol.style.Fill({ color: 'white' }),
-          stroke: new ol.style.Stroke({ color: 'white', width: 2 })
+          fill: new ol.style.Fill({ color: 'gray' }),
+          stroke: new ol.style.Stroke({ color: 'gray', width: 2 })
         })
       }),
       visible: false   // 처음엔 안 보이게
