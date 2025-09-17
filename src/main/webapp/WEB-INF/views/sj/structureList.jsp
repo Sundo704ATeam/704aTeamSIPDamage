@@ -5,7 +5,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>건물 목록</title>
+  <title>사회기반시설 목록</title>
   <style>
     body { 
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -17,7 +17,7 @@
 
     .content {
       flex: 1; 
-      padding: 150px 20px 20px 20px; /* ✅ 위쪽 여백 늘림 */
+      padding: 100px 20px 20px 20px; /* ✅ 위쪽 여백 늘림 */
       margin-left: 220px; /* 사이드바 폭 맞추기 */
     }
 
@@ -112,7 +112,7 @@
   <jsp:include page="/WEB-INF/views/sidebar.jsp" />
 
   <div class="content">
-    <h2>건물 목록</h2>
+    <h2>사회기반시설 목록</h2>
 
     <!-- ✅ 검색창 -->
     <div class="search-box">
@@ -149,12 +149,16 @@
               <td>${s.address}</td>
 			  <td>${s.latest_ins_date}</td>
               <td>
-			  <a href="${pageContext.request.contextPath}/StructureDetail?managecode=${s.managecode}" class="btn">
-			    내역 보기 
+			  <a href="javascript:void(0);" 
+			     class="btn"
+			     onclick="window.open('${pageContext.request.contextPath}/inspectList?managecode=${s.managecode}', 
+			                          'inspectWin', 
+			                          'width=1000,height=700,scrollbars=yes,resizable=yes');">
+			    내역 보기
 			  </a>
 			</td>
 			<td>
-			  <a href="${pageContext.request.contextPath}/StructureDetail?managecode=${s.managecode}" class="btn">
+			  <a href="${pageContext.request.contextPath}/structureDetail?managecode=${s.managecode}" class="btn">
 			    정보 보기
 			  </a>
 			</td>

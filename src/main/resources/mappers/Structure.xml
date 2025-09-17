@@ -27,22 +27,31 @@
 	</select>
 
 	<!-- managecode 단건 조회 -->
-	<select id="getStructureByManagecode" parameterType="int"
-		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
-		SELECT
-			managecode,
-			type,
-			name,
-			address,
-			x,
-			y,
-			sort,
-			hoshi,
-			materials,
-			typedetail
-		FROM structure
-		WHERE managecode = #{managecode}
+	<select id="getStructureByManagecode"
+	        parameterType="int"
+	        resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+	    SELECT
+	        s.managecode,
+	        s.type,
+	        s.name,
+	        s.address,
+	        s.x,
+	        s.y,
+	        s.sort,
+	        s.hoshi,
+	        s.materials,
+	        s.typedetail,
+	        c.crack,
+	        c.elecleak,
+	        c.leak,
+	        c.variation,
+	        c.abnormality
+	    FROM structure s
+	    LEFT JOIN constimp c
+	           ON s.managecode = c.managecode
+	    WHERE s.managecode = #{managecode}
 	</select>
+
 	<select id="getHoshiList"
 		resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
 		SELECT
@@ -59,9 +68,81 @@
 		where hoshi = 1
 		ORDER BY managecode
 	</select>
+	
 	<update id="updateHoshi" parameterType="int">
 		UPDATE structure
 		SET hoshi = 1 - hoshi
 		WHERE managecode = #{value};
+	</update>
+	 <!-- 특정 건물의 점검 이력 조회 -->
+	<select id="getInspectsByManagecode" 
+        parameterType="int" 
+        resultType="egovframework.sipdamage704a.dto.damage.Damage_InspectDto">
+    SELECT 
+        i.inscode,
+        i.managecode,
+        i.crackcnt,
+        i.elecleakcnt,
+        i.leakcnt,
+        i.variationcnt,
+        i.abnormalitycnt,
+        i.ins_date,
+        i.inspactor,
+        c.crack,
+        c.elecleak,
+        c.leak,
+        c.variation,
+        c.abnormality
+    FROM damage_inspect i
+    LEFT JOIN constimp c 
+           ON i.managecode = c.managecode
+    WHERE i.managecode = #{managecode}
+    ORDER BY i.ins_date DESC
+    
+	</select>
+    <!-- 구조물 신규 등록 -->
+    <insert id="registerStructure" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+        INSERT INTO structure
+        (name, type, typedetail, address, sort, x, y, materials, hoshi)
+        VALUES
+        (#{name}, #{type}, #{typedetail}, #{address}, #{sort}, #{x}, #{y}, #{materials}, #{hoshi});
+
+        <!-- PK 시퀀스 값 dto.managecode 에 채워넣기 (Postgres) -->
+        <selectKey keyProperty="managecode" resultType="int" order="AFTER">
+            SELECT currval('building_managecode_seq')
+        </selectKey>
+    </insert>
+
+    <!-- 영향도 신규 등록 -->
+    <insert id="registerStructureImpact" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+        INSERT INTO constimp
+        (managecode, crack, elecleak, leak, variation, abnormality)
+        VALUES
+        (#{managecode}, #{crack}, #{elecleak}, #{leak}, #{variation}, #{abnormality})
+    
+    </insert>
+	<update id="updateStructureBase" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+	    UPDATE structure
+	    SET 
+	        name = #{name},
+	        type = #{type},
+	        typedetail = #{typedetail},
+	        address = #{address},
+	        sort = #{sort},
+	        x = #{x},
+	        y = #{y},
+	        materials = #{materials}
+	    WHERE managecode = #{managecode}
+	</update>
+
+	<update id="updateStructureImpact" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+	    UPDATE constimp
+	    SET 
+	        crack = #{crack},
+	        elecleak = #{elecleak},
+	        leak = #{leak},
+	        variation = #{variation},
+	        abnormality = #{abnormality}
+	    WHERE managecode = #{managecode}	
 	</update>
 </mapper>

@@ -26,5 +26,12 @@ public class StructureDto {
 	
 	//최신 점검일 join
 	private LocalDate latest_ins_date;  // 최근 점검일
+    
+	//건물 영향도 join
+	private int crack;
+    private int elecleak;
+    private int leak;
+    private int variation;
+    private int abnormality;
 
 }
