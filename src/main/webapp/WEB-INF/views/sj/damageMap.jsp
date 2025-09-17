@@ -21,7 +21,7 @@
 	z-index: 900;
 	top: var(--header-h, 60px);
 	left: var(--rail-w);
-	bottom: var(--footer-h);
+	bottom: 0;
 	width: var(--tool-w);
 	background: #f3f3f3;
 	border-right: 1px solid #ddd;
@@ -148,7 +148,7 @@ body.rail-collapsed .rail-toggle {
 	<!-- 지도 버튼 -->
 	<div id="mapButtons">
 	  <button id="btnA" class="map-btn">범례</button>
-	  <button id="btnB" class="map-btn">통계보기</button>
+	  <button id="btnB" class="map-btn">지도 초기화</button>
 	
 	  <!-- 범례 말풍선 -->
 	  <div id="legendPopup" class="balloon">
@@ -161,7 +161,7 @@ body.rail-collapsed .rail-toggle {
 	      <li><span class="legend-color black"></span> 터널</li>
 	      <li><span class="legend-color blue"></span> 하천</li>
 	      <li><span class="legend-color orange"></span> 상하수도</li>
-	      <li><span class="legend-color gray"></span> 용벽</li>
+	      <li><span class="legend-color gray"></span> 옹벽</li>
 	      <li><span class="legend-color brown"></span> 질토사면</li>
 	      <li><span class="legend-color green"></span> 건축물</li>
 	      <li><span class="legend-color yellow"></span> 즐겨찾기</li>
@@ -244,8 +244,8 @@ body.rail-collapsed .rail-toggle {
 		  transition: color 0.2s;
 		}
 		.close-btn:hover {
-		  color: #000;       /* 마우스 올리면 진하게 */
-		}
+  color: #000;       /* 마우스 올리면 진하게 */
+}
 		.balloon ul {
 		  padding: 0;
 		  margin: 0;
@@ -278,20 +278,30 @@ body.rail-collapsed .rail-toggle {
 		</style>
 
 <script>
-const btnA = document.getElementById("btnA");
-const legendPopup = document.getElementById("legendPopup");
-const closeBtn = document.getElementById("closeLegend");
+		//통계보기
+		const legendPopup = document.getElementById("legendPopup");
+		const closeBtn = document.getElementById("closeLegend");
+		const btnA = document.getElementById("btnA");
+		// 범례 버튼 클릭 시 토글
+		btnA.addEventListener("click", () => {
+		  const isVisible = legendPopup.style.display === "block";
+		  legendPopup.style.display = isVisible ? "none" : "block";
+		});
+		
+		// X 버튼 클릭 시 닫기
+		closeBtn.addEventListener("click", () => {
+		  legendPopup.style.display = "none";
+		});
+		
+		const btnB = document.getElementById("btnB");
+		btnB.addEventListener("click", () => {
+		  map.getView().animate({
+		    center: ol.proj.fromLonLat([127.024612, 37.5326]),
+		    zoom: 12,
+		    duration: 800
+		  });
+		});
 
-// 범례 버튼 클릭 시 토글
-btnA.addEventListener("click", () => {
-  const isVisible = legendPopup.style.display === "block";
-  legendPopup.style.display = isVisible ? "none" : "block";
-});
-
-// X 버튼 클릭 시 닫기
-closeBtn.addEventListener("click", () => {
-  legendPopup.style.display = "none";
-});
 </script>
 
 
@@ -311,7 +321,12 @@ closeBtn.addEventListener("click", () => {
 					<option>서대문구</option>
 					<option>종로구</option>
 					<option>마포구</option>
-				</select>
+					<option>영등포구</option>
+					<option>서초구</option>
+					<option>강남구</option>
+					<option>구로구</option>
+					<option>금천구</option>
+				</select> 
 			</div>
 		</div>
 		<!-- 사회기반시설 선택 -->
@@ -337,14 +352,14 @@ closeBtn.addEventListener("click", () => {
 				style="width: 100%;">⭐ 즐겨찾기</button>
 			<!-- 즐겨찾기 리스트 -->
 			<div id="favoriteList"
-				style="margin-top: 8px; max-height: 120px; overflow-y: auto; text-align: left; display: none; border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 6px; font-size: 14px;">
+				style="margin-top: 8px; max-height: 200px; overflow-y: auto; text-align: left; display: none; border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 6px; font-size: 14px;">
 			</div>
 		</div>
 	</aside>
 	<button id="toggleRailBtn" class="rail-toggle" aria-expanded="true"
 		title="데이터레일 접기">◀</button>
 	<div id="map"></div>
-	<footer>© 사회기반시설 스마트 유지관리 시스템</footer>
+	
 	<script>
     // ✅ 배경지도 (VWorld)
     const vworldLayer = new ol.layer.Tile({
@@ -468,8 +483,7 @@ closeBtn.addEventListener("click", () => {
 	      '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
 	      '<div style="margin-top:6px; display:flex; gap:6px;">' +
 	      '<button class="btn btn-sm btn-primary" ' +
-	      '   onclick="window.open(\'' + '${pageContext.request.contextPath}/damageMap/inspect/new?managecode=' + managecode + '\', ' +
-	      '   \'inspectWin\', \'width=1000,height=600,scrollbars=yes,resizable=yes\');">점검 하기</button>' +
+	      '   onclick="document.getElementById(\'statsPanel\').style.display = \'block\';">통계보기</button>' +
 	      '<a href="javascript:void(0);" ' +
 	      '   class="btn btn-sm btn-secondary" ' +
 	      '   onclick="window.open(\'' + '${pageContext.request.contextPath}/inspectList?managecode=' + managecode + '\', ' +
@@ -526,7 +540,7 @@ closeBtn.addEventListener("click", () => {
 	            inspBox.innerHTML = "<div>점검 이력 없음</div>";
 	          } else {
 	            let html = '<table class="table table-sm table-bordered mb-0">';
-	            html += "<thead><tr><th>손상유형</th><th>등급</th></tr></thead><tbody>";
+	            html += "<thead><tr><th>손상유형</th><th>손상 위험도</th></tr></thead><tbody>";
 	            for (const key in data) {
 	              if (Object.prototype.hasOwnProperty.call(data, key)) {
 	                const value = data[key];
@@ -544,6 +558,7 @@ closeBtn.addEventListener("click", () => {
 	        });
 	    }
 	  });
+	  
 	  if (!found) {
 	    infoPopupOverlay.setPosition(undefined);
 	  }
@@ -583,10 +598,15 @@ closeBtn.addEventListener("click", () => {
     // ✅ 각 구 중심 좌표 (EPSG:4326 → 변환해서 EPSG:3857 사용)
    const regionCenters = {
      "전체": [127.024612, 37.5326], // 서울 중심
-     "마포구": [126.9104, 37.5663],
+     "마포구": [126.9018, 37.5662],
      "서대문구": [126.9386, 37.5791],
-     "종로구": [126.9794, 37.5720],
-     "은평구": [126.9271, 37.6027],
+     "종로구": [126.9865, 37.5825],
+     "은평구": [126.9270, 37.6017],
+     "영등포구": [126.9139242, 37.520641],  
+     "서초구":   [127.0378103, 37.4769528],
+     "강남구":   [127.0664091, 37.4959854], 
+     "구로구":   [126.8581210, 37.4954856], 
+     "금천구":   [126.9001546, 37.4600969] 
    };
     
     // ✅ 전체 켜기 버튼
@@ -608,12 +628,19 @@ closeBtn.addEventListener("click", () => {
       const selected = this.value;
       if (regionCenters[selected]) {
         const view = map.getView();
-        const center = ol.proj.fromLonLat(regionCenters[selected]); 
+        const center = ol.proj.fromLonLat(regionCenters[selected]);
+        
+        let zoomLevel = 14;   // 기본 줌
+        if (selected === "전체") {
+          zoomLevel = 13;     // 전체일 때만 줌 다르게
+        }
+
         view.animate({
           center: center,
-          zoom: 14,
+          zoom: zoomLevel,   // ✅ 변수 적용
           duration: 800
         });
+
       }
     });
     
@@ -685,12 +712,14 @@ closeBtn.addEventListener("click", () => {
       if (!feature) {
         infoPopupOverlay.setPosition(undefined);   // 좌클릭 팝업 닫기
         coordPopupOverlay.setPosition(undefined);  // 우클릭 팝업 닫기
+        document.getElementById("statsPanel").style.display = "none"; // 통계 패널 닫기
       }
     });
     // ✅ 맵 아무데나 우클릭하면 기존 좌표 팝업 닫기
     map.on("pointerdown", function(evt) {
       if (evt.originalEvent.button === 2) { // 우클릭
         coordPopupOverlay.setPosition(undefined);
+        document.getElementById("statsPanel").style.display = "none"; // 통계 패널 닫기
       }
     });
     
@@ -732,5 +761,87 @@ closeBtn.addEventListener("click", () => {
     	    });
     	}
   </script>
+  
+  	<!-- ✅ 통계 패널 -->
+<div id="statsPanel">
+  <div class="stats-header">
+    <span>📊 통계 결과</span>
+    <button id="closeStats">×</button>
+  </div>
+  <div style="padding: 20px; text-align:center; color:#666;">
+    (여기에 통계 데이터 들어갈 예정)
+  </div>
+</div>
+
+<style>
+  #statsPanel {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    height: 220px;
+    background: #fff;
+    border-top: 2px solid #444;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    display: none;   /* ✅ 처음엔 숨김 */
+    z-index: 2000;
+    transition: left .25s ease, height .3s ease;
+  }
+  #statsPanel .stats-header {
+    display: flex; justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    font-weight: bold;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+  }
+  #statsPanel button {
+    border:none; background:transparent;
+    font-size: 18px; cursor:pointer;
+  }
+  
+    .map-btn:disabled {
+	  background: #eee;
+	  color: #999;
+	  cursor: not-allowed;
+	  box-shadow: none;
+	  }
+</style>
+
+<script>
+  const statsPanel = document.getElementById("statsPanel");  
+  const statsClose = document.getElementById("closeStats");
+
+  // ✅ 현재 left 계산해서 적용
+  function updateStatsPanelLeft() {
+    if (!statsPanel) return;
+    if (document.body.classList.contains("rail-collapsed")) {
+      // 레일 접힌 상태 → dataRail 만큼만 띄움
+      statsPanel.style.left = getComputedStyle(document.documentElement)
+                              .getPropertyValue("--rail-w");
+    } else {
+      // 레일 펼친 상태 → dataRail + toolRail 만큼 띄움
+      statsPanel.style.left = `calc(var(--rail-w) + var(--tool-w))`;
+    }
+  }
+
+  // ✅ 초기 위치 세팅
+  updateStatsPanelLeft();
+
+  // ✅ 레일 토글될 때도 위치 업데이트
+  document.getElementById("toggleRailBtn").addEventListener("click", () => {
+    setTimeout(updateStatsPanelLeft, 260); // transition 끝난 뒤 적용
+  });
+
+  // ✅ 윈도우 리사이즈 시에도 보정
+  window.addEventListener("resize", updateStatsPanelLeft);
+
+  
+  // ✅ 닫기 버튼
+  statsClose.addEventListener("click", () => {
+    statsPanel.style.display = "none";
+  });
+</script>
+  	
+  
 </body>
 </html>
