@@ -12,12 +12,11 @@
       flex-direction: column;
       min-height: 100vh; /* 화면 전체 높이 채우기 */
     }
-    main {
-      flex: 1; /* 푸터 제외 나머지 공간 채우기 */
-      margin-top: 80px;   /* 헤더 높이만큼 띄우기 */
-      margin-left: 220px; /* 사이드바 폭만큼 밀기 */
-      padding: 20px;
-    }
+  main {
+	  margin: 80px auto 0 auto; /* 위쪽 80px, 좌우 auto */
+	  padding: 20px;
+	  max-width: 1200px; /* 테이블이 너무 넓어지지 않도록 제한 */
+	}
     footer {
       background: #333;
       color: #fff;
@@ -38,8 +37,6 @@
   </style>
 </head>
 <body>
-  <jsp:include page="/WEB-INF/views/header.jsp" />
-  <jsp:include page="/WEB-INF/views/sidebar.jsp" />
 
   <!-- ✅ 메인 컨텐츠 -->
   <main>

@@ -354,7 +354,7 @@ body.rail-collapsed .rail-toggle {
 	        '<a href="javascript:void(0);" ' +
 	        '   class="btn btn-sm btn-secondary" ' +
 	        '   onclick="window.open(\'' + '${pageContext.request.contextPath}/inspectList?managecode=' + managecode + '\', ' +
-	        '   \'inspectWin\', \'width=800,height=600,scrollbars=yes,resizable=yes\');">점검 내역</a>'
+	        '   \'inspectWin\', \'width=900,height=600,scrollbars=yes,resizable=yes\');">점검 내역</a>'
 
 	      '</div>';
 
@@ -470,7 +470,7 @@ body.rail-collapsed .rail-toggle {
 	      const url = "${pageContext.request.contextPath}/sj/registerPage"
 	        + "?x=" + x.toFixed(2)
 	        + "&y=" + y.toFixed(2);
-	      window.open(url, "_blank", "width=600,height=400");
+	      window.open(url, "_blank", "width=800,height=550");
 	    });
 	  }
 	});

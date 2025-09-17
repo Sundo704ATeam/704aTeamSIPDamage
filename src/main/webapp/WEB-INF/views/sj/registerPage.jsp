@@ -47,7 +47,7 @@
             <option value="상하수도">상하수도</option>
             <option value="옹벽">옹벽</option>
             <option value="절토사면">절토사면</option>
-            <option value="건물">건축물</option>
+            <option value="건물">건물</option>
           </select>
         </td>
       </tr>

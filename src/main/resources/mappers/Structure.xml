@@ -119,8 +119,8 @@
         (managecode, crack, elecleak, leak, variation, abnormality)
         VALUES
         (#{managecode}, #{crack}, #{elecleak}, #{leak}, #{variation}, #{abnormality})
-    </insert>
     
+    </insert>
 	<update id="updateStructureBase" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
 	    UPDATE structure
 	    SET 
@@ -143,6 +143,6 @@
 	        leak = #{leak},
 	        variation = #{variation},
 	        abnormality = #{abnormality}
-	    WHERE managecode = #{managecode}
+	    WHERE managecode = #{managecode}	
 	</update>
 </mapper>
