@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import egovframework.sipdamage704a.dao.DamageDao;
-
+import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,7 +44,7 @@ public class DamageServiceImpl implements DamageService {
                 } else if (intValue >= 100) {
                     grade = "D";
                 } else {
-                    grade = "F";
+                    grade = "E";
                 }
 
                 // ✅ 원래 키에 "_grade" 붙여서 등급 정보 추가
@@ -54,5 +54,11 @@ public class DamageServiceImpl implements DamageService {
 
         return response;
     }
+
+	@Override
+	public int saveInspect(Damage_InspectDto damage_InspectDto) {
+		
+		return damageDao.saveInspect(damage_InspectDto);
+	}
 
 }

@@ -87,7 +87,7 @@
     </div>
 
     <div class="mt-3">
-      <a href="${pageContext.request.contextPath}/inspect/new?managecode=${managecode}" 
+      <a href="${pageContext.request.contextPath}/damageMap/inspect/new?managecode=${managecode}" 
          class="btn btn-success">점검 등록</a>
     </div>
   </main>
