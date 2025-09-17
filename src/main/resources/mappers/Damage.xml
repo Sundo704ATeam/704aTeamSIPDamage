@@ -17,7 +17,7 @@
 		from
 			(select *
 			 from damage_inspect
-			 where managecode = 1
+			 where managecode = #{managecode}
 			 ORDER BY ins_date DESC
 			 LIMIT 1) dmgins
 		left join constimp cons on dmgins.managecode = cons.managecode
