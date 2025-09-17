@@ -147,7 +147,7 @@ public class DustServiceImpl implements DustService {
 
 	@Override
 	public List<DustDto> getLatestDustData() {
-		System.out.println("DustServiceImpl getDustMeasurements start...1");
+		System.out.println("DustServiceImpl getLatestDustData start...1");
 		
 		return dustDao.getLatestDustData();
 	}

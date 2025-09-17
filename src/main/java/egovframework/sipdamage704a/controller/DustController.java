@@ -43,9 +43,9 @@ public class DustController {
 		 return "sw/DustTest2";
 	}
 	 
-	@GetMapping("/realDust")
-	public String realDustPage(Model model) {
-		log.info("DustController realDustPage start");
+	@GetMapping("/realTimeDust")
+	public String realTimeDustPage(Model model) {
+		log.info("DustController realTimeDustPage start");
 		
 		List<DustDto> getDustStation = dustService.getDustStation();
 		List<DustDto> getLatestDustData = dustService.getLatestDustData();
@@ -53,7 +53,7 @@ public class DustController {
 		model.addAttribute("getDustStation", getDustStation);
 		model.addAttribute("getLatestDustData", getLatestDustData);
 		
-		return "sw/RealDust";
+		return "sw/realTimeDust";
 	}
 	
 	@GetMapping("/fetchDustStations")
@@ -71,6 +71,18 @@ public class DustController {
 	    return dustService.getDustMeasurements(sido);
 	}
 	
+	@GetMapping("/dustData")
+	public String dustDataPage(Model model) {
+		log.info("DustController dustDataPage start");
+		
+		List<DustDto> getDustStation = dustService.getDustStation();
+		List<DustDto> getDustMeasurements = dustService.getDustMeasurements("서울");
+		
+		model.addAttribute("getDustStation", getDustStation);
+		model.addAttribute("getDustMeasurements", getDustMeasurements);
+		
+		return "sw/dustData";
+	}
 	
 	
 }

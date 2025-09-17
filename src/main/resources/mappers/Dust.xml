@@ -59,31 +59,44 @@
 	</select>
 	
 	<select id="getDustMeasurements" parameterType="String" resultType="DustDto">
-		SELECT 	station_name AS stationName,
-				measure_time AS measureTime,
-				pm10		 AS pm10,
-				pm2_5		 AS pm2_5,
-				sido_name    AS sidoName
-		FROM 	station_measurements	
-		WHERE 	sido_name = #{sido}
-		AND 	measure_time >= NOW() - INTERVAL '7 days'
-    	ORDER BY measure_time
+	    SELECT  
+	        m.station_name AS stationName,
+	        m.measure_time AS measureTime,
+	        m.pm10         AS pm10,
+	        m.pm2_5        AS pm2_5,
+	        m.sido_name    AS sidoName,
+	        s.dmx          AS lon,
+	        s.dmy          AS lat
+	    FROM station_measurements m
+	    JOIN dust_station s 
+	         ON m.station_name = s.station_name
+	    WHERE m.sido_name = #{sido}
+	      AND m.measure_time >= NOW() - INTERVAL '7 days'
+	      AND s.station_active = true
+	    ORDER BY m.measure_time ASC
 	</select>
+
 	
 	<select id="getLatestDustData" resultType="DustDto">
-	    SELECT DISTINCT ON (m.station_name)
-	           m.station_name AS stationName,
-	           m.measure_time AS measureTime,
-	           m.pm10,
-	           m.pm2_5,
-	           m.sido_name    AS sidoName,
-	           s.dmx          AS lon,
-	           s.dmy          AS lat
-	    FROM station_measurements m
-	    LEFT JOIN dust_station s 
-	    	ON m.station_name = s.station_name
-	    AND s.station_active = true
-	    ORDER BY m.station_name, m.measure_time DESC
+	    SELECT 
+	        s.station_name AS stationName,
+	        m.measure_time AS measureTime,
+	        m.pm10,
+	        m.pm2_5,
+	        m.sido_name    AS sidoName,
+	        s.dmx          AS lon,
+	        s.dmy          AS lat
+	    FROM dust_station s
+	    JOIN LATERAL (
+	        SELECT m.*
+	        FROM station_measurements m
+	        WHERE m.station_name = s.station_name
+	        ORDER BY m.measure_time DESC
+	        LIMIT 1
+	    ) m ON true
+	    WHERE s.station_active = true
+	    ORDER BY s.station_name;
 	</select>
+
 	
 </mapper>

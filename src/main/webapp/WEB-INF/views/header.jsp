@@ -5,8 +5,9 @@
 
 <!-- OpenLayers / Bootstrap -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.4.0/ol.css" />
-<script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/ol@7.4.0/dist/ol.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- JQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
