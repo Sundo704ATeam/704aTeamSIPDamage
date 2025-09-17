@@ -15,5 +15,6 @@ public interface StructureDao {
 	void updateStructureBase(StructureDto dto);	
 	void updateStructureImpact(StructureDto dto);
 	void registerStructure(StructureDto dto);
+	void registerStructureImpact(StructureDto dto);
 
 }

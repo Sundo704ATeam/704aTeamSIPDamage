@@ -100,20 +100,27 @@
     ORDER BY i.ins_date DESC
     
 	</select>
-	<insert id="registerStructure" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
-		Insert structure
-		Set 
-			name = #{name},
-	        type = #{type},
-	        typedetail = #{typedetail},
-	        address = #{address},
-	        sort = #{sort},
-	        x = #{x},
-	        y = #{y},
-	        materials = #{materials}
-	    WHERE managecode = #{managecode}
-	</insert>
+    <!-- 구조물 신규 등록 -->
+    <insert id="registerStructure" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+        INSERT INTO structure
+        (name, type, typedetail, address, sort, x, y, materials)
+        VALUES
+        (#{name}, #{type}, #{typedetail}, #{address}, #{sort}, #{x}, #{y}, #{materials});
 
+        <!-- PK 시퀀스 값 dto.managecode 에 채워넣기 (Postgres) -->
+        <selectKey keyProperty="managecode" resultType="int" order="AFTER">
+            SELECT currval('building_managecode_seq')
+        </selectKey>
+    </insert>
+
+    <!-- 영향도 신규 등록 -->
+    <insert id="registerStructureImpact" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+        INSERT INTO constimp
+        (managecode, crack, elecleak, leak, variation, abnormality)
+        VALUES
+        (#{managecode}, #{crack}, #{elecleak}, #{leak}, #{variation}, #{abnormality})
+    </insert>
+    
 	<update id="updateStructureBase" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
 	    UPDATE structure
 	    SET 

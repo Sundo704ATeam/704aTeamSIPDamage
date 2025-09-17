@@ -44,10 +44,9 @@ public class RegisterController {
 	    return "sj/registerPage";
 	}
 	
-    @PostMapping("/registerStructure")
+    @PostMapping("/saveBuilding")
     public String saveBuilding(StructureDto dto) {
         structureService.registerStructure(dto);
-        return "redirect:/sj/listBuilding";
+        return "sj/structureList"; 
     }
-
 }
