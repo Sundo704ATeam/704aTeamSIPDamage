@@ -28,18 +28,6 @@ public class RainfallServiceImpl implements RainfallService {
 	private final RainfallDao rainfallDao;
 	private final RainfallAsyncService asyncService;
 	
-
-	/**
-	 * 현재까지의 강우량 정보 DB 동기화
-	 */
-	@Scheduled(cron = "0 0 4 * * *")
-	@Override
-	public void saveRainfallsUntilNow() {
-		List<RainfallDto> rainfalls = getAsyncRainfallsUntilNow();
-		rainfallDao.saveRainfalls(rainfalls);
-		rainfallDao.deleteOldRainfalls();
-	}
-
 	/**
 	 * DB에 저장된 마지막 강우량 시간 (정각 단위)
 	 */
@@ -54,7 +42,8 @@ public class RainfallServiceImpl implements RainfallService {
 	/**
 	 * 지역구 단위로 api 비동기 요청 후 리스트 통합
 	 */
-	private List<RainfallDto> getAsyncRainfallsUntilNow() {
+	@Override
+	public List<RainfallDto> getAsyncRainfallsUntilNow() {
 		List<String> guNames = rainfallDao.getAllGuName();
 
 		String startTime = getLatestTime();
