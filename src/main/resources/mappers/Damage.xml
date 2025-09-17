@@ -2,16 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-	<mapper namespace="egovframework.DamageMapper">
-	  	<select id="findLatestByManagecode" parameterType="int" resultType="map">
-	    SELECT inscode, managecode,
-	           crackrate, elecleakrate,
-	           leakrate, variationrate,
-	           abnomalityrate, ins_date, inspactor
-	    FROM public.damage_inspect
-	    WHERE managecode = #{value}
-	    ORDER BY ins_date DESC
-	    LIMIT 1
-	  </select>	 
-	
+<mapper namespace="egovframework.DamageMapper">
+	<select id="findLatestByManagecode" parameterType="int"
+		resultType="map">
+		select dmgins.inscode,
+			   dmgins.managecode,
+			  (dmgins.crackcnt * cons.crack) as crack,
+			  (dmgins.elecleakcnt * cons.elecleak) as elecleak,
+			  (dmgins.leakcnt * cons.leak) as leak,
+			  (dmgins.variationcnt * cons.variation) as variation,
+			  (dmgins.abnormalitycnt * cons.abnormality) as abnormality,
+			  dmgins.ins_date,
+			  dmgins.inspactor
+		from
+			(select *
+			 from damage_inspect
+			 where managecode = 1
+			 ORDER BY ins_date DESC
+			 LIMIT 1) dmgins
+		left join constimp cons on dmgins.managecode = cons.managecode
+	</select>
+
 </mapper>

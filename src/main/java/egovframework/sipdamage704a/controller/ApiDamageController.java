@@ -34,11 +34,11 @@ public class ApiDamageController {
 
         // 손상유형 → 등급만 매핑
         Map<String, String> result = new LinkedHashMap<>();
-        result.put("균열", (String) row.get("crackrate"));
-        result.put("누전", (String) row.get("elecleakrate"));
-        result.put("누수", (String) row.get("leakrate"));
-        result.put("변형", (String) row.get("variationrate"));
-        result.put("구조이상", (String) row.get("abnomalityrate"));
+        result.put("균열", (String) row.get("crack_grade"));
+        result.put("누전", (String) row.get("elecleak_grade"));
+        result.put("누수", (String) row.get("leak_grade"));
+        result.put("변형", (String) row.get("variation_grade"));
+        result.put("구조이상", (String) row.get("abnormality_grade"));
         return result;
 	}
 	

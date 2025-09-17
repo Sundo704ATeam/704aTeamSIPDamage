@@ -1,5 +1,6 @@
 package egovframework.sipdamage704a.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -18,7 +19,40 @@ public class DamageServiceImpl implements DamageService {
 
     @Override
     public Map<String, Object> findLatestByUfid(int managecode) {
-        return damageDao.findLatestByUfid(managecode);
+        
+    	Map<String, Object> result = damageDao.findLatestByUfid(managecode);
+    	
+    	// ✅ 반환용 Map 따로 준비 (원본 데이터 + 등급 정보 같이 넣을 수 있음)
+        Map<String, Object> response = new HashMap<>(result);
+
+        for (Map.Entry<String, Object> entry : result.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (value instanceof Number) { // int, double 등 숫자일 때만 처리
+                int intValue = ((Number) value).intValue();
+
+                // 예: 점수 기준으로 등급 나누기
+                String grade;
+                
+                if (intValue >= 400) {
+                    grade = "A";
+                } else if (intValue >= 300) {
+                    grade = "B";
+                } else if (intValue >= 200) {
+                    grade = "C";
+                } else if (intValue >= 100) {
+                    grade = "D";
+                } else {
+                    grade = "F";
+                }
+
+                // ✅ 원래 키에 "_grade" 붙여서 등급 정보 추가
+                response.put(key + "_grade", grade);
+            }
+        }
+
+        return response;
     }
 
 }

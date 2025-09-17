@@ -34,6 +34,7 @@ public class RegisterController {
 		AddressDto addressDto = addressService.getlonlatpoint(x, y);
 		System.out.println("addressDto => " + addressDto.getLon() + " / " + addressDto.getLat() );
 	
+		// 주소가져오기
 		addressDto = addressService.getAddressDetail(addressDto);
 		
 		
