@@ -6,11 +6,14 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import egovframework.sipdamage704a.dto.address.AddressDto;
+import egovframework.sipdamage704a.dto.damage.StructureDto;
 import egovframework.sipdamage704a.service.AddressService;
+import egovframework.sipdamage704a.service.StructureService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class RegisterController {
 
 	private final AddressService addressService; 
+	private final StructureService structureService;
 	
 	@GetMapping("/registerPage")
 	public String registerPage(
@@ -39,7 +43,10 @@ public class RegisterController {
 	    model.addAttribute("y", y);
 	    return "sj/registerPage";
 	}
-
-
-
+	
+    @PostMapping("/saveBuilding")
+    public String saveBuilding(StructureDto dto) {
+        structureService.registerStructure(dto);
+        return "sj/structureList"; 
+    }
 }

@@ -14,5 +14,7 @@ public interface StructureDao {
 	List<Damage_InspectDto> getInspectsByManagecode(int managecode);
 	void updateStructureBase(StructureDto dto);	
 	void updateStructureImpact(StructureDto dto);
+	void registerStructure(StructureDto dto);
+	void registerStructureImpact(StructureDto dto);
 
 }

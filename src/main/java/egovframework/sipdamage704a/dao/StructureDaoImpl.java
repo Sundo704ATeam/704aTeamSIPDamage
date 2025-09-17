@@ -52,5 +52,15 @@ public class StructureDaoImpl implements StructureDao {
         sqlSession.update(namespace + ".updateStructureImpact", dto);		
 	}
 
+	@Override
+	public void registerStructure(StructureDto dto) {
+        sqlSession.insert(namespace + ".registerStructure", dto);
+	}
+
+	@Override
+	public void registerStructureImpact(StructureDto dto) {
+        sqlSession.insert(namespace + ".registerStructureImpact", dto);
+	}
+
 
 }

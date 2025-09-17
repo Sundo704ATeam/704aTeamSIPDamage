@@ -39,7 +39,7 @@
       <tr>
         <td class="label">종류:</td>
         <td>
-          <select name="category" id="category" onchange="updateSubcategory()">
+          <select name="type" id="category" onchange="updateSubcategory()">
             <option value="">-- 선택 --</option>
             <option value="교량">교량</option>
             <option value="터널">터널</option>
@@ -47,14 +47,14 @@
             <option value="상하수도">상하수도</option>
             <option value="옹벽">옹벽</option>
             <option value="절토사면">절토사면</option>
-            <option value="건축물">건축물</option>
+            <option value="건물">건축물</option>
           </select>
         </td>
       </tr>
       <tr>
         <td class="label">세부 구분:</td>
         <td>
-          <select name="subcategory" id="subcategory">
+          <select name="typedetail" id="subcategory">
             <option value="">-- 먼저 종류를 선택하세요 --</option>
           </select>
         </td>
@@ -62,7 +62,7 @@
       <tr>
         <td class="label">종별:</td>
         <td>
-          <select name="usage">
+          <select name="sort">
             <option value="1종">1종</option>
             <option value="2종">2종</option>
             <option value="3종">3종</option>
@@ -81,6 +81,69 @@
         <td class="label">Y 좌표:</td>
         <td><input type="text" name="y" value="${y}" readonly /></td>
       </tr>
+
+      <!-- ✅ 영향도 항목 추가 -->
+      <tr>
+        <td class="label">균열:</td>
+        <td>
+          <select name="crack">
+            <option value="10">A</option>
+            <option value="8">B</option>
+            <option value="6">C</option>
+            <option value="4">D</option>
+            <option value="2">E</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">누전:</td>
+        <td>
+          <select name="elecleak">
+            <option value="10">A</option>
+            <option value="8">B</option>
+            <option value="6">C</option>
+            <option value="4">D</option>
+            <option value="2">E</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">누수:</td>
+        <td>
+          <select name="leak">
+            <option value="10">A</option>
+            <option value="8">B</option>
+            <option value="6">C</option>
+            <option value="4">D</option>
+            <option value="2">E</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">변형:</td>
+        <td>
+          <select name="variation">
+            <option value="10">A</option>
+            <option value="8">B</option>
+            <option value="6">C</option>
+            <option value="4">D</option>
+            <option value="2">E</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">구조이상:</td>
+        <td>
+          <select name="abnormality">
+            <option value="10">A</option>
+            <option value="8">B</option>
+            <option value="6">C</option>
+            <option value="4">D</option>
+            <option value="2">E</option>
+          </select>
+        </td>
+      </tr>
+
       <tr>
         <td></td>
         <td><button type="submit">등록</button></td>
@@ -104,7 +167,6 @@
       const category = document.getElementById("category").value;
       const subSelect = document.getElementById("subcategory");
 
-      // 기존 옵션 제거
       subSelect.innerHTML = "";
 
       if (category && subcategories[category]) {

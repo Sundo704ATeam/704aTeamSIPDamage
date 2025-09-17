@@ -64,21 +64,65 @@
         <div class="card">
           <h3>건물 영향도</h3>
           <table class="detail-table">
-
 		<tr class="impact-row"><th>균열</th>
-		  <td><c:out value="${fn:substring('ABCDE', structure.crack - 1, structure.crack)}" /></td></tr>
-		
+		  <td>
+		    <c:choose>
+		      <c:when test="${structure.crack == 10}">A</c:when>
+		      <c:when test="${structure.crack == 8}">B</c:when>
+		      <c:when test="${structure.crack == 6}">C</c:when>
+		      <c:when test="${structure.crack == 4}">D</c:when>
+		      <c:when test="${structure.crack == 2}">E</c:when>
+		    </c:choose>
+		  </td>
+		</tr>
+
 		<tr class="impact-row"><th>누전</th>
-		  <td><c:out value="${fn:substring('ABCDE', structure.elecleak - 1, structure.elecleak)}" /></td></tr>
+		  <td>
+		    <c:choose>
+		      <c:when test="${structure.elecleak == 10}">A</c:when>
+		      <c:when test="${structure.elecleak == 8}">B</c:when>
+		      <c:when test="${structure.elecleak == 6}">C</c:when>
+		      <c:when test="${structure.elecleak == 4}">D</c:when>
+		      <c:when test="${structure.elecleak == 2}">E</c:when>
+		    </c:choose>
+		  </td>
+		</tr>
 		
 		<tr class="impact-row"><th>누수</th>
-		  <td><c:out value="${fn:substring('ABCDE', structure.leak - 1, structure.leak)}" /></td></tr>
+		  <td>
+		    <c:choose>
+		      <c:when test="${structure.leak == 10}">A</c:when>
+		      <c:when test="${structure.leak == 8}">B</c:when>
+		      <c:when test="${structure.leak == 6}">C</c:when>
+		      <c:when test="${structure.leak == 4}">D</c:when>
+		      <c:when test="${structure.leak == 2}">E</c:when>
+		    </c:choose>
+		  </td>
+		</tr>
 		
 		<tr class="impact-row"><th>변형</th>
-		  <td><c:out value="${fn:substring('ABCDE', structure.variation - 1, structure.variation)}" /></td></tr>
+		  <td>
+		    <c:choose>
+		      <c:when test="${structure.variation == 10}">A</c:when>
+		      <c:when test="${structure.variation == 8}">B</c:when>
+		      <c:when test="${structure.variation == 6}">C</c:when>
+		      <c:when test="${structure.variation == 4}">D</c:when>
+		      <c:when test="${structure.variation == 2}">E</c:when>
+		    </c:choose>
+		  </td>
+		</tr>
 		
 		<tr class="impact-row"><th>구조이상</th>
-		  <td><c:out value="${fn:substring('ABCDE', structure.abnormality - 1, structure.abnormality)}" /></td></tr>
+		  <td>
+		    <c:choose>
+		      <c:when test="${structure.abnormality == 10}">A</c:when>
+		      <c:when test="${structure.abnormality == 8}">B</c:when>
+		      <c:when test="${structure.abnormality == 6}">C</c:when>
+		      <c:when test="${structure.abnormality == 4}">D</c:when>
+		      <c:when test="${structure.abnormality == 2}">E</c:when>
+		    </c:choose>
+		  </td>
+		</tr>
           </table>
         </div>
       </div>
