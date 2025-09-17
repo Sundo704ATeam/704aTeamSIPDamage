@@ -68,6 +68,7 @@
 		where hoshi = 1
 		ORDER BY managecode
 	</select>
+	
 	<update id="updateHoshi" parameterType="int">
 		UPDATE structure
 		SET hoshi = 1 - hoshi
@@ -97,8 +98,21 @@
            ON i.managecode = c.managecode
     WHERE i.managecode = #{managecode}
     ORDER BY i.ins_date DESC
-</select>
-
+    
+	</select>
+	<insert id="registerStructure" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
+		Insert structure
+		Set 
+			name = #{name},
+	        type = #{type},
+	        typedetail = #{typedetail},
+	        address = #{address},
+	        sort = #{sort},
+	        x = #{x},
+	        y = #{y},
+	        materials = #{materials}
+	    WHERE managecode = #{managecode}
+	</insert>
 
 	<update id="updateStructureBase" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
 	    UPDATE structure

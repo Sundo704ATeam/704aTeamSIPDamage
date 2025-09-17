@@ -54,6 +54,11 @@ public class StructureServiceImpl implements StructureService {
         structureDao.updateStructureImpact(dto);
 	}
 
+	@Override
+	public void registerStructure(StructureDto dto) {
+		structureDao.registerStructure(dto);
+	}
+
 
 
 }

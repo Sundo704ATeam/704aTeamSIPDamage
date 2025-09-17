@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 import egovframework.sipdamage704a.dto.damage.StructureDto;
 import egovframework.sipdamage704a.service.StructureService;
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class StructureController {
 
-    @Autowired
-    private StructureService structureService;
+    private final StructureService structureService;
 
     // 전체 조회 페이지 이동
     @GetMapping("/structureList")
@@ -40,6 +41,7 @@ public class StructureController {
         model.addAttribute("managecode", managecode);
         return "sj/inspectList";
     }
+    
     
     // 업데이트 화면
     @GetMapping("/structureUpdate")

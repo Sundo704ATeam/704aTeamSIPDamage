@@ -68,22 +68,22 @@
               <tr><th>균열</th>
                 <td>
                  <select name="crack" class="form-select">
-				  <option value="1" <c:if test="${structure.crack eq '1'}">selected</c:if>>A</option>
-				  <option value="2" <c:if test="${structure.crack eq '2'}">selected</c:if>>B</option>
-				  <option value="3" <c:if test="${structure.crack eq '3'}">selected</c:if>>C</option>
+				  <option value="10" <c:if test="${structure.crack eq '10'}">selected</c:if>>A</option>
+				  <option value="8" <c:if test="${structure.crack eq '8'}">selected</c:if>>B</option>
+				  <option value="6" <c:if test="${structure.crack eq '6'}">selected</c:if>>C</option>
 				  <option value="4" <c:if test="${structure.crack eq '4'}">selected</c:if>>D</option>
-				  <option value="5" <c:if test="${structure.crack eq '5'}">selected</c:if>>E</option>
+				  <option value="2" <c:if test="${structure.crack eq '2'}">selected</c:if>>E</option>
 				</select>
                 </td>
               </tr>
               <tr><th>누전</th>
                 <td>
                  <select name="elecleak" class="form-select">
-				  <option value="1" <c:if test="${structure.elecleak eq '1'}">selected</c:if>>A</option>
-				  <option value="2" <c:if test="${structure.elecleak eq '2'}">selected</c:if>>B</option>
-				  <option value="3" <c:if test="${structure.elecleak eq '3'}">selected</c:if>>C</option>
+				  <option value="10" <c:if test="${structure.elecleak eq '10'}">selected</c:if>>A</option>
+				  <option value="8" <c:if test="${structure.elecleak eq '8'}">selected</c:if>>B</option>
+				  <option value="6" <c:if test="${structure.elecleak eq '6'}">selected</c:if>>C</option>
 				  <option value="4" <c:if test="${structure.elecleak eq '4'}">selected</c:if>>D</option>
-				  <option value="5" <c:if test="${structure.elecleak eq '5'}">selected</c:if>>E</option>
+				  <option value="2" <c:if test="${structure.elecleak eq '2'}">selected</c:if>>E</option>
 				</select>
                   </select>
                 </td>
@@ -91,33 +91,33 @@
               <tr><th>누수</th>
                 <td>
 				<select name="leak" class="form-select">
-				  <option value="1" <c:if test="${structure.leak eq '1'}">selected</c:if>>A</option>
-				  <option value="2" <c:if test="${structure.leak eq '2'}">selected</c:if>>B</option>
-				  <option value="3" <c:if test="${structure.leak eq '3'}">selected</c:if>>C</option>
+				  <option value="10" <c:if test="${structure.leak eq '10'}">selected</c:if>>A</option>
+				  <option value="8" <c:if test="${structure.leak eq '8'}">selected</c:if>>B</option>
+				  <option value="6" <c:if test="${structure.leak eq '6'}">selected</c:if>>C</option>
 				  <option value="4" <c:if test="${structure.leak eq '4'}">selected</c:if>>D</option>
-				  <option value="5" <c:if test="${structure.leak eq '5'}">selected</c:if>>E</option>
+				  <option value="2" <c:if test="${structure.leak eq '2'}">selected</c:if>>E</option>
 				</select>
                 </td>
               </tr>
               <tr><th>변형</th>
                 <td>
 				<select name="variation" class="form-select">
-				  <option value="1" <c:if test="${structure.variation eq '1'}">selected</c:if>>A</option>
-				  <option value="2" <c:if test="${structure.variation eq '2'}">selected</c:if>>B</option>
-				  <option value="3" <c:if test="${structure.variation eq '3'}">selected</c:if>>C</option>
+				  <option value="10" <c:if test="${structure.variation eq '10'}">selected</c:if>>A</option>
+				  <option value="8" <c:if test="${structure.variation eq '8'}">selected</c:if>>B</option>
+				  <option value="6" <c:if test="${structure.variation eq '6'}">selected</c:if>>C</option>
 				  <option value="4" <c:if test="${structure.variation eq '4'}">selected</c:if>>D</option>
-				  <option value="5" <c:if test="${structure.variation eq '5'}">selected</c:if>>E</option>
+				  <option value="2" <c:if test="${structure.variation eq '2'}">selected</c:if>>E</option>
 				</select>
                 </td>
               </tr>
               <tr><th>구조이상</th>
                 <td>
 				<select name="abnormality" class="form-select">
-				  <option value="1" <c:if test="${structure.abnormality eq '1'}">selected</c:if>>A</option>
-				  <option value="2" <c:if test="${structure.abnormality eq '2'}">selected</c:if>>B</option>
-				  <option value="3" <c:if test="${structure.abnormality eq '3'}">selected</c:if>>C</option>
+				  <option value="10" <c:if test="${structure.abnormality eq '10'}">selected</c:if>>A</option>
+				  <option value="8" <c:if test="${structure.abnormality eq '8'}">selected</c:if>>B</option>
+				  <option value="6" <c:if test="${structure.abnormality eq '6'}">selected</c:if>>C</option>
 				  <option value="4" <c:if test="${structure.abnormality eq '4'}">selected</c:if>>D</option>
-				  <option value="5" <c:if test="${structure.abnormality eq '5'}">selected</c:if>>E</option>
+				  <option value="2" <c:if test="${structure.abnormality eq '2'}">selected</c:if>>E</option>
 				</select>
                 </td>
               </tr>
@@ -127,7 +127,7 @@
 
         <div class="actions">
           <button type="submit" class="btn btn-edit">저장</button>
-          <a href="${pageContext.request.contextPath}/structure/detail?managecode=${structure.managecode}" class="btn">취소</a>
+			<a href="javascript:history.back()" class="btn">취소</a>
         </div>
       </form>
       <!-- ✅ 수정 폼 끝 -->

@@ -351,7 +351,11 @@ body.rail-collapsed .rail-toggle {
 	      '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
 	      '<div style="margin-top:6px; display:flex; gap:6px;">' +
 	        '<button id="btnInspect" class="btn btn-sm btn-primary">점검 하기</button>' +
-	        '<button id="btnHistory" class="btn btn-sm btn-secondary">점검 내역</button>' +
+	        '<a href="javascript:void(0);" ' +
+	        '   class="btn btn-sm btn-secondary" ' +
+	        '   onclick="window.open(\'' + '${pageContext.request.contextPath}/inspectList?managecode=' + managecode + '\', ' +
+	        '   \'inspectWin\', \'width=800,height=600,scrollbars=yes,resizable=yes\');">점검 내역</a>'
+
 	      '</div>';
 
 	    found = true;
