@@ -42,8 +42,6 @@
     }
 
     .card { padding: 20px; }
-    
-    
   </style>
 </head>
 <body>
@@ -68,7 +66,7 @@
             <option value="상하수도">상하수도</option>
             <option value="옹벽">옹벽</option>
             <option value="절토사면">절토사면</option>
-            <option value="건물">건물</option>
+            <option value="건물">건축물</option>
           </select>
 
           <label>세부 구분:</label>
@@ -200,6 +198,20 @@
         customInput.style.display = "none";
         customInput.required = false;
         customInput.value = "";
+      }
+    });
+
+    // ✅ 폼 제출 시 "기타" 선택 시 입력값을 materials 값으로 치환
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function() {
+      if (select.value === "기타" && customInput.value.trim() !== "") {
+        // 기존 옵션 제거하고 새 값으로 교체
+        select.innerHTML = "";
+        const opt = document.createElement("option");
+        opt.value = customInput.value.trim();
+        opt.text = customInput.value.trim();
+        opt.selected = true;
+        select.appendChild(opt);
       }
     });
   </script>

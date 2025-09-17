@@ -16,7 +16,6 @@
 	--rail-w: 120px;
 	--tool-w: 200px;
 }
-
 #dataRail {
 	position: fixed;
 	z-index: 900;
@@ -33,7 +32,6 @@
 	transition: transform .25s ease;
 	will-change: transform;
 }
-
 footer {
 	position: fixed;
 	left: 0;
@@ -48,7 +46,6 @@ footer {
 	border-top: 1px solid #444;
 	z-index: 1000;
 }
-
 #map {
 	position: fixed;
 	top: var(--header-h);
@@ -60,7 +57,6 @@ footer {
 	width: 100%;
 	height: 100%;
 }
-
 #dataRail button {
 	display: block;
 	width: 100%;
@@ -71,25 +67,21 @@ footer {
 	background: #fff;
 	color: #111;
 }
-
 #dataRail button:hover {
 	background: #e5e7eb;
 }
-
 body.rail-collapsed #dataRail {
 	transform: translateX(-100%);
 }
-
 body.rail-collapsed #map {
 	left: var(--rail-w);
 }
-
 .rail-toggle {
 	position: fixed;
 	z-index: 1200;
 	top: 50%;
 	transform: translateY(-50%);
-	left: calc(var(--rail-w)+ var(--tool-w)- 1px);
+	left: calc(var(--rail-w) + var(--tool-w) - 1px);  /* ✅ 레일 오른쪽 끝 */
 	width: 18px;
 	height: 80px;
 	border: 1px solid #c9ccd1;
@@ -104,24 +96,19 @@ body.rail-collapsed #map {
 	transition: left .25s ease, background .15s ease, box-shadow .15s ease,
 		transform .1s ease;
 }
-
 .rail-toggle:hover {
 	background: #f6f7f9;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, .18);
 }
-
 .rail-toggle:active {
 	transform: translateY(-50%) scale(.97);
 }
-
 body.rail-collapsed .rail-toggle {
-	left: calc(var(--rail-w)- 1px);
+  left: var(--rail-w);   /* ✅ 레일 닫히면 사이드바 바로 옆 */
 }
-
 #dataRail .btn.active {
 	background: #e5e7eb;
 }
-
 /* 팝업 스타일 */
 .ol-popup {
 	position: absolute;
@@ -134,7 +121,6 @@ body.rail-collapsed .rail-toggle {
 	font-size: 14px;
 	color: #111;
 }
-
 .popup-close {
 	position: absolute;
 	top: 6px;
@@ -152,7 +138,6 @@ body.rail-collapsed .rail-toggle {
 	cursor: pointer;
 	transition: background 0.2s ease;
 }
-
 .popup-close:hover {
 	background: #b91c1c;
 }
@@ -162,7 +147,6 @@ body.rail-collapsed .rail-toggle {
 	<!-- 메뉴 -->
 	<jsp:include page="/WEB-INF/views/header.jsp" />
 	<jsp:include page="/WEB-INF/views/sidebar.jsp" />
-
 	<aside id="dataRail">
 		<!-- 지역 선택 -->
 		<div style="text-align: center; margin-bottom: 12px;">
@@ -194,8 +178,6 @@ body.rail-collapsed .rail-toggle {
 				<button id="btnALLOFF" class="btn btn-light btn-sm">전체 해제</button>
 			</div>
 		</div>
-
-
 		<!-- ✅ 즐겨찾기 토글 -->
 		<div
 			style="margin-top: auto; text-align: center; padding-top: 12px; border-top: 1px solid #ddd;">
@@ -203,17 +185,14 @@ body.rail-collapsed .rail-toggle {
 				style="width: 100%;">⭐ 즐겨찾기</button>
 			<!-- 즐겨찾기 리스트 -->
 			<div id="favoriteList"
-				style="margin-top: 8px; max-height: 150px; overflow-y: auto; text-align: left; display: none; border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 6px; font-size: 14px;">
+				style="margin-top: 8px; max-height: 120px; overflow-y: auto; text-align: left; display: none; border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 6px; font-size: 14px;">
 			</div>
 		</div>
 	</aside>
-
-
 	<button id="toggleRailBtn" class="rail-toggle" aria-expanded="true"
 		title="데이터레일 접기">◀</button>
 	<div id="map"></div>
 	<footer>© 사회기반시설 스마트 유지관리 시스템</footer>
-
 	<script>
     // ✅ 배경지도 (VWorld)
     const vworldLayer = new ol.layer.Tile({
@@ -221,8 +200,7 @@ body.rail-collapsed .rail-toggle {
          url: "http://api.vworld.kr/req/wmts/1.0.0/60DA3367-BC75-32D9-B593-D0386112A70C/Base/{z}/{y}/{x}.png"
       })
     });
-
-    // ✅ 지도 생성 (EPSG:3857)
+    // ✅ 지도 생성 (EPSG:3857)	
     const map = new ol.Map({
       target: "map",
       layers: [vworldLayer],
@@ -232,7 +210,6 @@ body.rail-collapsed .rail-toggle {
       })
     });
   </script>
-
 	<!-- ✅ 시설별 레이어 정의 JSP include -->
 	<jsp:include page="/WEB-INF/views/sj/layers/gyoryang.jsp" />
 	<jsp:include page="/WEB-INF/views/sj/layers/tunnel.jsp" />
@@ -242,7 +219,6 @@ body.rail-collapsed .rail-toggle {
 	<jsp:include page="/WEB-INF/views/sj/layers/samyun.jsp" />
 	<jsp:include page="/WEB-INF/views/sj/layers/building.jsp" />
 	<jsp:include page="/WEB-INF/views/sh/hoshiLayer.jsp" />
-
 	<script>
     // ✅ 레일 토글 버튼 동작
     const toggleBtn = document.getElementById("toggleRailBtn");
@@ -258,7 +234,6 @@ body.rail-collapsed .rail-toggle {
         toggleBtn.setAttribute("aria-expanded", "true");
       }
     });
-
 	     
 	// ✅ 우클릭용 팝업 + 닫기 버튼
 	const coordPopupContainer = document.createElement('div');
@@ -309,10 +284,8 @@ body.rail-collapsed .rail-toggle {
 	// ✅ 모든 벡터 레이어 공통 팝업 (좌클릭)
 	map.on("singleclick", function(evt) {
 	  let found = false;
-
 	  map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
 	    if (!feature || !feature.getGeometry()) return;
-
 	    let center;
 	    if (feature.getGeometry().getType() === "Point") {
 	      center = feature.getGeometry().getCoordinates();
@@ -320,21 +293,17 @@ body.rail-collapsed .rail-toggle {
 	      const extent = feature.getGeometry().getExtent();
 	      center = ol.extent.getCenter(extent);
 	    }
-
 	    map.getView().animate({
 	      center: center,
 	      zoom: 16,
 	      duration: 800
 	    });
-
 	    const props   = feature.getProperties();
 	    const name    = props.name    || "(이름 없음)";
 	    const address = props.address || "(주소 없음)";
 	    const managecode = props.managecode;
-
 	    // ✅ 팝업 열기
 	    infoPopupOverlay.setPosition(center);
-
 	    // ✅ 팝업 내용 채우기 (이름 + 즐겨찾기 아이콘 한 줄)
 	    infoPopupContent.innerHTML =
 	      '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">' +
@@ -351,14 +320,10 @@ body.rail-collapsed .rail-toggle {
 	        '   class="btn btn-sm btn-secondary" ' +
 	        '   onclick="window.open(\'' + '${pageContext.request.contextPath}/inspectList?managecode=' + managecode + '\', ' +
 	        '   \'inspectWin\', \'width=1000,height=600,scrollbars=yes,resizable=yes\');">점검 내역</a>'
-
 	      '</div>';
-
 	    found = true;
-
 	    // ✅ 즐겨찾기 버튼 가져오기
 	    const favBtn = document.getElementById("favToggleBtn");
-
 	    if (managecode) {
 	      // 현재 즐겨찾기 여부 조회
 	      fetch("${pageContext.request.contextPath}/api/damage/hoshi/status?managecode=" + managecode)
@@ -370,7 +335,6 @@ body.rail-collapsed .rail-toggle {
 	          loadFavoriteList();
 	        })
 	        .catch(err => console.error("즐겨찾기 상태 조회 실패:", err));
-
 	      // 클릭 시 즐겨찾기 토글
 	      favBtn.onclick = function() {
 	        fetch("${pageContext.request.contextPath}/api/damage/hoshi/toggle", {
@@ -394,7 +358,6 @@ body.rail-collapsed .rail-toggle {
 	        .catch(err => console.error("즐겨찾기 업데이트 실패:", err));
 	      };
 	    }
-
 	    // ✅ 진단표 fetch (기존 코드 그대로)
 	    if (managecode) {
 	      fetch("${pageContext.request.contextPath}/api/damage/" + managecode + "/inspection")
@@ -427,7 +390,6 @@ body.rail-collapsed .rail-toggle {
 	        });
 	    }
 	  });
-
 	  if (!found) {
 	    infoPopupOverlay.setPosition(undefined);
 	  }
@@ -437,17 +399,13 @@ body.rail-collapsed .rail-toggle {
 	// ✅ 우클릭 이벤트 → 좌표 표시, 건물 등록
 	map.on("contextmenu", function(evt) {
 	  evt.preventDefault();
-
 	  // OpenLayers에서 제공하는 픽셀 → 좌표 변환
 	  const coord = map.getCoordinateFromPixel(evt.pixel);
 	  const x = coord[0];
 	  const y = coord[1];
-
 	  // 우클릭 팝업을 정확히 클릭 지점에 표시
 	  coordPopupOverlay.setPosition(coord);
-
 	  const btnId = "registerButton_" + Date.now();
-
 	  coordPopupContent.innerHTML =
 	    "<b>좌표</b><br/>" +
 	    "X: " + x.toFixed(2) + "<br/>" +
@@ -455,10 +413,8 @@ body.rail-collapsed .rail-toggle {
 	    '<div style="margin-top:6px; display:flex; gap:6px;">' +
 	      '<button id="' + btnId + '" class="btn btn-sm btn-primary">건물 등록</button>' +
 	    '</div>';
-
 	  // 좌클릭 팝업 닫기
 	  infoPopupOverlay.setPosition(undefined);
-
 	  // 버튼 이벤트
 	  const btn = document.getElementById(btnId);
 	  if (btn) {
@@ -470,7 +426,6 @@ body.rail-collapsed .rail-toggle {
 	    });
 	  }
 	});
-
     // ✅ 각 구 중심 좌표 (EPSG:4326 → 변환해서 EPSG:3857 사용)
    const regionCenters = {
      "전체": [127.024612, 37.5326], // 서울 중심
@@ -484,25 +439,16 @@ body.rail-collapsed .rail-toggle {
    document.getElementById("btnALLON").addEventListener("click", () => {
      const layers = [gyoryangLayer, tunnelLayer, riverLayer, sudoLayer, wallLayer, samyunLayer, buildingLayer];
      const buttons = ["btnGyoryang","btnTunnel","btnRiver","btnSudo","btnWall","btnSamyun","btnBuilding"];
-
      layers.forEach(layer => layer && layer.setVisible(true));
      buttons.forEach(id => document.getElementById(id)?.classList.add("active"));
-
    });
-
-
 	// ✅ 전체 해제 버튼
    document.getElementById("btnALLOFF").addEventListener("click", () => {
      const layers = [gyoryangLayer, tunnelLayer, riverLayer, sudoLayer, wallLayer, samyunLayer, buildingLayer];
      const buttons = ["btnGyoryang","btnTunnel","btnRiver","btnSudo","btnWall","btnSamyun","btnBuilding"];
-
      layers.forEach(layer => layer && layer.setVisible(false));
      buttons.forEach(id => document.getElementById(id)?.classList.remove("active"));
-
    });
-
-
-
     // ✅ 지역 선택 이벤트
     document.getElementById("region2").addEventListener("change", function () {
       const selected = this.value;
@@ -520,7 +466,6 @@ body.rail-collapsed .rail-toggle {
  	// ✅ 즐겨찾기 토글 버튼
     const favBtn = document.getElementById("btnFavoriteToggle");
     const favList = document.getElementById("favoriteList");
-
     favBtn.addEventListener("click", () => {
       favBtn.classList.toggle("active");
       if (favBtn.classList.contains("active")) {
@@ -542,7 +487,6 @@ body.rail-collapsed .rail-toggle {
             favList.innerHTML = "<div style='color:#888;'>즐겨찾기 없음</div>";
             return;
           }
-
           let html = "<ul style='list-style:none; margin:0; padding:0;'>";
           data.forEach(item => {
             html +=
@@ -553,13 +497,11 @@ body.rail-collapsed .rail-toggle {
           });
           html += "</ul>";
           favList.innerHTML = html;
-
           // ✅ 리스트 클릭 이벤트 → 지도 이동
           favList.querySelectorAll("li").forEach(li => {
             li.addEventListener("click", function() {
               const x = parseFloat(this.getAttribute("data-x"));
               const y = parseFloat(this.getAttribute("data-y"));
-
               const coord = [x, y]; // EPSG:3857
               map.getView().animate({
                 center: coord,
@@ -586,13 +528,11 @@ body.rail-collapsed .rail-toggle {
       const feature = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
         return feature;
       });
-
       if (!feature) {
         infoPopupOverlay.setPosition(undefined);   // 좌클릭 팝업 닫기
         coordPopupOverlay.setPosition(undefined);  // 우클릭 팝업 닫기
       }
     });
-
     // ✅ 맵 아무데나 우클릭하면 기존 좌표 팝업 닫기
     map.on("pointerdown", function(evt) {
       if (evt.originalEvent.button === 2) { // 우클릭
@@ -609,7 +549,6 @@ body.rail-collapsed .rail-toggle {
     	        favList.innerHTML = "<div style='color:#888;'>즐겨찾기 없음</div>";
     	        return;
     	      }
-
     	      let html = "<ul style='list-style:none; margin:0; padding:0;'>";
     	      data.forEach(item => {
     	        html +=
@@ -620,7 +559,6 @@ body.rail-collapsed .rail-toggle {
     	      });
     	      html += "</ul>";
     	      favList.innerHTML = html;
-
     	      // ✅ 리스트 클릭 이벤트 → 지도 이동
     	      favList.querySelectorAll("li").forEach(li => {
     	        li.addEventListener("click", function() {
