@@ -3,16 +3,30 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="egovframework.DamageMapper">
-  	<select id="findLatestByUfid" parameterType="int" resultType="map">
-    SELECT inscode, managecode,
-           crackrate, elecleakrate,
-           leakrate, variationrate,
-           abnomalityrate, ins_date, inspactor
-    FROM public.damage_inspect
-    WHERE managecode = #{value}
-    ORDER BY ins_date DESC
-    LIMIT 1
-  </select> 
+	<select id="findLatestByManagecode" parameterType="int"
+		resultType="map">
+		select dmgins.inscode,
+			   dmgins.managecode,
+			  (dmgins.crackcnt * cons.crack) as crack,
+			  (dmgins.elecleakcnt * cons.elecleak) as elecleak,
+			  (dmgins.leakcnt * cons.leak) as leak,
+			  (dmgins.variationcnt * cons.variation) as variation,
+			  (dmgins.abnormalitycnt * cons.abnormality) as abnormality,
+			  dmgins.ins_date,
+			  dmgins.inspactor
+		from
+			(select *
+			 from damage_inspect
+			 where managecode = 1
+			 ORDER BY ins_date DESC
+			 LIMIT 1) dmgins
+		left join constimp cons on dmgins.managecode = cons.managecode
+	</select>
+	
+	<insert id="saveInspect">
+		INSERT INTO damage_inspect (inscode, managecode, crackcnt, elecleakcnt, leakcnt, variationcnt, abnormalitycnt, ins_date, inspactor)
+		VALUES (nextval('damage_inscode_seq'), #{managecode}, #{crackcnt}, #{elecleakcnt}, #{leakcnt}, #{variationcnt}, #{abnormalitycnt}, #{ins_date}, #{inspactor})
+	</insert>
 	
 	
 </mapper>

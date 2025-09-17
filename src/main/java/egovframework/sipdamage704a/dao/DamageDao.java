@@ -2,15 +2,13 @@ package egovframework.sipdamage704a.dao;
 
 import java.util.Map;
 
-import egovframework.sipdamage704a.dto.damage.BridgeDto;
+import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 
 public interface DamageDao {
 
 	Map<String, Object> findLatestByUfid(int managecode);
 
-    BridgeDto selectBridge(String ufid);
-
-
+	int saveInspect(Damage_InspectDto damage_InspectDto);
 
 }
  	
