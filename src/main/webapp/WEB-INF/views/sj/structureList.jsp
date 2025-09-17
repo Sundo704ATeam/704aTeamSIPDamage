@@ -149,8 +149,12 @@
               <td>${s.address}</td>
 			  <td>${s.latest_ins_date}</td>
               <td>
-			  <a href="${pageContext.request.contextPath}/inspectList?managecode=${s.managecode}" class="btn">
-			    내역 보기 
+			  <a href="javascript:void(0);" 
+			     class="btn"
+			     onclick="window.open('${pageContext.request.contextPath}/inspectList?managecode=${s.managecode}', 
+			                          'inspectWin', 
+			                          'width=1000,height=700,scrollbars=yes,resizable=yes');">
+			    내역 보기
 			  </a>
 			</td>
 			<td>

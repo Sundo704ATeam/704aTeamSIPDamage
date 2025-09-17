@@ -58,4 +58,6 @@ public class StructureController {
         structureService.updateStructureImpact(dto);
         return "redirect:/structureDetail?managecode=" + dto.getManagecode();
     }
+    
+    
 }
