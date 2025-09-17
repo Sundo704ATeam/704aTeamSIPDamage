@@ -19,7 +19,7 @@ public class Damage_InspectDto {
 	private int elecleakcnt;	//누전객체수
 	private int leakcnt;		//누수객체수
 	private int variationcnt;	//변형객체수
-	private int abnomalitycnt;	//구조이상객체수
+	private int abnormarlitycnt;	//구조이상객체수
 	private LocalDate ins_date;	//점검일
 	private String inspactor;	//점검자
 	

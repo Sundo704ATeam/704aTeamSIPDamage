@@ -329,8 +329,6 @@ body.rail-collapsed .rail-toggle {
 
 	    const props   = feature.getProperties();
 	    const name    = props.name    || "(이름 없음)";
-	    const type    = props.type    || "(정보 없음)";
-	    const sort    = props.sort    || "(정보 없음)";
 	    const address = props.address || "(주소 없음)";
 	    const managecode = props.managecode;
 
@@ -345,8 +343,6 @@ body.rail-collapsed .rail-toggle {
 	          '<i class="bi bi-bookmark" style="font-size:30px; color:gray;"></i>' +
 	        '</button>' +
 	      '</div>' +
-	      '<div style="margin-bottom:4px;"><b>종류:</b> ' + type + '</div>' +
-	      '<div style="margin-bottom:4px;"><b>종별:</b> ' + sort + '</div>' +
 	      '<div style="margin-bottom:8px;"><b>소재지:</b> ' + address + '</div>' +
 	      '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
 	      '<div style="margin-top:6px; display:flex; gap:6px;">' +

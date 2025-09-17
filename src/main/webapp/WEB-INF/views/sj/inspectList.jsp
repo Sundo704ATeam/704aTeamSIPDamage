@@ -74,7 +74,7 @@
               <td>${inspect.leak}</td>
               <td>${inspect.variationcnt}</td>
               <td>${inspect.variation}</td>
-              <td>${inspect.abnomalitycnt}</td>
+              <td>${inspect.abnormalitycnt}</td>
               <td>${inspect.abnormality}</td>
               <td>
                 <a href="${pageContext.request.contextPath}/inspect/detail?inscode=${inspect.inscode}" 

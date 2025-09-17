@@ -66,7 +66,7 @@
       <!-- 구조이상 -->
         <div class="col-md-6 mb-3">
           <label class="form-label">구조이상 (객체수)</label>
-          <input type="number" name="abnomalitycnt" class="form-control" min="0" value="0">
+          <input type="number" name="abnormalitycnt" class="form-control" min="0" value="0">
         </div>
 
       <!-- 버튼 -->

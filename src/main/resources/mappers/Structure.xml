@@ -85,7 +85,7 @@
         i.elecleakcnt,
         i.leakcnt,
         i.variationcnt,
-        i.abnomalitycnt,
+        i.abnormalitycnt,
         i.ins_date,
         i.inspactor,
         c.crack,
