@@ -144,6 +144,155 @@ body.rail-collapsed .rail-toggle {
 </style>
 </head>
 <body>
+			
+	<!-- 지도 버튼 -->
+	<div id="mapButtons">
+	  <button id="btnA" class="map-btn">범례</button>
+	  <button id="btnB" class="map-btn">통계보기</button>
+	
+	  <!-- 범례 말풍선 -->
+	  <div id="legendPopup" class="balloon">
+	    <div class="popup-header">
+	      <h4>범례</h4>
+	      <button id="closeLegend" class="close-btn">×</button>
+	    </div>
+	    <ul class="legend">
+	      <li><span class="legend-color red"></span> 교량</li>
+	      <li><span class="legend-color black"></span> 터널</li>
+	      <li><span class="legend-color blue"></span> 하천</li>
+	      <li><span class="legend-color orange"></span> 상하수도</li>
+	      <li><span class="legend-color gray"></span> 용벽</li>
+	      <li><span class="legend-color brown"></span> 질토사면</li>
+	      <li><span class="legend-color green"></span> 건축물</li>
+	      <li><span class="legend-color yellow"></span> 즐겨찾기</li>
+	    </ul>
+	  </div>
+	</div>
+
+		<style>
+		#mapButtons {
+		  position: absolute;
+		  top: 80px;
+		  right: 20px;
+		  display: flex;
+		  flex-direction: column;
+		  gap: 10px;
+		  z-index: 2000;
+		}
+		
+		
+		.map-btn {
+		  background: #fff;
+		  border: 1px solid #ccc;
+		  border-radius: 6px;
+		  padding: 6px 12px;
+		  font-size: 14px;
+		  cursor: pointer;
+		  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+		}
+		.map-btn:hover {
+		  background: #f0f0f0;
+		}
+		
+		/* 말풍선 */
+		.balloon {
+		  position: absolute;
+		  top: 0;
+		  left: -185px; /* 버튼 기준 왼쪽으로 배치 */
+		  background: #fff;
+		  border: 1px solid #ccc;
+		  border-radius: 8px;
+		  padding: 10px 15px;
+		  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+		  display: none;
+		  min-width: 180px;
+		  z-index: 2100;
+		}
+		
+		/* 말풍선 꼬리 */
+		.balloon::after {
+		  content: "";
+		  position: absolute;
+		  top: 15px;
+		  right: -10px; /* 오른쪽 방향 꼬리 */
+		  border-width: 10px;
+		  border-style: solid;
+		  border-color: transparent transparent transparent #fff;
+		  filter: drop-shadow(1px 0 1px rgba(0,0,0,0.2));
+		}
+		
+		.popup-header {
+		  display: flex;
+		  justify-content: space-between;
+		  align-items: center;
+		  margin-bottom: 8px;
+		}
+		
+		.balloon h4 {
+		  margin: 0 0 2px 0;
+		  font-size: 14px; 
+		}
+		.close-btn {
+		  background: none;
+		  border: none;
+		  font-size: 12px;   /* 작게 */
+		  font-weight: normal;
+		  cursor: pointer;
+		  line-height: 1;
+		  padding: 0;        /* 최소화 */
+		  color: #555;       /* 연한 회색 */
+		  transition: color 0.2s;
+		}
+		.close-btn:hover {
+		  color: #000;       /* 마우스 올리면 진하게 */
+		}
+		.balloon ul {
+		  padding: 0;
+		  margin: 0;
+		  list-style: none;
+		  font-size: 13px;
+		}
+		.balloon li {
+		  margin-bottom: 4px;
+		  display: flex;
+		  align-items: center;
+		  gap: 6px;
+		}
+		
+		/* 범례 색상 박스 */
+		.legend-color {
+		  display: inline-block;
+		  width: 14px;
+		  height: 14px;
+		  border-radius: 50%;
+		  border: 1px solid #999;
+		}
+		.red { background: red; }
+		.black { background: black; }
+		.blue { background: blue; }
+		.orange { background: orange; }
+		.gray { background: gray; }
+		.brown { background: saddlebrown; }
+		.green { background: green; }
+		.yellow { background: yellow; }
+		</style>
+
+<script>
+const btnA = document.getElementById("btnA");
+const legendPopup = document.getElementById("legendPopup");
+const closeBtn = document.getElementById("closeLegend");
+
+// 범례 버튼 클릭 시 토글
+btnA.addEventListener("click", () => {
+  const isVisible = legendPopup.style.display === "block";
+  legendPopup.style.display = isVisible ? "none" : "block";
+});
+
+// X 버튼 클릭 시 닫기
+closeBtn.addEventListener("click", () => {
+  legendPopup.style.display = "none";
+});
+</script>
 
 
 	<!-- 메뉴 -->
@@ -280,7 +429,7 @@ body.rail-collapsed .rail-toggle {
 	  element: infoPopupContainer,
 	  positioning: 'bottom-center',
 	  stopEvent: true,
-	  offset: [0, -10]
+	  offset: [0, -320]
 	});
 	map.addOverlay(infoPopupOverlay);
 	
