@@ -103,9 +103,9 @@
     <!-- 구조물 신규 등록 -->
     <insert id="registerStructure" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
         INSERT INTO structure
-        (name, type, typedetail, address, sort, x, y, materials)
+        (name, type, typedetail, address, sort, x, y, materials, hoshi)
         VALUES
-        (#{name}, #{type}, #{typedetail}, #{address}, #{sort}, #{x}, #{y}, #{materials});
+        (#{name}, #{type}, #{typedetail}, #{address}, #{sort}, #{x}, #{y}, #{materials}, #{hoshi});
 
         <!-- PK 시퀀스 값 dto.managecode 에 채워넣기 (Postgres) -->
         <selectKey keyProperty="managecode" resultType="int" order="AFTER">
