@@ -315,12 +315,14 @@ body.rail-collapsed .rail-toggle {
 	      '<div style="margin-bottom:8px;"><b>소재지:</b> ' + address + '</div>' +
 	      '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
 	      '<div style="margin-top:6px; display:flex; gap:6px;">' +
-	        '<button id="btnInspect" class="btn btn-sm btn-primary">점검 하기</button>' +
-	        '<a href="javascript:void(0);" ' +
-	        '   class="btn btn-sm btn-secondary" ' +
-	        '   onclick="window.open(\'' + '${pageContext.request.contextPath}/inspectList?managecode=' + managecode + '\', ' +
-	        '   \'inspectWin\', \'width=1000,height=600,scrollbars=yes,resizable=yes\');">점검 내역</a>'
-	      '</div>';
+	      '<button class="btn btn-sm btn-primary" ' +
+	      '   onclick="window.open(\'' + '${pageContext.request.contextPath}/damageMap/inspect/new?managecode=' + managecode + '\', ' +
+	      '   \'inspectWin\', \'width=1000,height=600,scrollbars=yes,resizable=yes\');">점검 하기</button>' +
+	      '<a href="javascript:void(0);" ' +
+	      '   class="btn btn-sm btn-secondary" ' +
+	      '   onclick="window.open(\'' + '${pageContext.request.contextPath}/inspectList?managecode=' + managecode + '\', ' +
+	      '   \'inspectWin\', \'width=1000,height=600,scrollbars=yes,resizable=yes\');">점검 내역</a>' +
+	    '</div>';
 	    found = true;
 	    // ✅ 즐겨찾기 버튼 가져오기
 	    const favBtn = document.getElementById("favToggleBtn");

@@ -2,6 +2,10 @@ package egovframework.sipdamage704a.dto.damage;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +24,8 @@ public class Damage_InspectDto {
 	private int leakcnt;		//누수객체수
 	private int variationcnt;	//변형객체수
 	private int abnormalitycnt;	//구조이상객체수
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate ins_date;	//점검일
 	private String inspactor;	//점검자
 	
@@ -29,5 +35,5 @@ public class Damage_InspectDto {
     private int leak;		//누수등급	
     private int variation;	//변형등급
     private int abnormality;	//구조이상등급
-    
+
 }
