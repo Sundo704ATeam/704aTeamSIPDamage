@@ -36,6 +36,6 @@
   <a class="menu-item" href="${pageContext.request.contextPath}/">HOME</a>
   <a class="menu-item" href="${pageContext.request.contextPath}/damageMap">노후화 패턴분석</a>
   <a class="menu-item" href="${pageContext.request.contextPath}/StructureList">건물목록</a>
-  <a class="menu-item" href="${pageContext.request.contextPath}/dust">손상진단 시뮬</a>
+  <a class="menu-item" href="${pageContext.request.contextPath}/realTimeDust">손상진단 시뮬</a>
 </nav>
 
