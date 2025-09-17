@@ -12,5 +12,7 @@ public interface DamageService {
 
 	int saveInspect(Damage_InspectDto damage_InspectDto);
 
+	Damage_InspectDto getFindByInscode(int inscode);
+
 
 }

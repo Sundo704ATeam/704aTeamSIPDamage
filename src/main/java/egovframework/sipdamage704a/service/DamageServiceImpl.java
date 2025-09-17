@@ -44,7 +44,7 @@ public class DamageServiceImpl implements DamageService {
                 } else if (intValue >= 100) {
                     grade = "D";
                 } else {
-                    grade = "E";
+                    grade = "-";
                 }
 
                 // ✅ 원래 키에 "_grade" 붙여서 등급 정보 추가
@@ -59,6 +59,27 @@ public class DamageServiceImpl implements DamageService {
 	public int saveInspect(Damage_InspectDto damage_InspectDto) {
 		
 		return damageDao.saveInspect(damage_InspectDto);
+	}
+
+	@Override
+	public Damage_InspectDto getFindByInscode(int inscode) {
+		Damage_InspectDto damage_InspectDto = damageDao.getFindByInscode(inscode);
+		
+		damage_InspectDto.setCrack_grade(grade(damage_InspectDto.getCrack()));
+		damage_InspectDto.setElecleak_grade(grade(damage_InspectDto.getElecleak()));
+		damage_InspectDto.setLeak_grade(grade(damage_InspectDto.getLeak()));
+		damage_InspectDto.setVariation_grade(grade(damage_InspectDto.getVariation()));
+		damage_InspectDto.setAbnormality_grade(grade(damage_InspectDto.getAbnormality()));
+		
+		return damage_InspectDto;
+	}
+	
+	private String grade(int cnt) {
+	    if (cnt >= 400) return "A"; // A
+	    else if (cnt >= 300) return "B"; // B
+	    else if (cnt >= 200) return "C"; // C
+	    else if (cnt >= 100) return "D"; // D
+	    else return "-"; // 없음
 	}
 
 }

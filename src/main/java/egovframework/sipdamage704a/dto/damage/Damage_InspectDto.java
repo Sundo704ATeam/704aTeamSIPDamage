@@ -36,4 +36,11 @@ public class Damage_InspectDto {
     private int variation;	//변형등급
     private int abnormality;	//구조이상등급
 
+    
+    // 위험등급
+    private String  crack_grade;		//균열등급
+    private String  elecleak_grade;	//누전등급
+    private String  leak_grade;		//누수등급	
+    private String  variation_grade;	//변형등급
+    private String  abnormality_grade;	//구조이상등급
 }

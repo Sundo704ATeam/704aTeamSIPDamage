@@ -77,7 +77,7 @@
               <td>${inspect.abnormalitycnt}</td>
               <td>${inspect.abnormality}</td>
               <td>
-                <a href="${pageContext.request.contextPath}/inspect/detail?inscode=${inspect.inscode}" 
+                <a href="${pageContext.request.contextPath}/damageMap/inspect/detail?inscode=${inspect.inscode}" 
                    class="btn btn-sm btn-primary">상세보기</a>
               </td>
             </tr>

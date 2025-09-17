@@ -26,5 +26,11 @@ public class DamageDaoImpl implements DamageDao {
 		return session.insert("egovframework.DamageMapper.saveInspect", damage_InspectDto);
 	}
 
+	@Override
+	public Damage_InspectDto getFindByInscode(int inscode) {
+		
+		return session.selectOne("egovframework.DamageMapper.getFindByInscode", inscode);
+	}
+
 
 }
