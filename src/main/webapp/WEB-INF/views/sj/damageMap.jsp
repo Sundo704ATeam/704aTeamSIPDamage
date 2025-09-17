@@ -144,6 +144,8 @@ body.rail-collapsed .rail-toggle {
 </style>
 </head>
 <body>
+
+
 	<!-- 메뉴 -->
 	<jsp:include page="/WEB-INF/views/header.jsp" />
 	<jsp:include page="/WEB-INF/views/sidebar.jsp" />
@@ -178,6 +180,7 @@ body.rail-collapsed .rail-toggle {
 				<button id="btnALLOFF" class="btn btn-light btn-sm">전체 해제</button>
 			</div>
 		</div>
+		
 		<!-- ✅ 즐겨찾기 토글 -->
 		<div
 			style="margin-top: auto; text-align: center; padding-top: 12px; border-top: 1px solid #ddd;">
