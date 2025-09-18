@@ -23,27 +23,25 @@ import egovframework.sipdamage704a.dao.RainfallDao;
 import egovframework.sipdamage704a.dto.rain.RainfallApiRespDto;
 import egovframework.sipdamage704a.dto.rain.RainfallDto;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import egovframework.sipdamage704a.dto.rain.RainfallApiRespDto.Rainfall;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 @Getter
 @Setter
 public class RainfallAsyncService {
 	
 	private final RainfallDao rainfallDao;
 	
-	private final String apiKey;
+	@Value("${seoulData.key}")
+	private String apiKey;
 	private final String baseUrl = "http://openAPI.seoul.go.kr:8088/";
 	private final String urlPath = "/json/ListRainfallService";
 	
 	private LocalDateTime lastCallTime = null;
-	
-	public RainfallAsyncService(RainfallDao rainfallDao, @Value("${seoulData.key}") String apiKey) {
-		this.rainfallDao = rainfallDao;
-		this.apiKey = apiKey;
-	}
 	
 	/**
 	 * startTime부터 현재까지의 강우량 정보 조회

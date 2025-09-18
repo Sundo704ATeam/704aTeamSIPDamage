@@ -1,5 +1,8 @@
 package egovframework.sipdamage704a.service;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,8 +11,13 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.PostConstruct;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -27,6 +35,9 @@ public class RainfallServiceImpl implements RainfallService {
 	
 	private final RainfallDao rainfallDao;
 	private final RainfallAsyncService asyncService;
+	
+	@Value("${path.gif.rainfall}")
+	private String gifPath;
 	
 	/**
 	 * DB에 저장된 마지막 강우량 시간 (정각 단위)
@@ -77,6 +88,25 @@ public class RainfallServiceImpl implements RainfallService {
 	@Override
 	public List<GaugeDto> getGauges() {
 		return rainfallDao.getGauges();
+	}
+
+	@Override
+	public List<String> getGifPaths() {
+		File dir = new File(gifPath);
+		List<String> gifs = Arrays.asList(dir.list());
+		
+		// 최신순 정렬
+		gifs.sort(Comparator.reverseOrder());
+		return gifs;
+	}
+
+	@Override
+	public Resource getGif(String gifName) {
+		Path fullPath = Paths.get(gifPath).resolve(gifName).normalize();
+		Resource gif = new FileSystemResource(fullPath);
+		
+		if (!gif.exists()) return null;
+		return gif;
 	}
 
 }

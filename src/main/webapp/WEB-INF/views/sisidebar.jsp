@@ -66,7 +66,14 @@
 </style>
 
 <aside id="dataRail">
-  <a class="rail-link" href="${pageContext.request.contextPath}/rain">강우량</a>
+  <button type="button" class="rail-link" id="rainToggle" aria-expanded="false" aria-controls="rainSub">
+    강우 <span class="caret" aria-hidden="true"></span>
+  </button>
+  <div id="rainSub" class="submenu">
+    <a class="sub-link" href="${pageContext.request.contextPath}/rain">상세 강우량</a>
+    <a class="sub-link" href="${pageContext.request.contextPath}/rain/img">레이더 영상</a>
+  </div>
+	  
   <button type="button" class="rail-link" id="dustToggle" aria-expanded="false" aria-controls="dustSub">
     황사 <span class="caret" aria-hidden="true"></span>
   </button>

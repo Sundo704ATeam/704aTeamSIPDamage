@@ -187,8 +187,8 @@ public class RainfallScheduler {
 	/**
 	 * 이미지 목록으로 animated git 파일 생성 및 저장
 	 * 
-	 * @param imgs Gif로 생성할 이미지 목록
-	 * @param fileName 저장할 git 파일 이름
+	 * @param imgs gif로 생성할 이미지 목록
+	 * @param fileName 저장할 gif 파일 이름 ("YYYYMMdd" 형식으로 저장)
 	 * @param delayTime 프레임당 멈출 시간 (10ms 단위)
 	 */
 	private void createAndSaveGif(List<BufferedImage> imgs, String fileName, int delayTime) {

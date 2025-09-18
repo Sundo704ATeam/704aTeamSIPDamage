@@ -23,40 +23,6 @@
       border-top:1px solid var(--gray-700);
       z-index:1000;
     }
-    #dataRail{
-      position: fixed; z-index: 900;
-      top: var(--header-h, 60px); left: var(--rail-w, 60px);
-      bottom: var(--footer-h, 40px);
-      width: var(--tool-w); background: #f3f3f3;
-      border-right:1px solid #ddd;
-      padding: 12px 10px; display:flex; flex-direction:column; gap:10px;
-    }
-    #dataRail a{
-      display:block; width:100%; padding:10px 12px;
-      text-align:center; border-radius:10px;
-      text-decoration:none; border:1px solid #6b7280;
-      background:#fff; color:#111;
-    }
-    #dataRail a:hover{ background:#e5e7eb; }
-    
-    .subnav{
-      display:none; flex-direction:column; gap:8px; margin-top:-2px;
-    }
-    .subnav.open{ display:flex; }
-    .subnav a{
-      padding:8px 10px;
-      font-size:13px;
-      border-radius:10px;
-      border:1px dashed #9ca3af;
-      background:#fff;
-      text-align:left;
-    }
-    .subnav a::before{
-      content:"•";
-      margin-right:6px;
-      font-weight:700;
-    }
-    .subnav a:hover{ background:#f3f4f6; }
     
     #timelineDock{
       position: fixed; z-index: 960;
@@ -96,17 +62,9 @@
 
 </head>
 <body>
-  <jsp:include page="/WEB-INF/views/header.jsp"/>
-  <jsp:include page="/WEB-INF/views/sidebar.jsp"/>
-  <aside id="dataRail">
-	  <a href="#" id="rainToggle" aria-expanded="false" aria-controls="rainSub">강우량</a>
-	  <div id="rainSub" class="subnav" role="region" aria-label="rain sub menu">
-	    <a class="sub-link" href="${pageContext.request.contextPath}/rain">실시간 강우량</a>
-	  </div>
-	  
-	  <!-- 황사 토글 버튼 -->
-	  <a href="${pageContext.request.contextPath}/dust">황사</a>
-  </aside>
+  <%@ include file="/WEB-INF/views/header.jsp" %>
+  <%@ include file="/WEB-INF/views/sidebar.jsp" %>
+  <%@ include file="/WEB-INF/views/sisidebar.jsp" %>
 
   <div id="map"></div>
   
@@ -148,28 +106,8 @@
   <footer>© 사회기반시설 스마트 유지관리 시스템</footer>
   
   <script type="text/javascript">
-	  (function(){
-	      var btn = document.getElementById('rainToggle');
-	      var sub = document.getElementById('rainSub');
-	      if (!btn || !sub) return;
-	
-	      btn.addEventListener('click', function(e){
-	        e.preventDefault();
-	        var opened = sub.classList.toggle('open');
-	        btn.setAttribute('aria-expanded', opened ? 'true' : 'false');
-	      });
-	
-	      // 바깥을 클릭하면 접기 (선택사항)
-	      document.addEventListener('click', function(e){
-	        if (!sub.classList.contains('open')) return;
-	        if (!e.target.closest('#rainToggle') && !e.target.closest('#rainSub')){
-	          sub.classList.remove('open');
-	          btn.setAttribute('aria-expanded', 'false');
-	        }
-	      });
-	    })();
-	  
-		// ======== 1. JSTL 데이터 -> JS 배열 ========
+
+		// ======== 1. 데이터 파싱 ========
 	    const rainfalls = [
 	      <c:forEach var="r" items="${rainfalls}" varStatus="st">
 	        { gaugeCode:${r.gauge_code}, time:"${r.time}", rainfall:${r.rainfall} }<c:if test="${!st.last}">,</c:if>
