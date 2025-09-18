@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import egovframework.sipdamage704a.dto.dust.DustDto;
+import egovframework.sipdamage704a.dto.dust.DustForecastDto;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -29,7 +30,7 @@ public class DustDaoImpl implements DustDao {
 	@Override
 	public void deactivateAllStations() {
 
-		session.insert("deactivateAllStations");
+		session.update("deactivateAllStations");
 	}
 
 	@Override
@@ -55,5 +56,24 @@ public class DustDaoImpl implements DustDao {
 
 		return session.selectList("getLatestDustData");
 	}
+
+	@Override
+	public void fetchDustForecast(DustForecastDto dto) {
+		
+		session.insert("fetchDustForecast", dto);
+	}
+
+	@Override
+	public void upsertForecastImg(DustForecastDto imgDto) {
+		
+		session.insert("upsertForecastImg", imgDto);
+	}
+
+	@Override
+	public DustForecastDto getForecastData(DustForecastDto dustForecastDto) {
+
+		return session.selectOne("getForecastData", dustForecastDto);
+	}
+
 	
 }

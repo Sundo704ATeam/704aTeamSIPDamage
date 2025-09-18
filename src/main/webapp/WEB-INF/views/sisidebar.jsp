@@ -73,5 +73,6 @@
   <div id="dustSub" class="submenu">
     <a class="sub-link" href="${pageContext.request.contextPath}/realTimeDust">실시간 PM10/PM2.5 정보</a>
     <a class="sub-link" href="${pageContext.request.contextPath}/dustData">권역별 1주일 데이터</a>
+    <a class="sub-link" href="${pageContext.request.contextPath}/dustForecast">PM10/PM2.5 예보</a>
   </div>
 </aside>

@@ -1,5 +1,6 @@
 package egovframework.sipdamage704a.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.sipdamage704a.dto.dust.DustDto;
+import egovframework.sipdamage704a.dto.dust.DustForecastDto;
 import egovframework.sipdamage704a.service.DustService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -84,5 +86,32 @@ public class DustController {
 		return "sw/dustData";
 	}
 	
+	@GetMapping("/dustForecast")
+	public String dustForecastPage(DustForecastDto dustForecastDto, Model model) {
+	    log.info("DustController dustForecastPage start");
+
+	    // InformCode 기본값
+	    if (dustForecastDto.getInformCode() == null) {
+	        dustForecastDto.setInformCode("PM10");
+	    }
+
+	    // DataTime 기본값: 초기 화면이면 오늘, 아니면 선택한 날짜
+	    if (dustForecastDto.getDataTime() == null || dustForecastDto.getDataTime().isEmpty()) {
+	        dustForecastDto.setDataTime(LocalDate.now().toString());
+	    }
+
+	    // 데이터 조회
+	    DustForecastDto dustForecast = dustService.getForecastData(dustForecastDto);
+
+	    // 조회 결과 없으면 빈 객체
+	    if (dustForecast == null || dustForecast.getDataTime() == null) {
+	        dustForecast = new DustForecastDto();
+	    }
+
+	    model.addAttribute("dustForecast", dustForecast);
+
+	    return "sw/dustForecast";
+	}
+
 	
 }
