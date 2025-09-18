@@ -53,75 +53,128 @@ h2 {
 .card {
 	padding: 20px;
 }
+
+.photo-row .btn-danger {
+	height: 38px; /* input이랑 맞춤 (form-control 기본 높이랑 동일) */
+	line-height: 1.2; /* 글자 세로 위치 맞추기 */
+	white-space: nowrap; /* 글자 줄바꿈 방지 */
+}
 </style>
 </head>
 <body>
-	<form id="inspectForm" action="${pageContext.request.contextPath}/damageMap/inspect/save"
-		method="post" class="mt-3">
+	<form id="inspectForm"
+		action="${pageContext.request.contextPath}/damageMap/inspect/save"
+		method="post" enctype="multipart/form-data" class="mt-3">
+
 		<div class="form-row">
 			<div class="card">
 				<h5 class="mb-3">점검등록</h5>
 				<div class="form-grid">
 					<!-- 관리코드 hidden -->
-					<input type="hidden" name="managecode" value="${managecode}" />
-
-					<label>점검일</label>
+					<input type="hidden" name="managecode" value="${managecode}" /> <label>점검일</label>
 					<input type="date" name="ins_date" class="form-control" required>
 
-					<label>점검자</label>
-					<input type="text" name="inspactor" class="form-control" placeholder="점검자 이름" required>
+					<label>점검자</label> <input type="text" name="inspactor"
+						class="form-control" placeholder="점검자 이름" required> <label>균열(객체수)</label>
+					<input type="number" name="crackcnt" class="form-control" min="0"
+						value="0"> <label>누전 (객체수)</label> <input type="number"
+						name="elecleakcnt" class="form-control" min="0" value="0">
 
-					<label>균열 (객체수)</label>
-					<input type="number" name="crackcnt" class="form-control" min="0" value="0">
-
-					<label>누전 (객체수)</label>
-					<input type="number" name="elecleakcnt" class="form-control" min="0" value="0">
-
-					<label>누수 (객체수)</label>
-					<input type="number" name="leakcnt" class="form-control" min="0" value="0">
-
-					<label>변형 (객체수)</label>
-					<input type="number" name="variationcnt" class="form-control" min="0" value="0">
-
-					<label>구조이상 (객체수)</label>
-					<input type="number" name="abnormalitycnt" class="form-control" min="0" value="0">
-
-					<!-- 버튼은 span 2 -->
-					<div class="mt-4 text-end" style="grid-column: span 2;">
-						<button type="submit" class="btn btn-success">등록</button>
-						<a href="${pageContext.request.contextPath}/inspectList?managecode=${managecode}" 
-						   class="btn btn-secondary">취소</a>
-					</div>
+					<label>누수 (객체수)</label> <input type="number" name="leakcnt"
+						class="form-control" min="0" value="0"> <label>변형(객체수)</label>
+					<input type="number" name="variationcnt" class="form-control"
+						min="0" value="0"> <label>구조이상(객체수)</label> <input
+						type="number" name="abnormalitycnt" class="form-control" min="0"
+						value="0">
 				</div>
 			</div>
 		</div>
+
+		<!-- ✅ 위치별 사진 등록 카드 -->
+		<div class="form-row mt-4">
+			<div class="card">
+				<h5 class="mb-3">위치별 사진 등록</h5>
+				<div id="photoContainer" class="d-flex flex-column gap-3">
+					<div class="photo-row d-flex align-items-center gap-2">
+						<input type="text" name="img_loc[0]" class="form-control imgLoc"
+							placeholder="위치 입력" style="max-width: 200px;"> <input
+							type="file" name="files[0]" class="form-control fileInput"
+							accept="image/*" multiple>
+						<button type="button" class="btn btn-sm btn-danger"
+							onclick="removeRow(this)">삭제</button>
+					</div>
+				</div>
+				<div class="mt-3">
+					<button type="button" class="btn btn-sm btn-outline-primary"
+						onclick="addPhotoRow()">+ 항목 추가</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- ✅ 등록/취소 버튼 -->
+		<div class="mt-4 text-end">
+			<button type="submit" class="btn btn-success">등록</button>
+			<a
+				href="${pageContext.request.contextPath}/inspectList?managecode=${managecode}"
+				class="btn btn-secondary">취소</a>
+		</div>
 	</form>
+
 	<script>
-	document.getElementById("inspectForm").addEventListener("submit", function(e) {
-		  e.preventDefault();
+	function addPhotoRow() {
+		  const container = document.getElementById("photoContainer");
+		  const div = document.createElement("div");
+		  div.className = "photo-row d-flex align-items-center gap-2 mt-2";
+		  div.innerHTML =
+		    '<input type="text" name="" class="form-control imgLoc" placeholder="위치 입력" style="max-width:200px;">' +
+		    '<input type="file" name="" class="form-control fileInput" accept="image/*" multiple>' +
+		    '<button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">삭제</button>';
+		  container.appendChild(div);
+		  reindexRows(); // 인덱스 다시 매기기
+		}
 
-		  const formData = new FormData(this);
-		  const jsonData = Object.fromEntries(formData); // { managecode: "1", ins_date: "2025-09-17", ... }
+		function removeRow(btn) {
+		  btn.parentElement.remove();
+		  reindexRows(); // 삭제 후 인덱스 다시 매기기
+		}
 
-		  fetch(this.action, {
-		    method: "POST",
-		    headers: { "Content-Type": "application/json" }, // JSON이라고 명시
-		    body: JSON.stringify(jsonData)                  // JSON 문자열로 변환
-		  })
-		  .then(r => r.json())
-		  .then(data => {
-		    if (data.success) {
-		      alert("등록완료 되었습니다");
-		      if (window.opener && !window.opener.closed) {
-		        window.opener.location.reload();
-		      }
-		      window.close();
-		    } else {
-		      alert("등록 실패!");
-		    }
-		  })
-		  .catch(err => console.error(err));
-		});
-</script>
+		function reindexRows() {
+		  const rows = document.querySelectorAll("#photoContainer .photo-row");
+		  rows.forEach(function(row, index) {
+		    const imgLocInput = row.querySelector(".imgLoc");
+		    const fileInput = row.querySelector(".fileInput");
+		    imgLocInput.setAttribute("name", "img_loc[" + index + "]");
+		    fileInput.setAttribute("name", "files[" + index + "]");
+		  });
+		}
+		
+		document.getElementById("inspectForm").addEventListener("submit", function(e) {
+			  e.preventDefault();
+
+			  const formData = new FormData(this);
+
+			  fetch(this.action, {
+			    method: "POST",
+			    body: formData
+			  })
+			  .then(r => r.json())
+			  .then(data => {
+			    if (data.success) {
+			      alert("등록이 완료되었습니다");
+			      if (window.opener && !window.opener.closed) {
+			        window.opener.location.reload(); // 부모창 새로고침
+			      }
+			      window.close(); // 현재 등록 팝업창 닫기
+			    } else {
+			      alert("등록 실패 ❌ 다시 시도해주세요.");
+			    }
+			  })
+			  .catch(err => {
+			    console.error("에러 발생:", err);
+			    alert("서버 오류가 발생했습니다.");
+			  });
+			});
+			</script>
+	</script>
 </body>
 </html>

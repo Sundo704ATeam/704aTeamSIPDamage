@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import egovframework.sipdamage704a.dto.damage.DamageImgDto;
 import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +40,16 @@ public class DamageDaoImpl implements DamageDao {
 	    return session.selectList("egovframework.DamageMapper.getDamageHistory", managecode);
 	}
 
+	@Override
+	public void saveDamageImg(DamageImgDto saveDto) {
+		session.insert("egovframework.DamageMapper.saveDamageImg", saveDto);
+		
+	}
 
+	@Override
+	public List<DamageImgDto> findImagesByInscode(int inscode) {
+		// TODO Auto-generated method stub
+		return session.selectList("egovframework.DamageMapper.findImagesByInscode", inscode);
+	}
 
 }

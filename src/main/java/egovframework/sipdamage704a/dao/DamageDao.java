@@ -3,6 +3,7 @@ package egovframework.sipdamage704a.dao;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.sipdamage704a.dto.damage.DamageImgDto;
 import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 
 public interface DamageDao {
@@ -14,6 +15,10 @@ public interface DamageDao {
 	Damage_InspectDto getFindByInscode(int inscode);
 
 	List<Map<String, Object>> getDamageHistory(int managecode);
+	
+	void saveDamageImg(DamageImgDto saveDto);
+
+	List<DamageImgDto> findImagesByInscode(int inscode);
 
 }
  	
