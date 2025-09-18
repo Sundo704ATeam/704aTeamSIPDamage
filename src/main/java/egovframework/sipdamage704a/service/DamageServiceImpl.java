@@ -1,6 +1,7 @@
 package egovframework.sipdamage704a.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -80,6 +81,11 @@ public class DamageServiceImpl implements DamageService {
 	    else if (cnt >= 200) return "C"; // C
 	    else if (cnt >= 100) return "D"; // D
 	    else return "-"; // 없음
+	}
+
+	@Override
+	public List<Map<String, Object>> getDamageHistory(int managecode) {
+	    return damageDao.getDamageHistory(managecode);
 	}
 
 }

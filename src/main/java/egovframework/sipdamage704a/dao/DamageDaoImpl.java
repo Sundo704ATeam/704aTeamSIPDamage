@@ -1,5 +1,6 @@
 package egovframework.sipdamage704a.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -31,6 +32,13 @@ public class DamageDaoImpl implements DamageDao {
 		
 		return session.selectOne("egovframework.DamageMapper.getFindByInscode", inscode);
 	}
+
+
+	@Override
+	public List<Map<String, Object>> getDamageHistory(int managecode) {
+	    return session.selectList("egovframework.DamageMapper.getDamageHistory", managecode);
+	}
+
 
 
 }
