@@ -32,11 +32,11 @@
           }
 
           const labels = data.map(r => r.ins_date);
-          const crack = data.map(r => r.crackcnt);
-          const elec  = data.map(r => r.elecLeakcnt);
-          const leak  = data.map(r => r.leakcnt);
-          const vario = data.map(r => r.variationcnt);
-          const abn   = data.map(r => r.abnormalitycnt);
+          const crack = data.map(r => r.crack);
+          const elec  = data.map(r => r.elecleak);
+          const leak  = data.map(r => r.leak);
+          const vario = data.map(r => r.variation);
+          const abn   = data.map(r => r.abnormality);
 
           
           new Chart(document.getElementById("historyChart"), {
