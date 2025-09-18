@@ -52,5 +52,21 @@
 			 LIMIT 1) dmgins
 		left join constimp cons on dmgins.managecode = cons.managecode
 	</select>
+		
+	<select id="getDamageHistory" parameterType="int" resultType="map">
+	  SELECT 
+	    ins_date,
+	    crackcnt   AS crackCnt,
+	    elecleakcnt AS elecLeakCnt,
+	    leakcnt     AS leakCnt,
+	    variationcnt AS variationCnt,
+	    abnormalitycnt AS abnormalityCnt
+	  FROM damage_inspect
+	  WHERE managecode = #{managecode}
+	  ORDER BY ins_date
+	</select>
+
 	
+
+
 </mapper>

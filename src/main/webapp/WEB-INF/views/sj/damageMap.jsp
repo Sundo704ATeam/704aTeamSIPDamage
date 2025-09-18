@@ -417,8 +417,7 @@ body.rail-collapsed .rail-toggle {
 	const coordPopupOverlay = new ol.Overlay({
 	  element: coordPopupContainer,
 	  positioning: 'bottom-center',
-	  stopEvent: true,
-	  offset: [0, -10]
+	  stopEvent: true
 	});
 	map.addOverlay(coordPopupOverlay);
 	
@@ -482,8 +481,8 @@ body.rail-collapsed .rail-toggle {
 	      '<div style="margin-bottom:8px;"><b>소재지:</b> ' + address + '</div>' +
 	      '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
 	      '<div style="margin-top:6px; display:flex; gap:6px;">' +
-	      '<button class="btn btn-sm btn-primary" ' +
-	      '   onclick="document.getElementById(\'statsPanel\').style.display = \'block\';">통계보기</button>' +
+	      // ✅ 통계보기 버튼 → 관리코드 전달
+	      '<button class="btn btn-sm btn-primary" onclick="openStatsPanel(' + managecode + ')">통계보기</button>' +
 	      '<a href="javascript:void(0);" ' +
 	      '   class="btn btn-sm btn-secondary" ' +
 	      '   onclick="window.open(\'' + '${pageContext.request.contextPath}/inspectList?managecode=' + managecode + '\', ' +
@@ -534,6 +533,8 @@ body.rail-collapsed .rail-toggle {
 	          const inspBox = document.getElementById("inspBox");
 	          if (!data || data.error || data.status >= 400) {
 	            inspBox.innerHTML = "<div style='color:red;'>점검표 불러오기 실패</div>";
+	            // 표가 없으니 offset 0
+	            infoPopupOverlay.setOffset([0, 0]);
 	            return;
 	          }
 	          if (Object.keys(data).length === 0) {
@@ -550,6 +551,7 @@ body.rail-collapsed .rail-toggle {
 	            html += "</tbody></table>";
 	            inspBox.innerHTML = html;
 	          }
+	          infoPopupOverlay.setOffset([0, -320]);
 	        })
 	        .catch(err => {
 	          console.error("점검표 로드 오류:", err);
@@ -762,16 +764,16 @@ body.rail-collapsed .rail-toggle {
     	}
   </script>
   
-  	<!-- ✅ 통계 패널 -->
-<div id="statsPanel">
-  <div class="stats-header">
-    <span>📊 통계 결과</span>
-    <button id="closeStats">×</button>
-  </div>
-  <div style="padding: 20px; text-align:center; color:#666;">
-    (여기에 통계 데이터 들어갈 예정)
-  </div>
-</div>
+	<!-- ✅ 통계 패널 -->
+	<div id="statsPanel">
+	  <div class="stats-header">
+	    <span>📊 통계 결과</span>
+	    <button id="closeStats">×</button>
+	  </div>
+	  <div style="padding: 10px; text-align:center; color:#666;">
+	    <iframe id="analysisFrame" src="" style="width:100%; height:180px; border:none;"></iframe>
+	  </div>
+	</div>
 
 <style>
   #statsPanel {
@@ -840,6 +842,17 @@ body.rail-collapsed .rail-toggle {
   statsClose.addEventListener("click", () => {
     statsPanel.style.display = "none";
   });
+  
+  function openStatsPanel(managecode) {
+	  const statsPanel = document.getElementById("statsPanel");
+	  statsPanel.style.display = "block";
+
+	  // ✅ 이제는 /analysis/view 로 접근해야 함
+	  const iframe = document.getElementById("analysisFrame");
+	  iframe.src = "${pageContext.request.contextPath}/analysis/view?managecode=" + managecode;
+	}
+
+
 </script>
   	
   
