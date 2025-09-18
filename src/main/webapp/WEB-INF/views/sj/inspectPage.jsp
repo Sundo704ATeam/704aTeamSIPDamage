@@ -95,13 +95,17 @@ h2 {
 			<div class="card">
 				<h5 class="mb-3">위치별 사진 등록</h5>
 				<div id="photoContainer" class="d-flex flex-column gap-3">
-					<div class="photo-row d-flex align-items-center gap-2">
-						<input type="text" name="img_loc[0]" class="form-control imgLoc"
-							placeholder="위치 입력" style="max-width: 200px;"> <input
-							type="file" name="files[0]" class="form-control fileInput"
-							accept="image/*" multiple>
-						<button type="button" class="btn btn-sm btn-danger"
-							onclick="removeRow(this)">삭제</button>
+					<div class="photo-row d-flex flex-column gap-2">
+						<div class="d-flex align-items-center gap-2">
+							<input type="text" name="img_loc[0]" class="form-control imgLoc"
+								placeholder="위치 입력" style="max-width: 200px;"> <input
+								type="file" name="files[0]" class="form-control fileInput"
+								accept="image/*" multiple onchange="previewFiles(this, 0)">
+							<button type="button" class="btn btn-sm btn-danger"
+								onclick="removeRow(this)">삭제</button>
+						</div>
+						<!-- ✅ 미리보기는 파일 선택 밑으로 -->
+						<div class="preview d-flex gap-2 flex-wrap mt-2"></div>
 					</div>
 				</div>
 				<div class="mt-3">
@@ -121,16 +125,43 @@ h2 {
 	</form>
 
 	<script>
-	function addPhotoRow() {
+	function previewFiles(input, index) {
+		  const previewContainer = input.closest(".photo-row").querySelector(".preview");
+		  previewContainer.innerHTML = ""; // 이전 미리보기 초기화
+
+		  if (input.files) {
+		    Array.from(input.files).forEach(file => {
+		      if (file.type.startsWith("image/")) {
+		        const reader = new FileReader();
+		        reader.onload = function(e) {
+		          const img = document.createElement("img");
+		          img.src = e.target.result;
+		          img.style.width = "80px";
+		          img.style.height = "80px";
+		          img.style.objectFit = "cover";
+		          img.style.border = "1px solid #ccc";
+		          img.style.borderRadius = "6px";
+		          previewContainer.appendChild(img);
+		        };
+		        reader.readAsDataURL(file);
+		      }
+		    });
+		  }
+		}
+
+		function addPhotoRow() {
 		  const container = document.getElementById("photoContainer");
 		  const div = document.createElement("div");
-		  div.className = "photo-row d-flex align-items-center gap-2 mt-2";
+		  div.className = "photo-row d-flex flex-column gap-2 mt-2";
 		  div.innerHTML =
-		    '<input type="text" name="" class="form-control imgLoc" placeholder="위치 입력" style="max-width:200px;">' +
-		    '<input type="file" name="" class="form-control fileInput" accept="image/*" multiple>' +
-		    '<button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">삭제</button>';
+		    '<div class="d-flex align-items-center gap-2">' +
+		      '<input type="text" name="" class="form-control imgLoc" placeholder="위치 입력" style="max-width:200px;">' +
+		      '<input type="file" name="" class="form-control fileInput" accept="image/*" multiple onchange="previewFiles(this)">' +
+		      '<button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">삭제</button>' +
+		    '</div>' +
+		    '<div class="preview d-flex gap-2 flex-wrap mt-2"></div>';
 		  container.appendChild(div);
-		  reindexRows(); // 인덱스 다시 매기기
+		  reindexRows();
 		}
 
 		function removeRow(btn) {

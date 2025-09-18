@@ -41,7 +41,17 @@ public class StructureServiceImpl implements StructureService {
 
 	@Override
 	public List<Damage_InspectDto> getInspectsByManagecode(int managecode) {
-	    return structureDao.getInspectsByManagecode(managecode);
+	    
+		List<Damage_InspectDto> result = structureDao.getInspectsByManagecode(managecode);
+		
+				for(Damage_InspectDto dto : result) {
+					dto.setCrack_grade(grade(dto.getCrack()*dto.getCrackcnt()));
+					dto.setElecleak_grade(grade(dto.getElecleak()*dto.getElecleakcnt()));
+					dto.setLeak_grade(grade(dto.getLeak()*dto.getLeakcnt()));
+					dto.setVariation_grade(grade(dto.getVariation()*dto.getVariationcnt()));
+					dto.setAbnormality_grade(grade(dto.getAbnormality()*dto.getAbnormalitycnt()));
+				}
+		return result ;
 	}
 
 	@Override
@@ -62,4 +72,12 @@ public class StructureServiceImpl implements StructureService {
 	}
 
 
+	private String grade(int cnt) {
+	    if (cnt >= 400) return "A"; // A
+	    else if (cnt >= 300) return "B"; // B
+	    else if (cnt >= 200) return "C"; // C
+	    else if (cnt >= 100) return "D"; // D
+	    else return "-"; // 없음
+	}
+	
 }
