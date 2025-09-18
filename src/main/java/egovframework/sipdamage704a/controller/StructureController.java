@@ -37,6 +37,8 @@ public class StructureController {
     @GetMapping("/inspectList")
     public String getInspectList(@RequestParam("managecode") int managecode, Model model) {
         List<Damage_InspectDto> list = structureService.getInspectsByManagecode(managecode);
+        
+        
         model.addAttribute("inspects", list);
         model.addAttribute("managecode", managecode);
         return "sj/inspectList";

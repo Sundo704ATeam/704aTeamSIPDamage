@@ -104,13 +104,13 @@ h2 {
 
 .inspection-list {
 	display: flex;
-	flex-wrap: wrap;
+	flex-direction: column; /* 가로 → 세로 */
 	gap: 16px;
 	padding: 16px;
 }
 
 .inspection-item {
-	flex: 1 1 280px;
+	width: 100%; /* ✅ 한 줄 다 차지 */
 	background: #fafafa;
 	border: 1px solid #eee;
 	border-radius: 10px;
@@ -129,9 +129,12 @@ h2 {
 
 .inspection-thumbnails {
 	display: flex;
-	flex-wrap: wrap;
 	gap: 8px;
 	padding: 10px;
+	overflow-x: auto; /* ✅ 가로 스크롤 활성화 */
+	overflow-y: hidden;
+	white-space: nowrap; /* ✅ 줄바꿈 방지 */
+	scroll-behavior: smooth; /* 스크롤 부드럽게 */
 }
 
 .inspection-thumbnails img {
@@ -142,6 +145,19 @@ h2 {
 	border-radius: 6px;
 	cursor: pointer;
 	transition: transform 0.2s;
+}
+
+.inspection-thumbnails::-webkit-scrollbar {
+	height: 8px; /* 스크롤바 두께 */
+}
+
+.inspection-thumbnails::-webkit-scrollbar-thumb {
+	background: #ccc;
+	border-radius: 4px;
+}
+
+.inspection-thumbnails::-webkit-scrollbar-thumb:hover {
+	background: #999;
 }
 
 .inspection-thumbnails img:hover {
@@ -224,6 +240,20 @@ h2 {
 .btn-edit:hover {
 	background: #2980b9;
 }
+
+.no-photo {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 120px;
+	border: 1px dashed #ccc;
+	border-radius: 6px;
+	background: #fdfdfd;
+	color: #888;
+	font-size: 14px;
+	font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -266,22 +296,36 @@ h2 {
 				<div class="card">
 					<h3>상세 점검내역</h3>
 					<div class="inspection-list">
-						<c:forEach var="entry" items="${imgMap}">
-							<div class="inspection-item">
-								<div class="inspection-info">
-									<p>
-										<strong>위치:</strong> ${entry.key}
-									</p>
-								</div>
-								<div class="inspection-thumbnails">
-									<c:forEach var="file" items="${entry.value}">
-										<img
-											src="${pageContext.request.contextPath}/damageMap/files/${file}"
-											alt="점검사진" onclick="openModal(this.src)" />
-									</c:forEach>
-								</div>
-							</div>
-						</c:forEach>
+						<c:choose>
+							<c:when test="${not empty imgMap}">
+								<c:forEach var="entry" items="${imgMap}">
+									<div class="inspection-item">
+										<div class="inspection-info">
+											<p>
+												<strong>위치:</strong> ${entry.key}
+											</p>
+										</div>
+										<div class="inspection-thumbnails">
+											<c:choose>
+												<c:when test="${not empty entry.value}">
+													<c:forEach var="file" items="${entry.value}">
+														<img
+															src="${pageContext.request.contextPath}/damageMap/files/${file}"
+															alt="점검사진" onclick="openModal(this.src)" />
+													</c:forEach>
+												</c:when>
+												<c:otherwise>
+													<div class="no-photo">등록된 사진이 없습니다</div>
+												</c:otherwise>
+											</c:choose>
+										</div>
+									</div>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<div class="no-photo">등록된 사진이 없습니다</div>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</div>

@@ -1,96 +1,152 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>점검 내역</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh; /* 화면 전체 높이 채우기 */
-    }
-  main {
-	  margin: 80px auto 0 auto; /* 위쪽 80px, 좌우 auto */
-	  padding: 20px;
-	  max-width: 1200px; /* 테이블이 너무 넓어지지 않도록 제한 */
-	}
-    footer {
-      background: #333;
-      color: #fff;
-      text-align: center;
-      padding: 10px 0;
-      margin-left: 220px; /* 사이드바 아래에 맞추기 */
-    }
+<meta charset="UTF-8">
+<title>점검 내역</title>
+<style>
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	margin: 0;
+	background: #f5f6fa;
+	color: #333;
+	display: flex;
+}
 
-    /* 작은 화면에서는 사이드바 겹치게 */
-    @media (max-width: 768px) {
-      main {
-        margin-left: 0;
-      }
-      footer {
-        margin-left: 0;
-      }
-    }
-  </style>
+.content {
+	flex: 1;
+	padding: 20px; /* ✅ 위쪽 여백 최소화 */
+	margin-left: var(--rail-w); /* 사이드바 폭 맞추기 */
+}
+
+h2 {
+	margin-bottom: 20px;
+	color: #2c3e50;
+	font-weight: 600;
+}
+
+.table-container {
+	width: 100%;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	max-height: 60vh;
+	overflow-y: auto;
+	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
+	padding: 0;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+	table-layout: fixed;
+}
+
+th, td {
+	padding: 12px 14px;
+	border-bottom: 1px solid #eee;
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+thead th {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	background: #f0f2f5;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+
+tbody tr:hover {
+	background: #f9f9f9;
+}
+
+a.btn {
+	display: inline-block;
+	padding: 6px 12px;
+	border: 1px solid #d1d5db;
+	background: #ffffff;
+	color: #333;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 500;
+	text-decoration: none;
+	transition: background 0.2s, box-shadow 0.2s;
+}
+
+a.btn:hover {
+	background: #f9fafb;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+a.btn:active {
+	background: #f3f4f6;
+}
+
+.btn-register {
+  display: inline-block;   /* ✅ 또는 block */
+  margin-top: 30px;        /* ✅ 리스트와 간격 띄우기 */
+  padding: 10px 18px;
+  background: #2ecc71;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-register:hover {
+	background: #27ae60;
+}
+</style>
 </head>
 <body>
 
-  <!-- ✅ 메인 컨텐츠 -->
-  <main>
-    <h3>점검 내역</h3>
+	<div class="content">
+		<h2>점검 내역</h2>
 
-    <div class="table-responsive mt-3">
-      <table class="table table-bordered table-hover text-center align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>점검일</th>
-            <th>점검자</th>
-            <th>균열</th>
-            <th>균열등급</th>
-            <th>누전</th>
-            <th>누전등급</th>
-            <th>누수</th>
-            <th>누수등급</th>
-            <th>변형</th>
-            <th>변형등급</th>
-            <th>구조이상</th>
-            <th>구조이상등급</th>
-            <th>상세이력</th>
-          </tr>
-        </thead>
-        <tbody>
-          <c:forEach var="inspect" items="${inspects}">
-            <tr>
-              <td>${inspect.ins_date}</td>
-              <td>${inspect.inspactor}</td>
-              <td>${inspect.crackcnt}</td>
-              <td>${inspect.crack}</td>
-              <td>${inspect.elecleakcnt}</td>
-              <td>${inspect.elecleak}</td>
-              <td>${inspect.leakcnt}</td>
-              <td>${inspect.leak}</td>
-              <td>${inspect.variationcnt}</td>
-              <td>${inspect.variation}</td>
-              <td>${inspect.abnormalitycnt}</td>
-              <td>${inspect.abnormality}</td>
-              <td>
-                <a href="${pageContext.request.contextPath}/damageMap/inspect/detail?inscode=${inspect.inscode}" 
-                   class="btn btn-sm btn-primary">상세보기</a>
-              </td>
-            </tr>
-          </c:forEach>
-        </tbody>
-      </table>
-    </div>
+		<div class="table-container">
+			<table>
+				<thead>
+					<tr>
+						<th>점검일</th>
+						<th>점검자</th>
+						<th>균열(등급)</th>
+						<th>누전(등급)</th>
+						<th>누수(등급)</th>
+						<th>변형(등급)</th>
+						<th>구조이상(등급)</th>
+						<th>상세이력</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="inspect" items="${inspects}">
+						<tr>
+							<td>${inspect.ins_date}</td>
+							<td>${inspect.inspactor}</td>
+							<td>${inspect.crackcnt}[${inspect.crack_grade}]</td>
+							<td>${inspect.elecleakcnt}[${inspect.elecleak_grade}]</td>
+							<td>${inspect.leakcnt}[${inspect.leak_grade}]</td>
+							<td>${inspect.variationcnt}[${inspect.variation_grade}]</td>
+							<td>${inspect.abnormalitycnt}[${inspect.abnormality_grade}]</td>
+							<td><a
+								href="${pageContext.request.contextPath}/damageMap/inspect/detail?inscode=${inspect.inscode}"
+								class="btn">상세보기</a></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
 
-    <div class="mt-3">
-      <a href="${pageContext.request.contextPath}/damageMap/inspect/new?managecode=${managecode}" 
-         class="btn btn-success">점검 등록</a>
-    </div>
-  </main>
+		<a
+			href="${pageContext.request.contextPath}/damageMap/inspect/new?managecode=${managecode}"
+			class="btn-register">점검 등록</a>
+	</div>
 
 </body>
 </html>
