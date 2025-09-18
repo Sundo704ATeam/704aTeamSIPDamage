@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import egovframework.sipdamage704a.dao.DamageDao;
+import egovframework.sipdamage704a.dto.damage.DamageImgDto;
 import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 import lombok.RequiredArgsConstructor;
 
@@ -56,13 +57,14 @@ public class DamageServiceImpl implements DamageService {
         return response;
     }
 
-	@Override
+    @Override
 	public int saveInspect(Damage_InspectDto damage_InspectDto) {
 		
 		return damageDao.saveInspect(damage_InspectDto);
 	}
 
-	@Override
+
+    @Override
 	public Damage_InspectDto getFindByInscode(int inscode) {
 		Damage_InspectDto damage_InspectDto = damageDao.getFindByInscode(inscode);
 		
@@ -74,6 +76,7 @@ public class DamageServiceImpl implements DamageService {
 		
 		return damage_InspectDto;
 	}
+
 	
 	private String grade(int cnt) {
 	    if (cnt >= 400) return "A"; // A
@@ -88,4 +91,17 @@ public class DamageServiceImpl implements DamageService {
 	    return damageDao.getDamageHistory(managecode);
 	}
 
+	@Override
+	public void saveDamageImg(DamageImgDto saveDto) {
+		damageDao.saveDamageImg(saveDto);
+		
+	}
+
+	@Override
+	public List<DamageImgDto> getImagesByInscode(int inscode) {
+		return damageDao.findImagesByInscode(inscode);
+	}
+
+	
+	
 }

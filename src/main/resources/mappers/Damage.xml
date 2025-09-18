@@ -18,7 +18,7 @@
 			(select *
 			 from damage_inspect
 			 where managecode = #{managecode}
-			 ORDER BY ins_date DESC
+			 ORDER BY inscode DESC
 			 LIMIT 1) dmgins
 		left join constimp cons on dmgins.managecode = cons.managecode
 	</select>
@@ -48,8 +48,7 @@
 			(select *
 			 from damage_inspect
 			 where inscode = #{value}
-			 ORDER BY ins_date DESC
-			 LIMIT 1) dmgins
+			 ) dmgins
 		left join constimp cons on dmgins.managecode = cons.managecode
 	</select>
 		
@@ -67,6 +66,23 @@
 		ORDER BY dmg.ins_date
 	</select>
 
+	<!-- 이미지 저장 -->
+    <insert id="saveDamageImg" parameterType="DamageImgDto">
+        INSERT INTO damage_img (inscode, managecode, img_loc, filename)
+        VALUES (#{inscode}, #{managecode}, #{img_loc}, #{filename})
+    </insert>
+	
+	<!-- 이미지 조회 -->
+    <select id="findImagesByInscode" parameterType="int"
+            resultType="DamageImgDto">
+        SELECT inscode,
+               managecode,
+               img_loc,
+               filename
+        FROM damage_img
+        WHERE inscode = #{inscode}
+        ORDER BY img_loc
+    </select>
 	
 
 
