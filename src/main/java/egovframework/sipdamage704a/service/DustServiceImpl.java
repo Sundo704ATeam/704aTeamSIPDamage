@@ -1,6 +1,15 @@
 package egovframework.sipdamage704a.service;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -8,11 +17,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.sipdamage704a.dao.DustDao;
 import egovframework.sipdamage704a.dto.dust.DustDto;
+import egovframework.sipdamage704a.dto.dust.DustForecastDto;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,6 +43,11 @@ public class DustServiceImpl implements DustService {
 
 	@Value("${pm10.api.base}")
 	private String MeasureBaseUrl;
+	
+	@Value("${dustForecast.base}")
+	private String forecastBaseUrl;
+	
+	private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 	@Override
 	public List<DustDto> getDustStation() { //모든 측정소
@@ -108,34 +124,6 @@ public class DustServiceImpl implements DustService {
 			}
 		}
 
-		/*
-		 * for (String sido : sidos) { try { URI uri =
-		 * UriComponentsBuilder.fromHttpUrl(MeasureBaseUrl +
-		 * "/getCtprvnRltmMesureDnsty") .queryParam("serviceKey", serviceKey) // 원문 키
-		 * 그대로 .queryParam("returnType", "json").queryParam("numOfRows",
-		 * 1000).queryParam("pageNo", 1) .queryParam("sidoName", sido) // 원문 "서울"
-		 * .queryParam("ver", "1.0") // ★ ver=1.0 .encode(StandardCharsets.UTF_8) // 여기서
-		 * 한 번만 인코딩 .build().toUri();
-		 * 
-		 * String response = restTemplate.getForObject(uri, String.class);
-		 * 
-		 * JsonNode root = objectMapper.readTree(response); String code =
-		 * root.path("response").path("header").path("resultCode").asText(); String msg
-		 * = root.path("response").path("header").path("resultMsg").asText(); JsonNode
-		 * items = root.path("response").path("body").path("items");
-		 * 
-		 * if (!"00".equals(code)) { System.out.println("API 오류: " + code + " / " +
-		 * msg); continue; } if (!items.isArray() || items.size() == 0) {
-		 * System.out.println("시/도=" + sido + " 결과 0건(버전/인코딩/요청량 제한 확인)"); continue; }
-		 * 
-		 * // 숫자 필드에 '-' 내려오는 걸 대비하려면 커스텀 역직렬화(아래 2) 참고) List<DustDto> dtos =
-		 * objectMapper.readerForListOf(DustDto.class).readValue(items);
-		 * 
-		 * dustDao.upsertDustMeasure(dtos); // 아래 3) 매퍼 추가 } catch (Exception e) {
-		 * e.printStackTrace(); } }
-		 */
-		
-		
 	}
 
 	@Override
@@ -151,5 +139,124 @@ public class DustServiceImpl implements DustService {
 		
 		return dustDao.getLatestDustData();
 	}
+	
+	@Scheduled(cron = "0 22 5,11,17,23 * * *")
+	/* @Scheduled(cron = "0 41 5,11,16,23 * * *") */
+	public void fetchDustForecast() {
+        String today = LocalDate.now().toString();
+        List<String> codes = List.of("PM10", "PM25");
+
+        for (String code : codes) {
+            String url = forecastBaseUrl
+                    + "?serviceKey=" + serviceKey
+                    + "&returnType=json&numOfRows=1000&pageNo=1"
+                    + "&searchDate=" + today
+                    + "&informCode=" + code
+                    + "&ver=1.1";
+
+            try {
+                String response = restTemplate.getForObject(url, String.class);
+                JsonNode items = objectMapper.readTree(response)
+                                             .path("response").path("body").path("items");
+                //loging
+                System.out.println("API 응답 informCode=" + code);
+                System.out.println(items.toPrettyString());
+
+                if (!items.isArray() || items.size() == 0) {
+                    System.out.println("예보 데이터 없음: " + today + " / " + code);
+                    continue;
+                }
+                
+                List<DustForecastDto> all = objectMapper.readerForListOf(DustForecastDto.class).readValue(items);
+                
+                //loging
+                all.forEach(d -> {
+                    System.out.println("→ dataTime=" + d.getDataTime() + ", informCode=" + d.getInformCode());
+                });
+
+                DustForecastDto latest = all.stream()
+                        .filter(d -> code.equalsIgnoreCase(d.getInformCode()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (latest != null) {
+                    dustDao.fetchDustForecast(latest);
+                    System.out.println("예보 저장 완료: " + latest.getDataTime() + " / " + code);
+
+                    if (LocalDateTime.now(ZoneId.of("Asia/Seoul")).getHour() == 17) {
+                        saveForecastImages(items, code);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+	
+	
+	/** 실제 파일 저장 메서드 */
+	private void saveForecastImages(JsonNode items, String code) {
+	    for (JsonNode item : items) {
+	        String dataTime = item.path("dataTime").asText();
+
+	        String imgUrl = null;
+	        if ("PM10".equalsIgnoreCase(code)) {
+	            imgUrl = item.path("imageUrl7").asText(null);
+	        } else if ("PM25".equalsIgnoreCase(code)) {
+	            imgUrl = item.path("imageUrl8").asText(null);
+	        }
+
+	        if (imgUrl == null || imgUrl.isEmpty()) continue;
+
+	        String savedPath = saveForecastImage(imgUrl, dataTime, code);
+
+	        DustForecastDto imgDto = new DustForecastDto();
+	        imgDto.setDataTime(dataTime);
+	        imgDto.setInformCode(code);
+	        imgDto.setType("dust");
+	        imgDto.setPath(savedPath);
+
+	        dustDao.upsertForecastImg(imgDto);
+	    }
+	}
+
+	
+	private String saveForecastImage(String imageUrl, String dataTime, String code) {
+        try {
+            String baseDir = "C:/upload/forecast";
+
+            String datePart;
+            try {
+                LocalDate parsed = LocalDate.parse(dataTime.substring(0, 10));
+                datePart = parsed.format(DateTimeFormatter.BASIC_ISO_DATE);
+            } catch (Exception e) {
+                datePart = LocalDate.now(ZoneId.of("Asia/Seoul"))
+                                    .format(DateTimeFormatter.BASIC_ISO_DATE);
+            }
+
+            File dir = new File(baseDir + File.separator + datePart + File.separator + code);
+            if (!dir.exists()) dir.mkdirs();
+
+            String fileName = code + "_" + dataTime.replace(" ", "_").replace(":", "-") + ".gif";
+            File outFile = new File(dir, fileName);
+
+            try (InputStream in = new URL(imageUrl).openStream()) {
+                Files.copy(in, outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            return "/forecast/" + datePart + "/" + code + "/" + fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+	@Override
+	public DustForecastDto getForecastData(DustForecastDto dustForecastDto) {
+
+		return dustDao.getForecastData(dustForecastDto);
+	}
+	
 	
 }

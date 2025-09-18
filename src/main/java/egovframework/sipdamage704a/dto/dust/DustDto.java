@@ -22,7 +22,7 @@ public class DustDto {
 	private String	stationAddr;	//측정소 주소
 	
 	@JsonProperty("mangName")
-	private String 	mangName;       //측정망 정보
+	private String 	mangName;       //측정망 정보	
 	
 	@JsonProperty("dmX")
 	private double 	lon;			//WGS84기반 X좌표(경도)

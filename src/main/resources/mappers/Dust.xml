@@ -97,6 +97,70 @@
 	    WHERE s.station_active = true
 	    ORDER BY s.station_name;
 	</select>
-
 	
+	<insert id="fetchDustForecast" parameterType="DustForecastDto">
+      INSERT INTO dust_forecast (
+        data_time,
+        inform_code,
+        inform_overall,
+        inform_cause,
+        inform_grade,
+        action_knack
+      )
+      VALUES (
+        #{dataTime},
+        #{informCode},
+        #{informOverall},
+        #{informCause},
+        #{informGrade},
+        #{actionKnack}
+      )
+      ON CONFLICT (data_time, inform_code)
+      DO UPDATE SET
+        inform_overall = EXCLUDED.inform_overall,
+        inform_cause   = EXCLUDED.inform_cause,
+        inform_grade   = EXCLUDED.inform_grade,
+        action_knack   = EXCLUDED.action_knack;
+    </insert>
+		
+	<insert id="upsertForecastImg" parameterType="DustForecastDto">
+	  INSERT INTO forecast_img (
+	    data_time,
+	    inform_code,
+	    type,
+	    path
+	  )
+	  VALUES (
+	    #{dataTime},
+	    #{informCode},
+	    #{type},
+	    #{path}
+	  )
+	  ON CONFLICT (data_time, inform_code)
+	  DO UPDATE SET
+	    type = EXCLUDED.type,
+	    path = EXCLUDED.path;
+	</insert>
+  	
+  	<select id="getForecastData" parameterType="DustForecastDto" resultType="DustForecastDto">
+	  SELECT 
+	    f.data_time     AS dataTime,
+	    f.inform_code   AS informCode,
+	    f.inform_overall AS informOverall,
+	    f.inform_cause  AS informCause,
+	    f.inform_grade  AS informGrade,
+	    f.action_knack  AS actionKnack,
+	    i.path          AS path,
+	    i.type          AS type
+	  FROM dust_forecast f
+	  LEFT JOIN forecast_img i
+	    ON f.data_time = i.data_time
+	   AND f.inform_code = i.inform_code
+	  WHERE f.inform_code = #{informCode}
+	    AND f.data_time LIKE CONCAT(#{dataTime, jdbcType=VARCHAR}, '%')
+	  ORDER BY f.data_time DESC
+	  LIMIT 1
+	</select>
+  
 </mapper>
+	
