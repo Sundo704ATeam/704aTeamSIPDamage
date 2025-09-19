@@ -20,5 +20,15 @@ public interface DamageDao {
 
 	List<DamageImgDto> findImagesByInscode(int inscode);
 
+	List<Map<String, Object>> findTop5Crack();
+
+	List<Map<String, Object>> findTop5elecleak();
+
+	List<Map<String, Object>> findTop5leak();
+
+	List<Map<String, Object>> findTopvariation();
+
+	List<Map<String, Object>> findTop5abnoramlity();
+
 }
  	

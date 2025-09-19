@@ -700,7 +700,7 @@
               .then(data => {
                 const inspBox = document.getElementById("inspBox");
                 if (!data || data.error || data.status >= 400) {
-                  inspBox.innerHTML = "<div style='color:red;'>점검표 불러오기 실패</div>";
+                  inspBox.innerHTML = "<div style='color:red;'>점검 이력이 없습니다.</div>";
                   // 표가 없으니 offset 0
                   infoPopupOverlay.setOffset([0, -165]);
                   return;

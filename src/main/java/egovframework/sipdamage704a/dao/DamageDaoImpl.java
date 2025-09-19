@@ -48,8 +48,32 @@ public class DamageDaoImpl implements DamageDao {
 
 	@Override
 	public List<DamageImgDto> findImagesByInscode(int inscode) {
-		// TODO Auto-generated method stub
 		return session.selectList("egovframework.DamageMapper.findImagesByInscode", inscode);
+	}
+
+	@Override
+	public List<Map<String, Object>> findTop5Crack() {
+		return session.selectList("egovframework.DamageMapper.findTop5Crack");
+	}
+
+	@Override
+	public List<Map<String, Object>> findTop5elecleak() {
+		return session.selectList("egovframework.DamageMapper.findTop5elecleak");
+	}
+
+	@Override
+	public List<Map<String, Object>> findTop5leak() {
+		return session.selectList("egovframework.DamageMapper.findTop5leak");
+	}
+
+	@Override
+	public List<Map<String, Object>> findTopvariation() {
+		return session.selectList("egovframework.DamageMapper.findTop5variation");
+	}
+
+	@Override
+	public List<Map<String, Object>> findTop5abnoramlity() {
+		return session.selectList("egovframework.DamageMapper.findTop5abnormality");
 	}
 
 }
