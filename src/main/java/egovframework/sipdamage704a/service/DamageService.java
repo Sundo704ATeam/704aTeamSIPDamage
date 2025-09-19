@@ -31,6 +31,16 @@ public interface DamageService {
 	List<Map<String, Object>> findTop5variation();
 
 	List<Map<String, Object>> findTop5abnoramlity();
+
+	List<Map<String, Object>> findEmergencyCrack();
+
+	List<Map<String, Object>> findEmergencyElecLeak();
+	
+	List<Map<String, Object>> findEmergencyLeak();
+
+	List<Map<String, Object>> findEmergencyVariation();
+
+	List<Map<String, Object>> findEmergencyAbnormality();
 	
 	
 

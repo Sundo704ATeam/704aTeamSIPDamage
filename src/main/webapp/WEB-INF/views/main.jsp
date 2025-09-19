@@ -124,6 +124,33 @@
         grid-template-rows: auto;
       }
     }
+    
+	    /* 🚨 2번 카드 - 긴급 점검 필요 건물 리스트 */
+	.card.emergency {
+	  display: flex;
+	  flex-direction: column;
+  	  height: 100%;
+  	  min-height: 0;     /* ✅ flex 자식 스크롤 버그 방지 */
+  	  
+  	}
+	
+	.card.emergency .table-wrapper {
+	  flex: 1;
+	  overflow-y: auto;  /* 내부 스크롤 */
+	}
+	
+	#urgent-table {
+	  width: 100%;
+	  border-collapse: collapse;
+	  table-layout: fixed;
+	}
+	
+	#urgent-table th, #urgent-table td {
+	  border: 1px solid #ddd;
+	  padding: 10px;
+	  text-align: center;
+	}
+	    
   </style>
 </head>
 <body>
@@ -156,14 +183,34 @@
         <tbody></tbody>
       </table>
     </div>
-
-    <!-- 2번 카드 -->
-    <div class="card">
-      <h3>🚨 긴급 점검 필요 건물 리스트</h3>
-      <div id="urgent-list" style="flex:1; display:flex; align-items:center; justify-content:center; color:#777;">
-        리스트 들어갈 자리
-      </div>
-    </div>
+	
+	<!-- 2번 카드 -->
+	<div class="card emergency">
+	  <h3>🚨 긴급 점검 필요 건물 리스트</h3>
+	
+	  <div style="text-align:center; margin-bottom:10px;">
+	    <button class="category-btn active" onclick="selectEmergency(this, CTX + '/emergency/crack', 'crack')">균열</button>
+	    <button class="category-btn" onclick="selectEmergency(this, CTX + '/emergency/elecleak', 'elecleak')">누전</button>
+	    <button class="category-btn" onclick="selectEmergency(this, CTX + '/emergency/leak', 'leak')">누수</button>
+	    <button class="category-btn" onclick="selectEmergency(this, CTX + '/emergency/variation', 'variation')">변형</button>
+	    <button class="category-btn" onclick="selectEmergency(this, CTX + '/emergency/abnormality', 'abnormality')">구조이상</button>
+	  </div>
+	
+	  <!-- 스크롤 영역 -->
+	  <div class="table-wrapper">
+	    <table id="urgent-table" class="top5-table">
+	      <thead>
+	        <tr>
+	          <th>종류</th>
+	          <th>시설물명</th>
+	          <th>등급</th>
+	          <th>점검 등록</th>
+	        </tr>
+	      </thead>
+	      <tbody></tbody>
+	    </table>
+	  </div>
+	</div>
 
     <!-- 3번 카드 -->
     <div class="card">
@@ -185,7 +232,7 @@
 
   <script>
     const CTX = '<%= request.getContextPath() %>';
-
+    /* 1번카드 ajax */
     function selectCategory(btn, endpoint) {
       document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
@@ -234,6 +281,49 @@
       loadTop5(CTX + "/risk/top5/crack");
     });
     
+    /* 2번카드 ajax */
+    function selectEmergency(btn, endpoint, type) {
+      document.querySelectorAll(".card:nth-child(2) .category-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      loadEmergency(endpoint, type);
+    }
+
+    function loadEmergency(endpoint, type) {
+    	  fetch(endpoint)
+    	    .then(res => res.json())
+    	    .then(data => {
+    	      const tbody = document.querySelector("#urgent-table tbody");
+    	      tbody.innerHTML = "";
+
+    	      if (!Array.isArray(data) || data.length === 0) {
+    	        tbody.innerHTML = "<tr><td colspan='4'>데이터 없음</td></tr>";
+    	        return;
+    	      }
+
+    	      data.forEach(item => {
+    	        let grade = "-";
+    	        if (item.risk >= 400) grade = "A";
+    	        else if (item.risk >= 300) grade = "B";
+
+    	        const tr = document.createElement("tr");
+    	        tr.innerHTML = `
+    	          <td>\${item.type || "-"}</td>
+    	          <td>\${item.name || "-"}</td>
+    	          <td>\${grade}</td>
+    	          <td>
+    	            <button class="btn-detail"
+    	                    onclick="window.open('\${CTX}/inspectList?managecode=\${item.managecode}',
+    	                              'inspectWin','width=1000,height=600,scrollbars=yes,resizable=yes');">
+    	              점검 내역
+    	            </button>
+    	          </td>`;
+    	        tbody.appendChild(tr);
+
+    	      });
+    	    })
+    	    .catch(err => console.error("에러:", err));
+    	}
+
     
   </script>
 </body>

@@ -127,6 +127,33 @@ public class DamageServiceImpl implements DamageService {
 		return damageDao.findTop5abnoramlity();
 	}
 
+	@Override
+	public List<Map<String, Object>> findEmergencyCrack() {
+	    return damageDao.findEmergencyCrack();
+	}
+
+	@Override
+	public List<Map<String, Object>> findEmergencyElecLeak() {
+	    return damageDao.findEmergencyElecLeak();
+	}
+
+	@Override
+	public List<Map<String, Object>> findEmergencyLeak() {
+	    return damageDao.findEmergencyLeak();
+	}
+
+	@Override
+	public List<Map<String, Object>> findEmergencyVariation() {
+	    return damageDao.findEmergencyVariation();
+	}
+
+	@Override
+	public List<Map<String, Object>> findEmergencyAbnormality() {
+	    return damageDao.findEmergencyAbnormality();
+	}
+
+
+
 	
 	
 }

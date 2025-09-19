@@ -212,6 +212,105 @@
 		ORDER BY diff DESC
 		LIMIT 5
 		</select>
-  
-  
+	
+	<!-- 긴급점검 균열 -->
+	<select id="findEmergencyCrack" resultType="map">
+	  SELECT di.managecode      AS managecode,
+	         s.type             AS type,
+	         s.name             AS name,
+	         (di.crackcnt * cons.crack) AS risk,
+	         di.ins_date        AS ins_date
+	  FROM damage_inspect di
+	  JOIN structure s ON di.managecode = s.managecode
+	  LEFT JOIN constimp cons ON di.managecode = cons.managecode
+	  INNER JOIN (
+	      SELECT managecode, MAX(ins_date) AS latest_date
+	      FROM damage_inspect
+	      GROUP BY managecode
+	  ) latest 
+	    ON di.managecode = latest.managecode AND di.ins_date = latest.latest_date
+	  WHERE (di.crackcnt * cons.crack) >= 300
+	  ORDER BY di.ins_date DESC
+	</select>
+	
+	<!-- 긴급점검 누전 -->
+	<select id="findEmergencyElecLeak" resultType="map">
+	  SELECT di.managecode      AS managecode,
+	         s.type             AS type,
+	         s.name             AS name,
+	         (di.elecleakcnt * cons.elecleak) AS risk,
+	         di.ins_date        AS ins_date
+	  FROM damage_inspect di
+	  JOIN structure s ON di.managecode = s.managecode
+	  LEFT JOIN constimp cons ON di.managecode = cons.managecode
+	  INNER JOIN (
+	      SELECT managecode, MAX(ins_date) AS latest_date
+	      FROM damage_inspect
+	      GROUP BY managecode
+	  ) latest 
+	    ON di.managecode = latest.managecode AND di.ins_date = latest.latest_date
+	  WHERE (di.elecleakcnt * cons.elecleak) >= 300
+	  ORDER BY di.ins_date DESC
+	</select>
+	
+	<!-- 긴급점검 누수 -->
+	<select id="findEmergencyLeak" resultType="map">
+	  SELECT di.managecode      AS managecode,
+	         s.type             AS type,
+	         s.name             AS name,
+	         (di.leakcnt * cons.leak) AS risk,
+	         di.ins_date        AS ins_date
+	  FROM damage_inspect di
+	  JOIN structure s ON di.managecode = s.managecode
+	  LEFT JOIN constimp cons ON di.managecode = cons.managecode
+	  INNER JOIN (
+	      SELECT managecode, MAX(ins_date) AS latest_date
+	      FROM damage_inspect
+	      GROUP BY managecode
+	  ) latest 
+	    ON di.managecode = latest.managecode AND di.ins_date = latest.latest_date
+	  WHERE (di.leakcnt * cons.leak) >= 300
+	  ORDER BY di.ins_date DESC
+	</select>
+	
+	<!-- 긴급점검 변형 -->
+	<select id="findEmergencyVariation" resultType="map">
+	  SELECT di.managecode      AS managecode,
+	         s.type             AS type,
+	         s.name             AS name,
+	         (di.variationcnt * cons.variation) AS risk,
+	         di.ins_date        AS ins_date
+	  FROM damage_inspect di
+	  JOIN structure s ON di.managecode = s.managecode
+	  LEFT JOIN constimp cons ON di.managecode = cons.managecode
+	  INNER JOIN (
+	      SELECT managecode, MAX(ins_date) AS latest_date
+	      FROM damage_inspect
+	      GROUP BY managecode
+	  ) latest 
+	    ON di.managecode = latest.managecode AND di.ins_date = latest.latest_date
+	  WHERE (di.variationcnt * cons.variation) >= 300
+	  ORDER BY di.ins_date DESC
+	</select>
+	
+	<!-- 긴급점검 구조이상 -->
+	<select id="findEmergencyAbnormality" resultType="map">
+	  SELECT di.managecode      AS managecode,
+	         s.type             AS type,
+	         s.name             AS name,
+	         (di.abnormalitycnt * cons.abnormality) AS risk,
+	         di.ins_date        AS ins_date
+	  FROM damage_inspect di
+	  JOIN structure s ON di.managecode = s.managecode
+	  LEFT JOIN constimp cons ON di.managecode = cons.managecode
+	  INNER JOIN (
+	      SELECT managecode, MAX(ins_date) AS latest_date
+	      FROM damage_inspect
+	      GROUP BY managecode
+	  ) latest 
+	    ON di.managecode = latest.managecode AND di.ins_date = latest.latest_date
+	  WHERE (di.abnormalitycnt * cons.abnormality) >= 300
+	  ORDER BY di.ins_date DESC
+	</select>
+
 </mapper>

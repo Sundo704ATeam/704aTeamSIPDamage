@@ -76,4 +76,30 @@ public class DamageDaoImpl implements DamageDao {
 		return session.selectList("egovframework.DamageMapper.findTop5abnormality");
 	}
 
+	@Override
+	public List<Map<String, Object>> findEmergencyCrack() {
+		return session.selectList("egovframework.DamageMapper.findEmergencyCrack");
+	}
+	
+	@Override
+	public List<Map<String, Object>> findEmergencyElecLeak() {
+		return session.selectList("egovframework.DamageMapper.findEmergencyElecLeak");
+	}
+	
+	@Override
+	public List<Map<String, Object>> findEmergencyLeak() {
+		return session.selectList("egovframework.DamageMapper.findEmergencyLeak");
+	}
+
+
+	@Override
+	public List<Map<String, Object>> findEmergencyVariation() {
+		return session.selectList("egovframework.DamageMapper.findEmergencyVariation");
+	}
+
+	@Override
+	public List<Map<String, Object>> findEmergencyAbnormality() {
+		return session.selectList("egovframework.DamageMapper.findEmergencyAbnormality");
+	}
+
 }

@@ -50,7 +50,35 @@ public class MainController {
         return damageService.findTop5abnoramlity();
     }
 
+    @GetMapping("/emergency/crack")
+    @ResponseBody
+    public List<Map<String,Object>> getEmergencyCrack() {
+        return damageService.findEmergencyCrack();
+    }
 
+    @GetMapping("/emergency/elecleak")
+    @ResponseBody
+    public List<Map<String,Object>> getEmergencyElecLeak() {
+        return damageService.findEmergencyElecLeak();
+    }
+
+    @GetMapping("/emergency/leak")
+    @ResponseBody
+    public List<Map<String,Object>> getEmergencyLeak() {
+        return damageService.findEmergencyLeak();
+    }
+
+    @GetMapping("/emergency/variation")
+    @ResponseBody
+    public List<Map<String,Object>> getEmergencyVariation() {
+        return damageService.findEmergencyVariation();
+    }
+
+    @GetMapping("/emergency/abnormality")
+    @ResponseBody
+    public List<Map<String,Object>> getEmergencyAbnormality() {
+        return damageService.findEmergencyAbnormality();
+    }
 
     
 }
