@@ -16,5 +16,6 @@ public interface StructureDao {
 	void updateStructureImpact(StructureDto dto);
 	void registerStructure(StructureDto dto);
 	void registerStructureImpact(StructureDto dto);
+	List<StructureDto> searchStructures(String filter, String keyword);
 
 }
