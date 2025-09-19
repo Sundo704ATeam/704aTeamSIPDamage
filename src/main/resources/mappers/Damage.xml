@@ -83,7 +83,135 @@
         WHERE inscode = #{inscode}
         ORDER BY img_loc
     </select>
-	
+	<!-- 균열 top5 -->
+		<select id="findTop5Crack" resultType="map">
+		WITH ranked AS (
+		    SELECT d.managecode, d.inscode,
+		           (d.crackcnt * c.crack) AS crack_risk,
+		           ROW_NUMBER() OVER (PARTITION BY d.managecode ORDER BY d.inscode DESC) AS rn
+		    FROM damage_inspect d
+		    LEFT JOIN constimp c ON d.managecode = c.managecode
+		),
+		paired AS (
+		    SELECT cur.managecode, cur.crack_risk, prev.crack_risk AS prev_crack_risk
+		    FROM ranked cur
+		    LEFT JOIN ranked prev 
+		           ON cur.managecode = prev.managecode AND prev.rn = 2
+		    WHERE cur.rn = 1
+		)
+		SELECT s.managecode,
+		       s.name, 
+		       s.type,
+		       (p.crack_risk - COALESCE(p.prev_crack_risk,0)) AS diff
+		FROM paired p
+		JOIN structure s ON p.managecode = s.managecode 
+		ORDER BY diff DESC
+		LIMIT 5
+		</select>
+  	
+  	<!-- 누전 top5 -->
+		<select id="findTop5elecleak" resultType="map">
+		WITH ranked AS (
+		    SELECT d.managecode, d.inscode,
+		           (d.elecleakcnt * c.elecleak) AS elecleak_risk,
+		           ROW_NUMBER() OVER (PARTITION BY d.managecode ORDER BY d.inscode DESC) AS rn
+		    FROM damage_inspect d
+		    LEFT JOIN constimp c ON d.managecode = c.managecode
+		),
+		paired AS (
+		    SELECT cur.managecode, cur.elecleak_risk, prev.elecleak_risk AS prev_elecleak_risk
+		    FROM ranked cur
+		    LEFT JOIN ranked prev 
+		           ON cur.managecode = prev.managecode AND prev.rn = 2
+		    WHERE cur.rn = 1
+		)
+		SELECT s.managecode,
+		       s.name,  
+		       s,type,
+		       (p.elecleak_risk - COALESCE(p.prev_elecleak_risk,0)) AS diff
+		FROM paired p
+		JOIN structure s ON p.managecode = s.managecode 
+		ORDER BY diff DESC
+		LIMIT 5
+		</select>
 
-
+	<!-- 누수 top5 -->
+		<select id="findTop5leak" resultType="map">
+		WITH ranked AS (
+		    SELECT d.managecode, d.inscode,
+		           (d.leakcnt * c.leak) AS leak_risk,
+		           ROW_NUMBER() OVER (PARTITION BY d.managecode ORDER BY d.inscode DESC) AS rn
+		    FROM damage_inspect d
+		    LEFT JOIN constimp c ON d.managecode = c.managecode
+		),
+		paired AS (
+		    SELECT cur.managecode, cur.leak_risk, prev.leak_risk AS prev_leak_risk
+		    FROM ranked cur
+		    LEFT JOIN ranked prev 
+		           ON cur.managecode = prev.managecode AND prev.rn = 2
+		    WHERE cur.rn = 1
+		)
+		SELECT s.managecode,
+		       s.name,   
+		       s,type,
+		       (p.leak_risk - COALESCE(p.prev_leak_risk,0)) AS diff
+		FROM paired p
+		JOIN structure s ON p.managecode = s.managecode 
+		ORDER BY diff DESC
+		LIMIT 5
+		</select>
+		
+	<!-- 변형 top5 -->
+		<select id="findTop5variation" resultType="map">
+		WITH ranked AS (
+		    SELECT d.managecode, d.inscode,
+		           (d.variationcnt * c.variation) AS variation_risk,
+		           ROW_NUMBER() OVER (PARTITION BY d.managecode ORDER BY d.inscode DESC) AS rn
+		    FROM damage_inspect d
+		    LEFT JOIN constimp c ON d.managecode = c.managecode
+		),
+		paired AS (
+		    SELECT cur.managecode, cur.variation_risk, prev.variation_risk AS prev_variation_risk
+		    FROM ranked cur
+		    LEFT JOIN ranked prev 
+		           ON cur.managecode = prev.managecode AND prev.rn = 2
+		    WHERE cur.rn = 1
+		)
+		SELECT s.managecode,
+		       s.name,   
+		       s,type,
+		       (p.variation_risk - COALESCE(p.prev_variation_risk,0)) AS diff
+		FROM paired p
+		JOIN structure s ON p.managecode = s.managecode 
+		ORDER BY diff DESC
+		LIMIT 5
+		</select>
+		
+		<!-- 구조이상 top5 -->
+		<select id="findTop5abnormality" resultType="map">
+		WITH ranked AS (
+		    SELECT d.managecode, d.inscode,
+		           (d.abnormalitycnt * c.abnormality) AS abnormality_risk,
+		           ROW_NUMBER() OVER (PARTITION BY d.managecode ORDER BY d.inscode DESC) AS rn
+		    FROM damage_inspect d
+		    LEFT JOIN constimp c ON d.managecode = c.managecode
+		),
+		paired AS (
+		    SELECT cur.managecode, cur.abnormality_risk, prev.abnormality_risk AS prev_abnormality_risk
+		    FROM ranked cur
+		    LEFT JOIN ranked prev 
+		           ON cur.managecode = prev.managecode AND prev.rn = 2
+		    WHERE cur.rn = 1
+		)
+		SELECT s.managecode,
+		       s.name,   
+		       s,type,
+		       (p.abnormality_risk - COALESCE(p.prev_abnormality_risk,0)) AS diff
+		FROM paired p
+		JOIN structure s ON p.managecode = s.managecode 
+		ORDER BY diff DESC
+		LIMIT 5
+		</select>
+  
+  
 </mapper>

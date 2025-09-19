@@ -22,5 +22,17 @@ public interface DamageService {
 	
 	List<Map<String, Object>> getDamageHistory(int managecode);
 
+	List<Map<String, Object>> findTop5Crack();
+
+	List<Map<String, Object>> findTop5eleleak();
+
+	List<Map<String, Object>> findTop5leak();
+
+	List<Map<String, Object>> findTop5variation();
+
+	List<Map<String, Object>> findTop5abnoramlity();
+	
+	
+
 
 }

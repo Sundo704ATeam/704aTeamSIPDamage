@@ -102,6 +102,31 @@ public class DamageServiceImpl implements DamageService {
 		return damageDao.findImagesByInscode(inscode);
 	}
 
+	@Override
+	public List<Map<String, Object>> findTop5Crack() {
+        return damageDao.findTop5Crack();
+	}
+
+	@Override
+	public List<Map<String, Object>> findTop5eleleak() {
+		return damageDao.findTop5elecleak();
+	}
+
+	@Override
+	public List<Map<String, Object>> findTop5leak() {
+		return damageDao.findTop5leak();
+	}
+
+	@Override
+	public List<Map<String, Object>> findTop5variation() {
+		return damageDao.findTopvariation();
+	}
+
+	@Override
+	public List<Map<String, Object>> findTop5abnoramlity() {
+		return damageDao.findTop5abnoramlity();
+	}
+
 	
 	
 }
