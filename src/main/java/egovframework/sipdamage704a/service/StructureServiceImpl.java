@@ -79,5 +79,13 @@ public class StructureServiceImpl implements StructureService {
 	    else if (cnt >= 100) return "D"; // D
 	    else return "-"; // 없음
 	}
-	
+
+	@Override
+	public List<StructureDto> searchStructures(String filter, String keyword) {
+        return structureDao.searchStructures(filter, keyword);
+	}
+
+
+
+
 }

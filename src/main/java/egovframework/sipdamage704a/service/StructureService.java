@@ -13,6 +13,9 @@ public interface StructureService {
 	  List<Damage_InspectDto> getInspectsByManagecode(int managecode);
 	  void updateStructureBase(StructureDto dto);
 	  void updateStructureImpact(StructureDto dto);
-	  void registerStructure(StructureDto dto);  
+	  void registerStructure(StructureDto dto);
+	  List<StructureDto> searchStructures(String filter, String keyword); 
+	  
+	
 
 }

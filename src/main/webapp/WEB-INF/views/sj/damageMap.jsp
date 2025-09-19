@@ -281,27 +281,31 @@
    
         
      
-     <!-- ✅ 검색 패널 -->
-   <div id="searchPanel">
-     <div class="search-header">
-       <span>🔍 시설물 검색</span>
-       <button id="closeSearch">×</button>
-     </div>
-     <div style="padding:10px; text-align:center;">
-       <input type="text" id="searchInput" placeholder="건물 이름 입력" 
-              style="width:70%; padding:6px; border:1px solid #ccc; border-radius:4px;">
-       <button id="doSearch" class="btn btn-sm btn-primary">검색</button>
-     </div>
-     <div id="searchResult" style="max-height:120px; overflow-y:auto; margin-top:8px; font-size:14px; text-align:left;"></div>
-   </div>
-   
+	<!-- ✅ 검색 패널 -->
+	<div id="searchPanel">
+	  <div class="search-header">
+	    <span>🔍 시설물 검색</span>
+	    <button id="closeSearch">×</button>
+	  </div>
+	  <div style="padding:6px; text-align:center;"> <!-- ⬅️ 패딩 줄임 -->
+	    <div style="display:flex; gap:4px; align-items:stretch;"> 
+	      <input type="text" id="searchInput" placeholder="건물 이름 입력" 
+	             style="flex:1; padding:6px; border:1px solid #ccc; border-radius:4px;">
+	      <button id="doSearch" class="btn btn-sm btn-primary"
+	              style="border-radius:4px;">검색</button>
+	    </div>
+	  </div>
+	  <div id="searchResult" 
+	       style="max-height:120px; overflow-y:auto; margin-top:8px; font-size:14px; text-align:left;"></div>
+	</div>
+
    <style>
      #searchPanel {
        position: fixed;
        right: 20px;
        top: 50%;
        transform: translateY(-50%);
-       width: 280px;
+       width: 400px;
        background: #fff;
        border: 1px solid #ccc;
        border-radius: 8px;
@@ -410,7 +414,7 @@
             resultBox.innerHTML = "";
 
             if (!keyword) {
-              resultBox.innerHTML = "<div style='color:#888;'>검색어를 입력하세요</div>";
+              resultBox.innerHTML = "<div style='color:#888;'>  검색어를 입력하세요</div>";
               return;
             }
 
@@ -434,7 +438,7 @@
             });
 
             if (matched.length === 0) {
-              resultBox.innerHTML = "<div style='color:red;'>검색 결과 없음</div>";
+              resultBox.innerHTML = "<div style='color:red;'>  검색 결과 없음</div>";
               return;
             }
 
@@ -470,6 +474,12 @@
             });
           });
    
+         // ✅ 엔터 눌러도 검색 버튼 클릭되게
+         document.getElementById("searchInput").addEventListener("keydown", function(e) {
+           if (e.key === "Enter") {
+             document.getElementById("doSearch").click();
+           }
+         });
    </script>
    
    

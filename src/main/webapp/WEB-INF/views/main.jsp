@@ -323,7 +323,10 @@
     	    })
     	    .catch(err => console.error("에러:", err));
     	}
-
+    
+    document.addEventListener("DOMContentLoaded", () => {
+    	  loadEmergency(CTX + "/emergency/crack", "crack");
+    	});
     
   </script>
 </body>

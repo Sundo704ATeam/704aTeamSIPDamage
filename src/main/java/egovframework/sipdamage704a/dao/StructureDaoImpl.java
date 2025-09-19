@@ -1,6 +1,8 @@
 package egovframework.sipdamage704a.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,15 @@ public class StructureDaoImpl implements StructureDao {
 	@Override
 	public void registerStructureImpact(StructureDto dto) {
         sqlSession.insert(namespace + ".registerStructureImpact", dto);
+	}
+
+	@Override
+	public List<StructureDto> searchStructures(String filter, String keyword) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("filter", filter);
+	    param.put("keyword", keyword);
+
+	    return sqlSession.selectList(namespace + ".searchStructures", param);
 	}
 
 

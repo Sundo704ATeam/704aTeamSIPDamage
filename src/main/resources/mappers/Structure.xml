@@ -26,6 +26,43 @@
 	    ORDER BY s.managecode
 	</select>
 
+	<select id="searchStructures" parameterType="map"
+	        resultType="egovframework.sipdamage704a.dto.damage.StructureDto">
+	    SELECT s.managecode, s.name, s.type, s.typedetail, s.sort, s.address, di.latest_ins_date
+	    FROM structure s
+	    LEFT JOIN (
+	        SELECT managecode, MAX(ins_date) AS latest_ins_date
+	        FROM damage_inspect
+	        GROUP BY managecode
+	    ) di ON s.managecode = di.managecode
+	    <where>
+	        <if test="keyword != null and keyword != ''">
+	            <choose>
+	                <when test="filter == 'managecode'">
+	                    s.managecode::text ILIKE CONCAT('%', #{keyword}, '%')
+	                </when>
+	                <when test="filter == 'name'">
+	                    s.name ILIKE CONCAT('%', #{keyword}, '%')
+	                </when>
+	                <when test="filter == 'type'">
+	                    s.type ILIKE CONCAT('%', #{keyword}, '%')
+	                </when>
+	                <when test="filter == 'sort'">
+	                    s.sort ILIKE CONCAT('%', #{keyword}, '%')
+	                </when>
+	                <otherwise>
+	                    (s.managecode::text ILIKE CONCAT('%', #{keyword}, '%')
+	                     OR s.name ILIKE CONCAT('%', #{keyword}, '%')
+	                     OR s.type ILIKE CONCAT('%', #{keyword}, '%')
+	                     OR s.sort ILIKE CONCAT('%', #{keyword}, '%')
+	                     OR s.address ILIKE CONCAT('%', #{keyword}, '%'))
+	                </otherwise>
+	            </choose>
+	        </if>
+	    </where>
+	    ORDER BY s.managecode ASC
+	</select>
+
 	<!-- managecode 단건 조회 -->
 	<select id="getStructureByManagecode"
 	        parameterType="int"

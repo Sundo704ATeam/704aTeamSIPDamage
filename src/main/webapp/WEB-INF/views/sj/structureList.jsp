@@ -29,30 +29,44 @@ h2 {
 
 /* ✅ 검색창 */
 .search-box {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
+  display: flex;          /* 한 줄로 정렬 */
+  align-items: center;    /* 높이 맞춤 */
+  gap: 6px;               /* 요소 간격 일정 */
+}
+
+.search-box select,
+.search-box input,
+.search-box button {
+  height: 38px;           /* ✅ 통일된 높이 */
+  font-size: 14px;
+}
+
+.search-box select {
+  padding: 0 8px;         /* 양쪽 패딩만 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
 }
 
 .search-box input {
-	width: 250px;
-	padding: 8px 12px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	font-size: 14px;
+  width: 250px;
+  padding: 0 10px;        /* 위아래 padding 없애고 정렬 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .search-box button {
-	padding: 8px 14px;
-	margin-left: 6px;
-	background: #3498db;
-	color: #fff;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-	font-size: 14px;
+  padding: 0 14px;        /* 좌우 패딩만 */
+  background: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .search-box button:hover {
-	background: #2c80b4;
+  background: #2c80b4;
 }
 
 .table-container {
@@ -138,10 +152,26 @@ a.btn:active {
     display: none;
   }
 }
+/* ✅ 건물 등록 버튼 */
+.register-btn {
+  margin-left: auto;          /* 오른쪽 끝으로 밀기 */
+  background: #27ae60;
+  color: #fff !important;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+.register-btn:hover {
+  background: #1e874b;
+}
+
 </style>
 </head>
 <body>
-
 	<!-- 공용 include -->
 	<jsp:include page="/WEB-INF/views/header.jsp" />
 	<jsp:include page="/WEB-INF/views/sidebar.jsp" />
@@ -149,15 +179,28 @@ a.btn:active {
 	<div class="content">
 		<h2>사회기반시설 목록</h2>
 
-		<!-- ✅ 검색창 -->
 		<div class="search-box">
-			<form action="${pageContext.request.contextPath}/StructureList"
-				method="get">
-				<input type="text" name="keyword" placeholder="검색어를 입력하세요">
-				<button type="submit">검색</button>
-			</form>
+		  <form action="${pageContext.request.contextPath}/structureSearch" method="get">
+		    <select name="filter">
+		      <option value="all" <c:if test="${filter == 'all'}">selected</c:if>>전체</option>
+		      <option value="managecode" <c:if test="${filter == 'managecode'}">selected</c:if>>관리코드</option>
+		      <option value="name" <c:if test="${filter == 'name'}">selected</c:if>>이름</option>
+		      <option value="type" <c:if test="${filter == 'type'}">selected</c:if>>종류</option>
+		      <option value="sort" <c:if test="${filter == 'sort'}">selected</c:if>>종별</option>
+		    </select>
+		    <input type="text" name="keyword" placeholder="검색어를 입력하세요" value="${keyword}">
+		    <button type="submit">검색</button>
+		  </form>
+		<!-- ✅ 건물 등록 버튼 -->
+		<a href="javascript:void(0);" 
+		   onclick="window.open('${pageContext.request.contextPath}/sj/registerPage', 
+		                        '_blank', 
+		                        'width=800,height=550');" 
+		   class="register-btn">
+		   건물 등록
+		</a>
 		</div>
-
+		
 		<div class="table-container">
 			<table>
 				<thead>

@@ -2,7 +2,6 @@ package egovframework.sipdamage704a.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,21 @@ public class StructureController {
         model.addAttribute("structures", structureService.getAllStructures());
         return "sj/structureList";  
     }
-
+    
+    //검색
+    @GetMapping("/structureSearch")
+    public String searchStructures(
+            @RequestParam(defaultValue = "all") String filter,
+            @RequestParam(required = false) String keyword,
+            Model model) 
+    {
+        List<StructureDto> result = structureService.searchStructures(filter, keyword);
+        model.addAttribute("structures", result);
+        model.addAttribute("filter", filter);
+        model.addAttribute("keyword", keyword);
+        return "sj/structureList";
+    }
+    
     // 상세 조회
     @GetMapping("/structureDetail")
     public String getStructureByManagecode(@RequestParam("managecode") int managecode, Model model) {

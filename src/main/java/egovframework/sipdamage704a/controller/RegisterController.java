@@ -26,25 +26,24 @@ public class RegisterController {
 	
 	@GetMapping("/registerPage")
 	public String registerPage(
-	        @RequestParam String x,  // ← 문자열로 받음
-	        @RequestParam String y,
+	        @RequestParam(required = false) String x,
+	        @RequestParam(required = false) String y,
 	        Model model) {
 
-		// x,y좌표 => 위도경도 변환 
-		AddressDto addressDto = addressService.getlonlatpoint(x, y);
-		System.out.println("addressDto => " + addressDto.getLon() + " / " + addressDto.getLat() );
-	
-		// 주소가져오기
-		addressDto = addressService.getAddressDetail(addressDto);
-		
-		
-		
-		model.addAttribute("address", addressDto.getPointAddress());
-	    model.addAttribute("x", x);
-	    model.addAttribute("y", y);
+	    if (x != null && y != null) {
+	        // x,y 있을 때만 주소 변환
+	        AddressDto addressDto = addressService.getlonlatpoint(x, y);
+	        addressDto = addressService.getAddressDetail(addressDto);
+
+	        model.addAttribute("address", addressDto.getPointAddress());
+	        model.addAttribute("x", x);
+	        model.addAttribute("y", y);
+	    }
+
+	    // 좌표 없으면 그냥 빈 폼 열림
 	    return "sj/registerPage";
 	}
-	
+
 	@PostMapping("/saveBuilding")
 	public String saveBuilding(StructureDto dto, Model model) {
 	    structureService.registerStructure(dto);
