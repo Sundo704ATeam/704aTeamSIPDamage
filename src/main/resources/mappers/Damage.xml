@@ -127,7 +127,7 @@
 		)
 		SELECT s.managecode,
 		       s.name,  
-		       s,type,
+		       s.type,
 		       (p.elecleak_risk - COALESCE(p.prev_elecleak_risk,0)) AS diff
 		FROM paired p
 		JOIN structure s ON p.managecode = s.managecode 
@@ -153,7 +153,7 @@
 		)
 		SELECT s.managecode,
 		       s.name,   
-		       s,type,
+		       s.type,
 		       (p.leak_risk - COALESCE(p.prev_leak_risk,0)) AS diff
 		FROM paired p
 		JOIN structure s ON p.managecode = s.managecode 
@@ -179,7 +179,7 @@
 		)
 		SELECT s.managecode,
 		       s.name,   
-		       s,type,
+		       s.type,
 		       (p.variation_risk - COALESCE(p.prev_variation_risk,0)) AS diff
 		FROM paired p
 		JOIN structure s ON p.managecode = s.managecode 
@@ -205,7 +205,7 @@
 		)
 		SELECT s.managecode,
 		       s.name,   
-		       s,type,
+		       s.type,
 		       (p.abnormality_risk - COALESCE(p.prev_abnormality_risk,0)) AS diff
 		FROM paired p
 		JOIN structure s ON p.managecode = s.managecode 

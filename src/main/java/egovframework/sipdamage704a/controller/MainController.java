@@ -21,7 +21,7 @@ public class MainController {
     @GetMapping("/")
     public String mainPage(Model model) {
         System.out.println("====================== START ======================");
-        return "main";  // /WEB-INF/views/main.jsp
+        return "main";  
     }
 
     @GetMapping("/risk/top5/crack")
