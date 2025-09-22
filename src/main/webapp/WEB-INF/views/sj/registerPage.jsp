@@ -89,10 +89,10 @@
           
 
           <label>X 좌표:</label>
-          <input type="text" name="x" value="${x}" readonly />
+          <input type="text" name="x" value="${x}" />
 
           <label>Y 좌표:</label>
-          <input type="text" name="y" value="${y}" readonly />
+          <input type="text" name="y" value="${y}" />
 
           <label>구조:</label>
           <div>
