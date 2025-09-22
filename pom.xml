@@ -186,6 +186,21 @@
 		<version>3.12.0</version>
 	</dependency>
 
+	<!-- Apache POI (Excel) -->
+	<dependency>
+	    <groupId>org.apache.poi</groupId>
+	    <artifactId>poi</artifactId>
+	    <version>5.2.5</version>
+	</dependency>
+	
+	<!-- Apache POI (Excel OOXML: .xlsx 지원) -->
+	<dependency>
+	    <groupId>org.apache.poi</groupId>
+	    <artifactId>poi-ooxml</artifactId>
+	    <version>5.2.5</version>
+	</dependency>
+
+
     <!-- Test -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -197,6 +212,9 @@
       <artifactId>selenium-java</artifactId>
       <scope>test</scope>
     </dependency>
+    
+    
+    
   </dependencies>
 
   <build>
