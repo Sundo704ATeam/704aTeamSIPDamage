@@ -18,9 +18,10 @@
     }
     
     #dropdownWrapper {
-	    position: absolute; /* 상단 고정 */
-	    top: calc(var(--header-h, 60px) + 12px);
-	    right: 20px;
+	    position: fixed; /* 상단 고정 */
+	    top: calc(var(--header-h, 60px) + 80px);
+	    left: 200px;
+	    margin-left: 100px;
 	    z-index: 100;
 	}
 	
@@ -38,7 +39,7 @@
 	    justify-content: center; /* 수평 중앙 */
 	    align-items: center;     /* 수직 중앙 */
 	    height: calc(100vh - 150px); /* 헤더+footer 제외 */
-	    margin-top: 50px; /* header와 간격 */
+	    margin-top: 100px; /* header와 간격 */
 	}
 	
 	#gifContainer img {
