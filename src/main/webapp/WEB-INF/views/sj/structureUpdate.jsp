@@ -57,6 +57,7 @@
               <tr><th>종별</th><td><input type="text" name="sort" value="${structure.sort}" class="form-control"/></td></tr>
               <tr><th>주소</th><td><input type="text" name="address" value="${structure.address}" class="form-control"/></td></tr>
               <tr><th>구조</th><td><input type="text" name="materials" value="${structure.materials}" class="form-control"/></td></tr>
+              <tr><th>건축일</th><td><input type="date" name="estdate" value="${structure.estdate}" class="form-control"/></td></tr>
               <tr><th>X 좌표</th><td><input type="number" step="0.01" name="x" value="${structure.x}" class="form-control"/></td></tr>
               <tr><th>Y 좌표</th><td><input type="number" step="0.01" name="y" value="${structure.y}" class="form-control"/></td></tr>
             </table>

@@ -83,6 +83,10 @@
 
           <label>위치:</label>
           <input type="text" name="address" value="${address}" />
+          
+          <label>설립일:</label>
+		  <input type="date" name="estdate" value="${estdate}" />
+          
 
           <label>X 좌표:</label>
           <input type="text" name="x" value="${x}" readonly />
@@ -95,7 +99,10 @@
             <select name="materials" id="materials">
               <option value="철골">철골</option>
               <option value="벽돌">벽돌</option>
-              <option value="모래">모래</option>
+              <option value="석재">석재</option>
+              <option value="유리">유리</option>
+              <option value="목재">목재</option>
+              <option value="철근콘크리트">철근콘크리트</option>
               <option value="기타">기타</option>
             </select>
             <input type="text" id="materialsCustom" name="materialsCustom"

@@ -2,6 +2,8 @@ package egovframework.sipdamage704a.dto.damage;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +24,8 @@ public class StructureDto {
 	private String sort;	  //종별
 	private int hoshi;		  //즐겨찾기
 	private String materials; //구조
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate estdate;	//건축일
 
 	
 	//최신 점검일 join

@@ -152,6 +152,10 @@ public class DamageServiceImpl implements DamageService {
 	    return damageDao.findEmergencyAbnormality();
 	}
 
+	 @Override
+	    public List<Map<String, Object>> findAvgRiskByDistrict() {
+		 return damageDao.findAvgRiskByDistrict(); 
+	}
 
 
 	

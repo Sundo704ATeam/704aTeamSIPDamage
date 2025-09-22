@@ -102,4 +102,9 @@ public class DamageDaoImpl implements DamageDao {
 		return session.selectList("egovframework.DamageMapper.findEmergencyAbnormality");
 	}
 
+	@Override
+	public List<Map<String, Object>> findAvgRiskByDistrict() {
+	    return session.selectList("egovframework.DamageMapper.selectAvgRiskByDistrict");
+	}
+
 }
