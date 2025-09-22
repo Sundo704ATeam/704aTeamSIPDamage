@@ -104,7 +104,29 @@
       color: #856404;
       font-size: 14px;
     }
-
+	/* 칩 스타일 */
+	.grade-box {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 6px;
+	  padding: 6px 10px;
+	  margin: 4px 0;
+	  border-radius: 999px;
+	  font-size: 13px;
+	  font-weight: 600;
+	  background: #fff;
+	  border: 1px solid #e5e7eb;
+	  color: #111;
+	}
+	
+	/* 점(dot) */
+	.grade-dot {
+	  width: 12px;
+	  height: 12px;
+	  border-radius: 50%;
+	  flex-shrink: 0;
+	}
+	
     footer {
       position: fixed;
       bottom: 0;
@@ -119,6 +141,7 @@
       font-size: 13px;
       z-index: 2100;
     }
+    
   </style>
 </head>
 <body>
@@ -133,8 +156,17 @@
       <c:choose>
         <c:when test="${not empty dustForecast.informGrade}">
           <c:forTokens var="grade" items="${dustForecast.informGrade}" delims=",">
-            <div class="grade-box">${grade}</div>
-          </c:forTokens>
+			<c:set var="color"
+			       value="${fn:contains(grade,'매우나쁨') ? '#ef4444' :
+			               fn:contains(grade,'나쁨')    ? '#f97316' :
+			               fn:contains(grade,'보통')    ? '#eab308' :
+			               fn:contains(grade,'좋음')    ? '#60a5fa' :
+			                                             '#cbd5e1'}" />
+			<div class="grade-box">
+			  <span class="grade-dot" style="background:${color}"></span>
+			  ${grade}
+			</div>
+	 	  </c:forTokens>
         </c:when>
         <c:otherwise>
           <p class="alert">등급 데이터 없음</p>
@@ -146,14 +178,14 @@
     <div class="main">
       <!-- 조건 선택 -->
       <form class="search-bar" method="get" action="${pageContext.request.contextPath}/dustForecast">
-        <input type="date" class="form-control" name="dateTime"
-               value="${param.dateTime}">
-        <select name="informCode" class="form-select">
-          <option value="PM10" ${param.informCode == 'PM10' ? 'selected' : ''}>PM10</option>
-          <option value="PM25" ${param.informCode == 'PM25' ? 'selected' : ''}>PM2.5</option>
-        </select>
-        <button type="submit" class="btn btn-primary">조회</button>
-      </form>
+		  <input type="date" class="form-control" name="dataTime"
+		         value="${param.dataTime}" required>
+		  <select name="informCode" class="form-select" required>
+		    <option value="PM10" ${param.informCode == 'PM10' ? 'selected' : ''}>PM10</option>
+		    <option value="PM25" ${param.informCode == 'PM25' ? 'selected' : ''}>PM2.5</option>
+		  </select>
+		  <button type="submit" class="btn btn-primary">조회</button>
+		</form>
 
       <!-- 이미지 -->
       <div class="image-box">
@@ -161,26 +193,24 @@
           <img src="${pageContext.request.contextPath}${dustForecast.path}" alt="예보 이미지"/>
         </c:if>
         <c:if test="${empty dustForecast.path}">
-          <p>이미지가 없습니다.</p>
+          <p>해당 날짜 데이터가 없습니다.</p>
         </c:if>
       </div>
 
       <!-- 상세 정보 -->
-      <div class="info-box">
-        <c:choose>
-          <c:when test="${not empty dustForecast.dataTime}">
-            <p><strong>발표시각:</strong> ${dustForecast.dataTime}</p>
-            <p><strong>종합:</strong> ${dustForecast.informOverall}</p>
-            <p><strong>원인:</strong> ${dustForecast.informCause}</p>
-            <p><strong>행동요령:</strong> ${dustForecast.actionKnack}</p>
-          </c:when>
-          <c:otherwise>
-            <div class="alert">해당 날짜 데이터가 없습니다.</div>
-          </c:otherwise>
-        </c:choose>
-      </div>
-    </div>
-  </div>
+	<div class="info-box">
+	  <c:choose>
+		  <c:when test="${not empty dustForecast}">
+		    <p><strong>발표시각:</strong> ${dustForecast.dataTime}</p>
+		    <p><strong>종합:</strong> ${dustForecast.informOverall}</p>
+		    <p><strong>원인:</strong> ${dustForecast.informCause}</p>
+		    <p><strong>행동요령:</strong> ${dustForecast.actionKnack}</p>
+		  </c:when>
+		  <c:otherwise>
+		    <div class="alert">해당 날짜 데이터가 없습니다.</div>
+		  </c:otherwise>
+		</c:choose>
+	</div>
 
   <footer>© 사회기반시설 스마트 유지관리 시스템</footer>
 </body>
