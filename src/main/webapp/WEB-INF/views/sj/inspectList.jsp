@@ -4,6 +4,10 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<!-- exel아이콘 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 <title>점검 내역</title>
 <style>
 body {
@@ -90,25 +94,58 @@ a.btn:active {
 }
 
 .btn-register {
-  display: inline-block;   /* ✅ 또는 block */
-  margin-top: 30px;        /* ✅ 리스트와 간격 띄우기 */
-  padding: 10px 18px;
-  background: #2ecc71;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
+	display: inline-block; /* ✅ 또는 block */
+	margin-top: 30px; /* ✅ 리스트와 간격 띄우기 */
+	padding: 10px 18px;
+	background: #2ecc71;
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 14px;
 }
+
 .btn-register:hover {
 	background: #27ae60;
+}
+
+.table-header {
+	display: flex;
+	justify-content: space-between; /* 좌우 배치 */
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.btn-excel {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 6px;
+	background: #1d6f42;
+	color: #fff;
+	font-size: 16px;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.btn-excel:hover {
+	background: #14532d;
 }
 </style>
 </head>
 <body>
 
 	<div class="content">
-		<h2>점검 내역</h2>
+		<div class="table-header">
+			<h2>점검 내역</h2>
+			<a
+				href="${pageContext.request.contextPath}/damageMap/inspect/excelDownload?managecode=${managecode}"
+				class="btn-excel" title="엑셀 다운로드"> <i
+				class="fa-solid fa-file-excel"></i>
+			</a>
+		</div>
 
 		<div class="table-container">
 			<table>

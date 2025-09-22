@@ -1,5 +1,7 @@
 package egovframework.sipdamage704a.controller;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,6 +9,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import egovframework.sipdamage704a.dto.damage.DamageImgDto;
 import egovframework.sipdamage704a.dto.damage.Damage_InspectDto;
 import egovframework.sipdamage704a.service.DamageService;
+import egovframework.sipdamage704a.service.StructureService;
 import egovframework.sipdamage704a.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +49,7 @@ public class DamageController {
 
 	private final DamageService damageService;
 	private final CustomFileUtil fileUtil;
+	private final StructureService structureService;
 	
 	@GetMapping("")
 	public String damageMap() {
@@ -147,6 +162,75 @@ public class DamageController {
 	    ResponseEntity<Resource> res = fileUtil.getFile(fileName);
 	    System.out.println("응답 상태 => " + res.getStatusCode());
 	    return res;
+	}
+	
+	@GetMapping("/inspect/excelDownload")
+	public void excelDownload(@RequestParam("managecode") int managecode, HttpServletResponse response) throws IOException {
+	    // ✅ 서비스에서 점검내역 가져오기
+	    List<Damage_InspectDto> list = structureService.getInspectsByManagecode(managecode);
+
+	    // ✅ Workbook / Sheet 생성
+	    Workbook wb = new XSSFWorkbook();
+	    Sheet sheet = wb.createSheet("점검내역");
+
+	    // ✅ 헤더 스타일
+	    CellStyle headerStyle = wb.createCellStyle();
+	    Font headerFont = wb.createFont();
+	    headerFont.setBold(true);
+	    headerStyle.setFont(headerFont);
+	    headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+	    headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+	    // ✅ 헤더 행
+	    String[] headers = {
+	        "점검일", "점검자",
+	        "균열(개수/등급)", "누전(개수/등급)",
+	        "누수(개수/등급)", "변형(개수/등급)",
+	        "구조이상(개수/등급)"
+	    };
+
+	    Row headerRow = sheet.createRow(0);
+	    for (int i = 0; i < headers.length; i++) {
+	        Cell cell = headerRow.createCell(i);
+	        cell.setCellValue(headers[i]);
+	        cell.setCellStyle(headerStyle);
+	    }
+
+	    // ✅ 데이터 행
+	    int rowNum = 1;
+	    for (Damage_InspectDto dto : list) {
+	        Row row = sheet.createRow(rowNum++);
+	        row.createCell(0).setCellValue(dto.getIns_date().toString()); // 점검일
+	        row.createCell(1).setCellValue(dto.getInspactor());           // 점검자
+	        row.createCell(2).setCellValue(dto.getCrackcnt() + "[" + dto.getCrack_grade() + "]");
+	        row.createCell(3).setCellValue(dto.getElecleakcnt() + "[" + dto.getElecleak_grade() + "]");
+	        row.createCell(4).setCellValue(dto.getLeakcnt() + "[" + dto.getLeak_grade() + "]");
+	        row.createCell(5).setCellValue(dto.getVariationcnt() + "[" + dto.getVariation_grade() + "]");
+	        row.createCell(6).setCellValue(dto.getAbnormalitycnt() + "[" + dto.getAbnormality_grade() + "]");
+	    }
+
+	    // ✅ 컬럼 폭 자동 조정
+	    int minWidth = 4000; // 최소 14자
+	    for (int i = 0; i < headers.length; i++) {
+	        sheet.autoSizeColumn(i);
+	        if (sheet.getColumnWidth(i) < minWidth) {
+	            sheet.setColumnWidth(i, minWidth);
+	        } else {
+	            sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 512);
+	        }
+	    }
+
+	    // ✅ 응답 헤더
+	    response.setHeader(
+	    	    "Content-Disposition",
+	    	    "attachment; filename=inspect_list_" + managecode + ".xlsx"
+	    	);
+	    response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	    
+
+	    // ✅ 파일 쓰기
+	    wb.write(response.getOutputStream());
+	    wb.close();
 	}
 	
 }
