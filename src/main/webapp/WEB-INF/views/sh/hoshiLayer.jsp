@@ -12,7 +12,7 @@
   window.hoshiLayer = new ol.layer.Vector({
     source: new ol.source.Vector({
       url: function(extent) {
-        return 'http://localhost:1221/geoserver/dbdbdb/ows?' +
+        return 'http://172.30.1.33:5433/geoserver/dbdbdb/ows?' +
                'service=WFS&version=1.0.0&request=GetFeature&' +
                'typeName=dbdbdb:structurehoshi&outputFormat=application/json&' +
                'srsName=EPSG:3857&';
