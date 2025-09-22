@@ -87,31 +87,29 @@ public class DustController {
 	}
 	
 	@GetMapping("/dustForecast")
-	public String dustForecastPage(DustForecastDto dustForecastDto, Model model) {
+	public String dustForecastPage(@RequestParam(value = "informCode", required = false) String informCode,
+	        					   @RequestParam(value = "dataTime", required = false) String dataTime,
+	        					   Model model) {
 	    log.info("DustController dustForecastPage start");
 
-	    // InformCode 기본값
-	    if (dustForecastDto.getInformCode() == null) {
-	        dustForecastDto.setInformCode("PM10");
+	    if (informCode == null && dataTime == null) {
+	        informCode = "PM10";
+	        dataTime = LocalDate.now().toString();
 	    }
-
-	    // DataTime 기본값: 초기 화면이면 오늘, 아니면 선택한 날짜
-	    if (dustForecastDto.getDataTime() == null || dustForecastDto.getDataTime().isEmpty()) {
-	        dustForecastDto.setDataTime(LocalDate.now().toString());
-	    }
-
-	    // 데이터 조회
+	    DustForecastDto dustForecastDto = new DustForecastDto();
+	    dustForecastDto.setInformCode(informCode);
+	    dustForecastDto.setDataTime(dataTime);
+	    
 	    DustForecastDto dustForecast = dustService.getForecastData(dustForecastDto);
-
-	    // 조회 결과 없으면 빈 객체
-	    if (dustForecast == null || dustForecast.getDataTime() == null) {
-	        dustForecast = new DustForecastDto();
-	    }
-
+	    System.out.println("dustForecast : " + dustForecast);
+	    
 	    model.addAttribute("dustForecast", dustForecast);
 
 	    return "sw/dustForecast";
 	}
+
+
+
 
 	
 }

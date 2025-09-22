@@ -140,59 +140,51 @@ public class DustServiceImpl implements DustService {
 		return dustDao.getLatestDustData();
 	}
 	
-	@Scheduled(cron = "0 22 5,11,17,23 * * *")
-	/* @Scheduled(cron = "0 41 5,11,16,23 * * *") */
+	@Scheduled(cron = "0 20 5,11,17,23 * * *")
 	public void fetchDustForecast() {
-        String today = LocalDate.now().toString();
-        List<String> codes = List.of("PM10", "PM25");
+	    String today = LocalDate.now().toString();
+	    List<String> codes = List.of("PM10", "PM25");
 
-        for (String code : codes) {
-            String url = forecastBaseUrl
-                    + "?serviceKey=" + serviceKey
-                    + "&returnType=json&numOfRows=1000&pageNo=1"
-                    + "&searchDate=" + today
-                    + "&informCode=" + code
-                    + "&ver=1.1";
+	    for (String code : codes) {
+	        String url = forecastBaseUrl
+	                + "?serviceKey=" + serviceKey
+	                + "&returnType=json&numOfRows=1000&pageNo=1"
+	                + "&searchDate=" + today
+	                + "&informCode=" + code
+	                + "&ver=1.1";
 
-            try {
-                String response = restTemplate.getForObject(url, String.class);
-                JsonNode items = objectMapper.readTree(response)
-                                             .path("response").path("body").path("items");
-                //loging
-                System.out.println("API 응답 informCode=" + code);
-                System.out.println(items.toPrettyString());
+	        try {
+	            String response = restTemplate.getForObject(url, String.class);
+	            JsonNode items = objectMapper.readTree(response)
+	                                         .path("response").path("body").path("items");
 
-                if (!items.isArray() || items.size() == 0) {
-                    System.out.println("예보 데이터 없음: " + today + " / " + code);
-                    continue;
-                }
-                
-                List<DustForecastDto> all = objectMapper.readerForListOf(DustForecastDto.class).readValue(items);
-                
-                //loging
-                all.forEach(d -> {
-                    System.out.println("→ dataTime=" + d.getDataTime() + ", informCode=" + d.getInformCode());
-                });
+	            System.out.println("API 응답 informCode=" + code);
+	            System.out.println(items.toPrettyString());
 
-                DustForecastDto latest = all.stream()
-                        .filter(d -> code.equalsIgnoreCase(d.getInformCode()))
-                        .findFirst()
-                        .orElse(null);
+	            if (!items.isArray() || items.size() == 0) {
+	                System.out.println("예보 데이터 없음: " + today + " / " + code);
+	                continue;
+	            }
 
-                if (latest != null) {
-                    dustDao.fetchDustForecast(latest);
-                    System.out.println("예보 저장 완료: " + latest.getDataTime() + " / " + code);
+	            List<DustForecastDto> all = objectMapper.readerForListOf(DustForecastDto.class).readValue(items);
 
-                    if (LocalDateTime.now(ZoneId.of("Asia/Seoul")).getHour() == 17) {
-                        saveForecastImages(items, code);
-                    }
-                }
+	            // 발표시각별 전체 저장
+	            for (DustForecastDto dto : all) {
+	                dustDao.fetchDustForecast(dto);
+	                System.out.println("예보 저장 완료: " + dto.getDataTime() + " / " + dto.getInformCode());
+	            }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+	            // 이미지 저장은 17시에만
+	            if (LocalDateTime.now(ZoneId.of("Asia/Seoul")).getHour() == 17) {
+	                saveForecastImages(items, code);
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
 	
 	
 	/** 실제 파일 저장 메서드 */
