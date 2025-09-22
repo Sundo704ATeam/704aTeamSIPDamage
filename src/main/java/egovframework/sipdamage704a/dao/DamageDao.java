@@ -40,5 +40,7 @@ public interface DamageDao {
 
 	List<Map<String, Object>> findEmergencyAbnormality();
 
+	List<Map<String, Object>> findAvgRiskByDistrict();
+
 }
  	

@@ -15,6 +15,7 @@
 	        s.y,
 	        s.sort,
 	        s.hoshi,
+	        s.estdate,
 	        s.materials,
 	        di.latest_ins_date
 	    FROM structure s
@@ -77,6 +78,7 @@
 	        s.sort,
 	        s.hoshi,
 	        s.materials,
+	        s.estdate,
 	        s.typedetail,
 	        c.crack,
 	        c.elecleak,
@@ -100,6 +102,7 @@
 			y,
 			sort,
 			hoshi,
+			estdate,
 			materials
 		FROM structure
 		where hoshi = 1
@@ -140,9 +143,9 @@
     <!-- 구조물 신규 등록 -->
     <insert id="registerStructure" parameterType="egovframework.sipdamage704a.dto.damage.StructureDto">
         INSERT INTO structure
-        (name, type, typedetail, address, sort, x, y, materials, hoshi)
+        (name, type, typedetail, address, sort, x, y, materials, estdate, hoshi)
         VALUES
-        (#{name}, #{type}, #{typedetail}, #{address}, #{sort}, #{x}, #{y}, #{materials}, #{hoshi});
+        (#{name}, #{type}, #{typedetail}, #{address}, #{sort}, #{x}, #{y}, #{materials}, #{estdate}, #{hoshi});
 
         <!-- PK 시퀀스 값 dto.managecode 에 채워넣기 (Postgres) -->
         <selectKey keyProperty="managecode" resultType="int" order="AFTER">
@@ -168,7 +171,8 @@
 	        sort = #{sort},
 	        x = #{x},
 	        y = #{y},
-	        materials = #{materials}
+	        materials = #{materials},
+	        estdate = #{estdate}
 	    WHERE managecode = #{managecode}
 	</update>
 
@@ -182,4 +186,6 @@
 	        abnormality = #{abnormality}
 	    WHERE managecode = #{managecode}	
 	</update>
+	
+
 </mapper>

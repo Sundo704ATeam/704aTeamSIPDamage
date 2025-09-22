@@ -56,6 +56,7 @@
             <tr><th>종별</th><td>${structure.sort}</td></tr>
             <tr><th>주소</th><td>${structure.address}</td></tr>
             <tr><th>구조</th><td>${structure.materials}</td></tr>
+            <tr><th>건축일</th><td>${structure.estdate}</td></tr>
             <tr><th>X 좌표</th><td><fmt:formatNumber value="${structure.x}" pattern="0.00"/></td></tr>
             <tr><th>Y 좌표</th><td><fmt:formatNumber value="${structure.y}" pattern="0.00"/></td></tr>
           </table>

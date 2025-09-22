@@ -41,6 +41,8 @@ public interface DamageService {
 	List<Map<String, Object>> findEmergencyVariation();
 
 	List<Map<String, Object>> findEmergencyAbnormality();
+
+	List<Map<String, Object>> findAvgRiskByDistrict();
 	
 	
 

@@ -313,4 +313,38 @@
 	  ORDER BY di.ins_date DESC
 	</select>
 
+
+	<select id="selectAvgRiskByDistrict" resultType="map">
+	  WITH latest_ins AS (
+	    SELECT di.*
+	    FROM damage_inspect di
+	    JOIN (
+	      SELECT managecode, MAX(ins_date) AS latest_date
+	      FROM damage_inspect
+	      GROUP BY managecode
+	    ) sub ON di.managecode = sub.managecode 
+	          AND di.ins_date = sub.latest_date
+	  )
+		SELECT 
+		  CASE
+		    WHEN s.address LIKE '%마포%' THEN '마포구'
+		    WHEN s.address LIKE '%서대문%' THEN '서대문구'
+		    WHEN s.address LIKE '%종로%' THEN '종로구'
+		    WHEN s.address LIKE '%은평%' THEN '은평구'
+		  END AS GRAPH_DISTRICT,
+		  (EXTRACT(YEAR FROM s.estdate)::int / 10) * 10 AS GRAPH_DECADE,
+		  AVG(COALESCE(l.crackcnt,0) * COALESCE(c.crack,0))        AS GRAPH_CRACK_RISK,
+		  AVG(COALESCE(l.elecleakcnt,0) * COALESCE(c.elecleak,0))  AS GRAPH_ELECLEAK_RISK,
+		  AVG(COALESCE(l.leakcnt,0) * COALESCE(c.leak,0))          AS GRAPH_LEAK_RISK,
+		  AVG(COALESCE(l.variationcnt,0) * COALESCE(c.variation,0))AS GRAPH_VARIATION_RISK,
+		  AVG(COALESCE(l.abnormalitycnt,0) * COALESCE(c.abnormality,0)) AS GRAPH_ABNORMALITY_RISK
+		FROM structure s
+		LEFT JOIN latest_ins l ON s.managecode = l.managecode
+		LEFT JOIN constimp c ON s.managecode = c.managecode
+		WHERE s.address ~ '마포|서대문|종로|은평'
+		GROUP BY GRAPH_DISTRICT, (EXTRACT(YEAR FROM s.estdate)::int / 10) * 10
+		ORDER BY GRAPH_DECADE, GRAPH_DISTRICT
+
+	</select>
+		
 </mapper>

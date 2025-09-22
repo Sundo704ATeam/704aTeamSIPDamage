@@ -645,6 +645,7 @@
           const props   = feature.getProperties();
           const name    = props.name    || "(이름 없음)";
           const address = props.address || "(주소 없음)";
+          const type = props.type || "(종류 없음)";
           const managecode = props.managecode;
           // ✅ 팝업 열기
           infoPopupOverlay.setPosition(center);
@@ -657,6 +658,7 @@
               '</button>' +
             '</div>' +
             '<div style="margin-bottom:8px;"><b>소재지:</b> ' + address + '</div>' +
+            '<div style="margin-bottom:8px;"><b>종류:</b> ' + type + '</div>' +
             '<div id="inspBox" style="margin-top:8px; font-size:0.9em; color:#555;">안전진단표 불러오는 중...</div>' +
             '<div style="margin-top:6px; display:flex; gap:6px;">' +
             // ✅ 통계보기 버튼 → 관리코드 전달
@@ -712,7 +714,7 @@
                 if (!data || data.error || data.status >= 400) {
                   inspBox.innerHTML = "<div style='color:red;'>점검 이력이 없습니다.</div>";
                   // 표가 없으니 offset 0
-                  infoPopupOverlay.setOffset([0, -165]);
+                  infoPopupOverlay.setOffset([0, -200]);
                   return;
                 }
                 if (Object.keys(data).length === 0) {
@@ -729,7 +731,7 @@
                   html += "</tbody></table>";
                   inspBox.innerHTML = html;
                 }
-                infoPopupOverlay.setOffset([0, -320]);
+                infoPopupOverlay.setOffset([0, -350]);
               })
               .catch(err => {
                 console.error("점검표 로드 오류:", err);

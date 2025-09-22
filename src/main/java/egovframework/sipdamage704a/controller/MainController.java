@@ -80,5 +80,10 @@ public class MainController {
         return damageService.findEmergencyAbnormality();
     }
 
+    @GetMapping("/risk/avgByDistrict")
+    @ResponseBody
+    public List<Map<String,Object>> getAvgRiskByDistrict() {
+        return damageService.findAvgRiskByDistrict();
+    }
     
 }
