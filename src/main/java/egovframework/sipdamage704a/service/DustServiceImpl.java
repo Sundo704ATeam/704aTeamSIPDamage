@@ -86,46 +86,54 @@ public class DustServiceImpl implements DustService {
 	@Override
 	@Scheduled(cron = "0 15 * * * *")
 	public void fetchDustMeasureHourly() { //1시간마다 권역별 측정소 데이터 api 호출 -> DB저장
-		System.out.println("fetchDustMeasureHourly start...1");
+	    System.out.println("fetchDustMeasureHourly start...1");
 
-		String[] sidos = { "서울","부산","대구","인천","광주","대전","울산","세종","경기","강원","충북","충남","전북","전남","경북","경남","제주" };
+	    String[] sidos = { "서울","부산","대구","인천","광주","대전","울산","세종","경기","강원","충북","충남","전북","전남","경북","경남","제주" };
 
-		for (String sido : sidos) {
-			try {
-				String url = MeasureBaseUrl + "/getCtprvnRltmMesureDnsty"
-				        + "?serviceKey=" + serviceKey
-				        + "&returnType=json"
-				        + "&numOfRows=1000&pageNo=1"
-				        + "&sidoName=" + sido
-				        + "&ver=1.4";
+	    for (String sido : sidos) {
+	        try {
+	            String url = MeasureBaseUrl + "/getCtprvnRltmMesureDnsty"
+	                    + "?serviceKey=" + serviceKey
+	                    + "&returnType=json"
+	                    + "&numOfRows=1000&pageNo=1"
+	                    + "&sidoName=" + sido
+	                    + "&ver=1.4";
 
-				String response = restTemplate.getForObject(url, String.class);
-				System.out.println(response);
+	            String response = restTemplate.getForObject(url, String.class);
 
-				JsonNode items = objectMapper.readTree(response).path("response").path("body").path("items");
+	            // 👉 JSON 대신 XML이 오면(<로 시작) 에러 처리
+	            if (response.trim().startsWith("<")) {
+	                System.err.println("API 오류 응답 (XML) → sido=" + sido);
+	                System.err.println(response);
+	                continue; // 다음 sido로 넘어가기
+	            }
 
-				System.out.println(items);
+	            JsonNode items = objectMapper.readTree(response)
+	                                         .path("response").path("body").path("items");
 
-				List<DustDto> dtos = objectMapper.readerForListOf(DustDto.class).readValue(items);
-				
-				for (DustDto dto : dtos) {
-				    if (dto.getMeasureTime() == null) {
-				        dto.setMeasureTime(LocalDateTime.now());
-				        dto.setSidoName(sido);
-				    }
-				}
+	            if (!items.isArray() || items.size() == 0) {
+	                System.out.println("측정값 없음 → sido=" + sido);
+	                continue;
+	            }
 
-				if (!dtos.isEmpty()) {
-					dustDao.upsertDustMeasure(dtos);
-				}
-				else System.out.println("Empty!");
+	            List<DustDto> dtos = objectMapper.readerForListOf(DustDto.class).readValue(items);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+	            for (DustDto dto : dtos) {
+	                if (dto.getMeasureTime() == null) {
+	                    dto.setMeasureTime(LocalDateTime.now());
+	                }
+	                dto.setSidoName(sido);
+	            }
 
+	            dustDao.upsertDustMeasure(dtos);
+	            System.out.println("DB 저장 완료 → sido=" + sido + ", count=" + dtos.size());
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
+
 
 	@Override
 	public List<DustDto> getDustMeasurements(String sido) {
