@@ -78,6 +78,7 @@ public class DustServiceImpl implements DustService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("측정소 갱신 실패", e);
 		}
 	}
 

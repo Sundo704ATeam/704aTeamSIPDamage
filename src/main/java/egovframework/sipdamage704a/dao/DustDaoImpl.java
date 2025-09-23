@@ -18,7 +18,6 @@ public class DustDaoImpl implements DustDao {
 	public void upsertStation(DustDto dto) {
 		
 		session.insert("upsertStation", dto);
-		session.insert("upsertStationSido", dto);
 	}
 
 	@Override
