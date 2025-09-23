@@ -127,7 +127,7 @@ public class RainfallScheduler {
 		}
 			
 		// gif 생성 및 저장
-		createAndSaveGif(imgs, today, isAfternoon ? 1 : 2);
+		createAndSaveGif(imgs, today, 1);
 	}
 	
 	/**
