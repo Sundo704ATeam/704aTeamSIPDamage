@@ -6,7 +6,7 @@
 <mapper namespace="egovframework.DustMapper">
 	<insert id="upsertStation" parameterType="DustDto">
 	    INSERT INTO dust_station (
-	      station_name, addr, mang_name, dmX, dmY, station_active, sido_name
+	      station_name, addr, mang_name, dmX, dmY, station_active
 	    )
 	    VALUES (
 	      #{stationName}, #{stationAddr}, #{mangName}, #{lat}, #{lon}, #{stationActive}

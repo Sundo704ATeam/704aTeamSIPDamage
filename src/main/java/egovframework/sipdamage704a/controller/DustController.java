@@ -3,6 +3,8 @@ package egovframework.sipdamage704a.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,10 +62,14 @@ public class DustController {
 	
 	@GetMapping("/fetchDustStations")
 	@ResponseBody
-	public String fetchDustStations() {
-        dustService.fetchDustStations();
-        
-        return "OK";
+	public ResponseEntity<String> fetchDustStations() {
+		try {
+	        dustService.fetchDustStations();
+	        return ResponseEntity.ok("OK");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("FAIL: " + e.getMessage());
+	    }
     }
 	
 	@GetMapping("/dustMeasurements")

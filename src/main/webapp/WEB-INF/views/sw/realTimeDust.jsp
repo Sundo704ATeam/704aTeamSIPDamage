@@ -257,19 +257,33 @@
     const refreshBtn = document.getElementById("refreshBtn");
     const lastRefreshKey = "stationLastRefresh";
     refreshBtn.onclick = function() {
-      const now = new Date();
-      const last = localStorage.getItem(lastRefreshKey);
-      if (last) {
-        const lastDate = new Date(last);
-        const diffDays = Math.floor((now - lastDate) / (1000*60*60*24));
-        if (diffDays < 30) {
-          alert("이미 갱신되었습니다 (" + lastDate.toLocaleDateString() + ")");
-          return;
-        }
-      }
-      alert("측정소 정보를 갱신했습니다.");
-      localStorage.setItem(lastRefreshKey, now.toISOString());
-    };
+    	  const now = new Date();
+    	  const last = localStorage.getItem(lastRefreshKey);
+
+    	  if (last) {
+    	    const lastDate = new Date(last);
+    	    const diffDays = Math.floor((now - lastDate) / (1000*60*60*24));
+    	    if (diffDays < 1) {
+    	      alert("이미 갱신되었습니다 (" + lastDate.toLocaleDateString() + ")");
+    	      return;
+    	    }
+    	  }
+
+    	  // 서버 호출
+    	  fetch("${pageContext.request.contextPath}/fetchDustStations")
+    	    .then(r => {
+    	      if (!r.ok) throw new Error("갱신 실패");
+    	      return r.text();
+    	    })
+    	    .then(() => {
+    	      alert("측정소 정보를 갱신했습니다.");
+    	      localStorage.setItem(lastRefreshKey, now.toISOString());
+    	    })
+    	    .catch(e => {
+    	      alert("갱신 중 오류: " + err.message);
+    	    });
+    	};
+
   </script>
 
   <footer>
