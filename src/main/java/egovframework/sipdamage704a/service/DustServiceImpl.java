@@ -101,7 +101,7 @@ public class DustServiceImpl implements DustService {
 
 	            String response = restTemplate.getForObject(url, String.class);
 
-	            // 👉 JSON 대신 XML이 오면(<로 시작) 에러 처리
+	            // JSON 대신 XML이 오면(<로 시작) 에러 처리
 	            if (response.trim().startsWith("<")) {
 	                System.err.println("API 오류 응답 (XML) → sido=" + sido);
 	                System.err.println(response);
